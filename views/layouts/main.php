@@ -2,14 +2,13 @@
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use app\modules\wmadmin\assets\AdminAsset;
+use wmadmin\assets\AdminAsset;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
 AdminAsset::register($this);
 $assetUrl = \Yii::$app->getModule('wmadmin')->assetUrl;
-$imageBase =
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -36,7 +35,7 @@ $imageBase =
 </head>
 <body>
 <?php $this->beginBody() ?>
-
+<?= $content ?>
 <?php $this->endBody() ?>
 </body>
 </html>
