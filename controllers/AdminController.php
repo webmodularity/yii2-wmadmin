@@ -6,5 +6,5 @@ use Yii;
 use yii\web\Controller;
 
 class AdminController extends Controller {
-    public $layout = '@webmod/wmadmin/views/layouts/main';
+    public $layout = '@wmadmin/views/layouts/main';
 }
