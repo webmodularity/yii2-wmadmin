@@ -72,7 +72,7 @@
  * VOICE COMMAND CONFIG
  * dependency: voicecommand.js
  */
-	voice_command = false,
+	voice_command = true,
 /*
  * Turns on speech without asking
  */	
