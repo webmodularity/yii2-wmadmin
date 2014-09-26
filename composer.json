@@ -13,7 +13,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "/home/rory/work/webmod/yii2-wmcommon"
+            "url": "/home/rory/work/bare_repos/wmadmin/wmadmin.git"
         }
     ],
     "require": {
