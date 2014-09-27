@@ -10,12 +10,6 @@
             "homepage": "http://www.webmodularity.com/"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "/home/rory/work/bare_repos/wmadmin/wmadmin.git"
-        }
-    ],
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "*",
