@@ -3,7 +3,6 @@
 namespace wmadmin\models;
 
 use Yii;
-use wmadmin\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
@@ -21,7 +20,7 @@ use yii\web\IdentityInterface;
  * @property Person[] $people
  * @property UserRole $role
  */
-class User extends ActiveRecord implements IdentityInterface
+class User extends \wma\db\ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = -1;
     const STATUS_ACTIVE = 1;

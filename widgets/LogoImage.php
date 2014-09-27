@@ -1,9 +1,9 @@
 <?php
 
-namespace wmadmin\widgets;
+namespace wma\widgets;
 
 use yii\base\Widget;
-use yii\helpers\Html;
+use wmc\helpers\Html;
 
 class LogoImage extends Widget
 {

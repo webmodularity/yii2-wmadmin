@@ -1,8 +1,8 @@
 <?php
 
-namespace wmadmin\widgets;
+namespace wma\widgets;
 
-use yii\helpers\Html;
+use wmc\helpers\Html;
 use yii\helpers\ArrayHelper;
 use rmrevin\yii\fontawesome\FA;
 

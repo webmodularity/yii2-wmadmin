@@ -1,7 +1,7 @@
 <?php
 
-namespace wmadmin\controllers;
+namespace wma\controllers;
 
 class Controller extends \yii\web\Controller {
-    public $layout = '@wmadmin/views/layouts/main';
+    public $layout = 'views/layouts/main';
 }

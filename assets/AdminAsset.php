@@ -1,11 +1,11 @@
 <?php
-namespace wmadmin\assets;
+namespace wma\assets;
 
 use yii\web\AssetBundle;
 
 class AdminAsset extends AssetBundle
 {
-    public $sourcePath = '@wmadmin/assets/web';
+    public $sourcePath = 'assets/web';
     public $css = [
         'css/bootstrap.min.css',
         'css/font-awesome.min.css',

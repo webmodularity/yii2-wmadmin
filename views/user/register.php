@@ -1,7 +1,7 @@
 <?php
 
-use wmadmin\widgets\ActiveForm;
-use yii\helpers\Html;
+use wma\widgets\ActiveForm;
+use wmc\helpers\Html;
 
 $this->title = 'Register';
 $form = ActiveForm::begin([

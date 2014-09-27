@@ -1,12 +1,12 @@
 <?php
 
-namespace wmadmin;
+namespace wma;
 
-use yii\helpers\Html;
+use wmc\helpers\Html;
 
 class Module extends \yii\base\Module
 {
-    public $controllerNamespace = 'wmadmin\controllers';
+    public $controllerNamespace = 'wma\controllers';
 
     private $_assetPath = null;
     private $_assetUrl = null;
@@ -29,7 +29,7 @@ class Module extends \yii\base\Module
     public function init()
     {
         parent::init();
-        $asset = \Yii::$app->assetManager->publish('@wmadmin/assets/web',['forceCopy' => false]);
+        $asset = \Yii::$app->assetManager->publish('assets/web',['forceCopy' => false]);
         $this->_assetPath = $asset[0];
         $this->_assetUrl = $asset[1];
     }

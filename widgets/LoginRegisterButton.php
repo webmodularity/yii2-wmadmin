@@ -1,9 +1,9 @@
 <?php
 
-namespace wmadmin\widgets;
+namespace wma\widgets;
 
 use Yii;
-use yii\helpers\Html;
+use wmc\helpers\Html;
 use yii\base\Widget;
 
 class LoginRegisterButton extends Widget

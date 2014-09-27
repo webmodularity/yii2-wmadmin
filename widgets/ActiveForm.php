@@ -1,6 +1,6 @@
 <?php
 
-namespace wmadmin\widgets;
+namespace wma\widgets;
 
 use yii\helpers\ArrayHelper;
 
@@ -19,7 +19,7 @@ class ActiveForm extends \yii\widgets\ActiveForm
             'requiredCssClass' => '',
             'errorCssClass' => 'state-error',
             'successCssClass' => 'state-success',
-            'fieldClass' => 'wmadmin\widgets\ActiveField'
+            'fieldClass' => 'wma\widgets\ActiveField'
         ];
 
         $config = ArrayHelper::merge($mergeConfig, $config);

@@ -1,10 +1,10 @@
 <?php
-use yii\helpers\Html;
+use wmc\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use wmadmin\assets\AdminAsset;
-use wmadmin\widgets\BodyTag;
-use wmadmin\widgets\LogoImage;
+use wma\assets\AdminAsset;
+use wma\widgets\BodyTag;
+use wma\widgets\LogoImage;
 
 /* @var $this \yii\web\View */
 /* @var $content string */

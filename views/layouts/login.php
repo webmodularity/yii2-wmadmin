@@ -1,8 +1,8 @@
 <?php
-use yii\helpers\Html;
-use wmadmin\assets\AdminAsset;
-use wmadmin\widgets\LogoImage;
-use wmadmin\widgets\LoginRegisterButton;
+use wmc\helpers\Html;
+use wma\assets\AdminAsset;
+use wma\widgets\LogoImage;
+use wma\widgets\LoginRegisterButton;
 
 /* @var $this \yii\web\View */
 /* @var $content string */

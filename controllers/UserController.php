@@ -1,16 +1,16 @@
 <?php
 
-namespace wmadmin\controllers;
+namespace wma\controllers;
 
 use Yii;
-use wmadmin\controllers\Controller;
-use wmadmin\models\LoginForm;
-use wmadmin\models\User;
-use wmadmin\models\Person;
+use wma\controllers\Controller;
+use wma\models\LoginForm;
+use wma\models\User;
+use wma\models\Person;
 
 class UserController extends Controller
 {
-    public $layout = '@wmadmin/views/layouts/login';
+    public $layout = 'views/layouts/login';
 
 
     public function actionLogin()

@@ -1,6 +1,6 @@
 <?php
 
-namespace wmadmin\db;
+namespace wma\db;
 
 class ActiveRecord extends \yii\db\ActiveRecord
 {
