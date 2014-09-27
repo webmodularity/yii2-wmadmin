@@ -29,7 +29,7 @@ class Module extends \yii\base\Module
     public function init()
     {
         parent::init();
-        $asset = \Yii::$app->assetManager->publish('assets/web',['forceCopy' => false]);
+        $asset = \Yii::$app->assetManager->publish('wma/assets/web',['forceCopy' => false]);
         $this->_assetPath = $asset[0];
         $this->_assetUrl = $asset[1];
     }
