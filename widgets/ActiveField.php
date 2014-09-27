@@ -103,7 +103,7 @@ class ActiveField extends \yii\widgets\ActiveField
             if (!is_null($tooltipIcon)) {
                 if (!is_array($tooltipIconOptions) || count($tooltipIconOptions) < 1) {
                     // Set to default tooltip color
-                    $tooltipIconOptions = ['class' => \Yii::$app->getModule('wmadmin')->tooltipIconDefaultColor];
+                    $tooltipIconOptions = ['class' => \wma\Module::getInstance()->tooltipIconDefaultColor];
                 }
                 $tooltip = FA::icon($tooltipIcon, $tooltipIconOptions) . ' ' . $tooltipText;
             } else {

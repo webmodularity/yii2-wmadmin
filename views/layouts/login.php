@@ -8,8 +8,7 @@ use wma\widgets\LoginRegisterButton;
 /* @var $content string */
 
 AdminAsset::register($this);
-$this->registerJs("");
-$assetUrl = \Yii::$app->getModule('wmadmin')->assetUrl;
+$assetUrl = \wma\Module::getInstance()->assetUrl;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
