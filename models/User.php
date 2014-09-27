@@ -1,6 +1,6 @@
 <?php
 
-namespace wmadmin\models;
+namespace wma\models;
 
 use Yii;
 use yii\web\IdentityInterface;
