@@ -10,7 +10,7 @@ use wma\models\Person;
 
 class UserController extends Controller
 {
-    public $layout = 'views/layouts/login';
+    public $layout = '@wma/views/layouts/login';
 
 
     public function actionLogin()

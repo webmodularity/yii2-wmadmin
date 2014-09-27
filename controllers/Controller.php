@@ -3,5 +3,5 @@
 namespace wma\controllers;
 
 class Controller extends \yii\web\Controller {
-    public $layout = 'views/layouts/main';
+    public $layout = '@wma/views/layouts/main';
 }

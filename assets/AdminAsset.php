@@ -5,7 +5,7 @@ use yii\web\AssetBundle;
 
 class AdminAsset extends AssetBundle
 {
-    public $sourcePath = 'assets/web';
+    public $sourcePath = '@wma/assets/web';
     public $css = [
         'css/bootstrap.min.css',
         'css/font-awesome.min.css',
