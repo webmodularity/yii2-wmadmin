@@ -13,16 +13,16 @@ $form = ActiveForm::begin([
 
     <fieldset>
         <div class="row">
-            <?= $form->field($person, 'first_name')->placeholder()->colspan(6)->iconAppend('user') ?>
-            <?= $form->field($person, 'last_name')->placeholder()->colspan(6)->iconAppend('user') ?>
+            <?= $form->field($model, 'first_name')->placeholder()->colspan(6)->iconAppend('user') ?>
+            <?= $form->field($model, 'last_name')->placeholder()->colspan(6)->iconAppend('user') ?>
         </div>
 
-        <?= $form->field($person, 'email')->placeholder()->iconAppend('envelope') ?>
-        <?= $form->field($user, 'username')->placeholder()->iconAppend('user') ?>
+        <?= $form->field($model, 'email')->placeholder()->iconAppend('envelope') ?>
+        <?= $form->field($model, 'username')->placeholder()->iconAppend('user') ?>
 
         <div class="row">
-            <?= $form->field($user, 'password_hash')->placeholder()->passwordInput()->colspan(6)->iconAppend('lock') ?>
-            <?= $form->field($user, 'password_confirm')->placeholder()->passwordInput()->colspan(6)->iconAppend('lock') ?>
+            <?= $form->field($model, 'password')->placeholder()->passwordInput()->colspan(6)->iconAppend('lock') ?>
+            <?= $form->field($model, 'password_confirm')->placeholder()->passwordInput()->colspan(6)->iconAppend('lock') ?>
         </div>
     </fieldset>
 

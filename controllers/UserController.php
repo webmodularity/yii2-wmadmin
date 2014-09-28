@@ -4,9 +4,8 @@ namespace wma\controllers;
 
 use Yii;
 use wma\controllers\Controller;
-use wma\models\LoginForm;
-use wma\models\User;
-use wma\models\Person;
+use wmc\models\LoginForm;
+use wmc\models\RegisterForm;
 
 class UserController extends Controller
 {
@@ -32,39 +31,18 @@ class UserController extends Controller
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-        $user = new User();
-        $person = new Person();
+        $model = new RegisterForm();
 
-        if ($user->load(Yii::$app->request->post('User')) && $person->load(Yii::$app->request->post('Person'))) {
-          /**  $addressLocation = $model->addressLocation->findOneFromAttributes();
-            if (is_null($addressLocation)) {
-                if ($model->addressLocation->save()) {
-                    $model->link('addressLocation', $model->addressLocation);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
                 }
-            } else {
-                $model->populateRelation('addressLocation', $addressLocation);
-                $model->link('addressLocation', $model->addressLocation);
             }
-            if (!is_null($model->addressLocation) && $model->save()) {
-                $addressLocationId = $model->addressLocation->id;
-            }
-            if (!is_null($addressLocationId)) {
-                $model->address_location_id = $addressLocationId;
-                $addressId = $model->PkFromAttributes;
-                if (is_null($addressId) && $model->save()) {
-                    $addressId = $model->id;
-                }
-
-                if (!is_null($addressId)) {
-                    return $this->redirect(['view', 'id' => $addressId]);
-                }
-            } */
-
         }
 
         return $this->render('register', [
-                'user' => $user,
-                'person' => $person
+                'model' => $model
             ]);
     }
 
