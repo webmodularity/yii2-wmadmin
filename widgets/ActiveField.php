@@ -131,7 +131,7 @@ class ActiveField extends \yii\widgets\ActiveField
                 $this->inputOptions,
                 ['placeholder' => $this->model->getAttributeLabel($this->attribute)]
             );
-        } else if (is_string($this->placeholder)) {
+        } else if (is_string($placeholder)) {
             $this->inputOptions = ArrayHelper::merge(
                 $this->inputOptions,
                 ['placeholder' => $placeholder]

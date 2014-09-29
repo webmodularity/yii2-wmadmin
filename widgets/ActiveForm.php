@@ -2,7 +2,7 @@
 
 namespace wma\widgets;
 
-use yii\helpers\ArrayHelper;
+use wmc\helpers\ArrayHelper;
 
 class ActiveForm extends \yii\widgets\ActiveForm
 {
@@ -14,7 +14,7 @@ class ActiveForm extends \yii\widgets\ActiveForm
         $mergeConfig = [
             'options' => [
                 'role' => 'form',
-                'class' => 'smart-form'
+                'class' => 'smart-form',
             ],
             'requiredCssClass' => '',
             'errorCssClass' => 'state-error',
@@ -22,7 +22,7 @@ class ActiveForm extends \yii\widgets\ActiveForm
             'fieldClass' => 'wma\widgets\ActiveField'
         ];
 
-        $config = ArrayHelper::merge($mergeConfig, $config);
+        $config = ArrayHelper::mergeClass($mergeConfig, $config, ['options']);
         return parent::__construct($config);
     }
 }

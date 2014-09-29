@@ -5,7 +5,7 @@ use wmc\helpers\Html;
 
 $this->title = 'Login';
 $form = ActiveForm::begin([
-        'options' => ['class' => 'smart-form client-form']
+        'options' => ['class' => 'client-form']
     ]) ?>
     <header>
         Sign In
