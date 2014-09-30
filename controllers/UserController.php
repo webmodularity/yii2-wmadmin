@@ -4,8 +4,9 @@ namespace wma\controllers;
 
 use Yii;
 use wma\controllers\Controller;
-use wmc\models\LoginForm;
-use wmc\models\RegisterForm;
+use wma\models\LoginForm;
+use wma\models\RegisterForm;
+use wma\models\User;
 
 class UserController extends Controller
 {
@@ -34,7 +35,7 @@ class UserController extends Controller
         $model = new RegisterForm();
 
         if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
+            if ($user = $model->registerUser()) {
                 if (Yii::$app->getUser()->login($user)) {
                     return $this->goHome();
                 }
