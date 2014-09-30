@@ -3,6 +3,7 @@
 namespace wma\models;
 
 use Yii;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "user".
@@ -20,7 +21,7 @@ use Yii;
  * @property Person $person
  * @property UserKey[] $userKeys
  */
-class User extends \wmc\models\ActiveRecord
+class User extends \wmc\models\ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = -1;
     const STATUS_ACTIVE = 1;
@@ -28,6 +29,7 @@ class User extends \wmc\models\ActiveRecord
 
     const ROLE_USER = 1;
     const ROLE_SUPERADMIN = 255;
+
     /**
      * @inheritdoc
      */
@@ -43,8 +45,8 @@ class User extends \wmc\models\ActiveRecord
     {
         return [
             [['role_id', 'status', 'person_id'], 'integer'],
-            [['status'], 'in', 'range' => [self::STATUS_DELETED, self::STATUS_ACTIVE]],
-            [['role_id'], 'in', 'range' => [self::ROLE_USER, self::ROLE_SUPERADMIN]],
+            [['status'], 'in', 'range' => range(self::STATUS_DELETED, self::STATUS_ACTIVE)],
+            [['role_id'], 'in', 'range' => range(self::ROLE_USER, self::ROLE_SUPERADMIN)],
             [['username', 'password_hash', 'person_id', 'role_id', 'status', 'created_at', 'auth_key'], 'required'],
             [['username', 'password_hash'], 'string', 'max' => 255],
             [['username'], 'unique']
@@ -81,7 +83,7 @@ class User extends \wmc\models\ActiveRecord
      */
     public function getPerson()
     {
-        return $this->hasOne(Person::className(), ['id' => 'person_id']);
+        return $this->hasOne(\wmc\models\Person::className(), ['id' => 'person_id']);
     }
 
     /**

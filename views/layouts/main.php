@@ -1,17 +1,17 @@
 <?php
 use wmc\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
 use wma\assets\AdminAsset;
 use wma\widgets\BodyTag;
 use wma\widgets\LogoImage;
+use wma\widgets\LogoutButton;
+use wma\widgets\LoggedInUser;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
 AdminAsset::register($this);
 $this->registerJs("pageSetUp();");
-$assetUrl = \Yii::$app->getModule('wmadmin')->assetUrl;
+$assetUrl = \wma\Module::getInstance()->assetUrl;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -43,7 +43,7 @@ $assetUrl = \Yii::$app->getModule('wmadmin')->assetUrl;
         <?= LogoImage::widget() ?>
 
 
-        <span id="activity" class="activity-dropdown"> <i class="fa fa-user"></i> <b class="badge"> 21 </b> </span>
+        <span id="activity" class="activity-dropdown"> <i class="fa fa-user"></i> <b class="badge"> 0 </b> </span>
 
         <!-- AJAX-DROPDOWN : control this dropdown height, look and feel from the LESS variable file -->
 
@@ -158,7 +158,7 @@ $assetUrl = \Yii::$app->getModule('wmadmin')->assetUrl;
 
         <!-- logout button -->
         <div id="logout" class="btn-header transparent pull-right">
-            <span> <a href="login.html" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i class="fa fa-sign-out"></i></a> </span>
+            <?= LogoutButton::widget() ?>
         </div>
         <!-- end logout button -->
 
@@ -198,16 +198,7 @@ $assetUrl = \Yii::$app->getModule('wmadmin')->assetUrl;
 
     <!-- User info -->
     <div class="login-info">
-        <span> <!-- User image size is adjusted inside CSS, it should stay as it -->
-            <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                <img src="<?= $assetUrl ?>/img/avatars/4.png" alt="me" class="online" />
-                <span>
-                    john.doe
-                </span>
-                <i class="fa fa-angle-down"></i>
-            </a>
-
-        </span>
+        <?= LoggedInUser::widget(['displayName' => 'full_name']) ?>
     </div>
     <!-- end user info -->
 

@@ -27,8 +27,7 @@ class BodyTag extends Widget
     public function init()
     {
         parent::init();
-        $wmadmin = \wma\Module::getInstance();
-        $templateOptions = $wmadmin->templateOptions;
+        $templateOptions = \wma\Module::getInstance()->templateOptions;
         // Theme
         if ($templateOptions['theme'] !== 'default') {
             $this->_classes[] = $this->_themeIndex[$templateOptions['theme']];

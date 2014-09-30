@@ -12,7 +12,6 @@ class UserController extends Controller
 {
     public $layout = '@wma/views/layouts/login';
 
-
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
@@ -50,6 +49,6 @@ class UserController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->goHome();
+        return $this->redirect(['/' . \wma\Module::getInstance()->id . '/user/login', 'message' => 'You have successfully logged out.']);
     }
 }

@@ -4,7 +4,6 @@ namespace wma\models;
 use wma\models\User;
 use wmc\models\Person;
 use yii\base\Model;
-use yii\i18n\Formatter;
 use Yii;
 
 class RegisterForm extends Model
@@ -98,7 +97,7 @@ class RegisterForm extends Model
             $user->generateAuthKey();
             $user->role_id = $roleId;
             $user->status = $status;
-            $user->created_at = Yii::$app->formatter->asDatetime('now');
+            $user->created_at = Yii::$app->formatter->asMysqlDatetime();
             $user->save();
             return $user;
         }
