@@ -3,6 +3,7 @@ use wmc\helpers\Html;
 use wma\assets\AdminAsset;
 use wma\widgets\LogoImage;
 use wma\widgets\LoginRegisterButton;
+use wma\widgets\Alert;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -45,6 +46,20 @@ $assetUrl = \wma\Module::getInstance()->assetUrl;
 <div id="main" role="main">
     <!-- MAIN CONTENT -->
     <div id="content" class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <?=
+            Alert::widget(
+                [
+                    'heading' => \Yii::$app->session->getFlash('logout')['heading'],
+                    'message' => \Yii::$app->session->getFlash('logout')['message'],
+                    'style' => 'success',
+                    'icon' => \Yii::$app->session->getFlash('logout')['icon']
+                ]
+            );
+            ?>
+            </div>
+        </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
                 <div class="well no-padding">

@@ -5,6 +5,7 @@ use wma\widgets\BodyTag;
 use wma\widgets\LogoImage;
 use wma\widgets\LogoutButton;
 use wma\widgets\LoggedInUser;
+use wma\widgets\Alert;
 
 /* @var $this \yii\web\View */
 /* @var $content string */

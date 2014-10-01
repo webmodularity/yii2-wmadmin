@@ -49,6 +49,7 @@ class UserController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->redirect(['/' . \wma\Module::getInstance()->id . '/user/login', 'message' => 'You have successfully logged out.']);
+        Yii::$app->session->setFlash('logout', ['heading' => 'Successfully Logged Out','message' => 'User session cleared.', 'icon' => 'sign-out']);
+        return $this->redirect(['/' . \wma\Module::getInstance()->id . '/user/login']);
     }
 }
