@@ -12,12 +12,32 @@ $form = ActiveForm::begin([
     </header>
 
     <fieldset>
-        <?= $form->field($model, 'username')->iconAppend('user') ?>
-        <?= $form->field($model, 'password')->passwordInput()->iconAppend('lock')->hint(Html::a('Forgot password?', 'forgot-password')) ?>
-        <?= $form->field($model, 'rememberMe')->checkbox()->label(false) ?>
+        <?php
+        echo $form->field(
+            $model,
+            'username',
+            [
+                'inputOptions' => [
+                    'tabindex' => 1,
+                    'autofocus' => 'autofocus'
+                ]
+            ])->iconAppend('user')->hint(Html::a('Forgot username?', 'forgot-username'));
+        echo $form->field(
+            $model,
+            'password',
+            [
+                'inputOptions' => [
+                    'tabindex' => 2
+                ]
+            ])->passwordInput()->iconAppend('lock')->hint(Html::a('Forgot password?', 'forgot-password'));
+
+        if (Yii::$app->getAdminModule()->getOption('user', 'allowCookies') === true) {
+            echo $form->field($model, 'rememberMe')->checkbox()->label(false);
+        }
+        ?>
     </fieldset>
 
     <footer>
-        <?= Html::submitButton('Sign In', ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton('Sign In', ['class' => 'btn btn-primary', 'tabindex' => 3]) ?>
     </footer>
 <?php ActiveForm::end() ?>

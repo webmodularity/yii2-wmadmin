@@ -64,7 +64,15 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            if (   Yii::$app->getModule(Yii::$app->adminModuleId)->getOption('user', 'allowCookies') === true
+                && $this->rememberMe) {
+                // Cookies
+                $duration = Yii::$app->getAdminModule()->getOption('user', 'sessionDuration');
+            } else {
+                // Session
+                $duration = 0;
+            }
+            return Yii::$app->user->login($this->getUser(), $duration);
         } else {
             return false;
         }

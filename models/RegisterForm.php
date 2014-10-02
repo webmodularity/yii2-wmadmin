@@ -21,16 +21,16 @@ class RegisterForm extends Model
     public function rules()
     {
         return [
-            [['username', 'email', 'first_name', 'last_name'], 'filter', 'filter' => 'trim'],
-            [['username', 'email','password', 'password_confirm', 'first_name', 'last_name'], 'required'],
-            ['username', 'string', 'min' => 3, 'max' => 50],
-            ['password', 'string', 'min' => 6, 'max' => 50],
+            [['username', 'password', 'password_confirm'], 'required'],
+            [['password'], 'string', 'length' => [6, 50]],
+            [['username'], 'string', 'length' => [3, 50]],
             [['first_name', 'last_name'], 'string', 'max' => 50],
-            ['email', 'string', 'max' => 100],
-            ['email', 'email'],
-            ['username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u', 'message' => "{attribute} can contain only letters, numbers or underscores."],
+            [['email'], 'string', 'max' => 100],
+            [['email'], 'email'],
+            [['email', 'first_name', 'last_name', 'username'], 'trim'],
+            [['username'], 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u', 'message' => "{attribute} can contain only letters, numbers or underscores."],
+            [['username'], 'unique', 'targetClass' => '\wma\models\User', 'message' => 'This username is already in use.'],
             ['password_confirm', 'compare', 'compareAttribute' => 'password', 'message' => 'Passwords do not match.'],
-            ['username', 'unique', 'targetClass' => '\wma\models\User', 'message' => 'This username is already in use.'],
         ];
     }
 

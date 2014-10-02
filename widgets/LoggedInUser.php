@@ -45,6 +45,7 @@ class LoggedInUser extends Widget
                     'span',
                     $this->_displayName
                 )
+                . '&nbsp;'
                 . FA::icon('angle-down'),
                 "javascript:void(0);",
                 [

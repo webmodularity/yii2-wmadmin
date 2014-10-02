@@ -2,6 +2,7 @@
 
 namespace wma\widgets;
 
+use Yii;
 use yii\base\Widget;
 use wmc\helpers\Html;
 
@@ -14,6 +15,6 @@ class LogoImage extends Widget
     }
 
     public function run() {
-        return Html::tag('span',' ' . Html::img(\wma\Module::getInstance()->assetUrl.'/img/logo.png',['alt' => 'Web Modularity']) . ' ',['id' => 'logo']);
+        return Html::tag('span',' ' . Html::img(Yii::$app->getAdminModule()->assetUrl.'/img/logo.png',['alt' => 'Web Modularity']) . ' ',['id' => 'logo']);
     }
 }

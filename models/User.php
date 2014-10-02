@@ -4,13 +4,14 @@ namespace wma\models;
 
 use Yii;
 use yii\web\IdentityInterface;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "user".
  *
  * @property integer $person_id
  * @property string $username
- * @property string $password_hash
+ * @property string $password
  * @property integer $role_id
  * @property string $auth_key
  * @property integer $status
@@ -47,8 +48,8 @@ class User extends \wmc\models\ActiveRecord implements IdentityInterface
             [['role_id', 'status', 'person_id'], 'integer'],
             [['status'], 'in', 'range' => range(self::STATUS_DELETED, self::STATUS_ACTIVE)],
             [['role_id'], 'in', 'range' => range(self::ROLE_USER, self::ROLE_SUPERADMIN)],
-            [['username', 'password_hash', 'person_id', 'role_id', 'status', 'created_at', 'auth_key'], 'required'],
-            [['username', 'password_hash'], 'string', 'max' => 255],
+            [['person_id', 'role_id', 'status', 'created_at', 'auth_key'], 'required'],
+            [['password'], 'string', 'max' => 255],
             [['username'], 'unique']
         ];
     }
@@ -61,7 +62,7 @@ class User extends \wmc\models\ActiveRecord implements IdentityInterface
         return [
             'person_id' => 'ID',
             'username' => 'Username',
-            'password_hash' => 'Password',
+            'password' => 'Password',
             'role_id' => 'Role ID',
             'auth_key' => 'Auth Key',
             'status' => 'Status',
@@ -170,7 +171,7 @@ class User extends \wmc\models\ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
+        return Yii::$app->security->validatePassword($password, $this->password);
     }
     /**
      * Generates password hash from password and sets it to the model
@@ -179,7 +180,7 @@ class User extends \wmc\models\ActiveRecord implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+        $this->password = Yii::$app->security->generatePasswordHash($password);
     }
     /**
      * Generates "remember me" authentication key

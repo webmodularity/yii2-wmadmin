@@ -6,15 +6,24 @@ use Yii;
 use wma\controllers\Controller;
 use wma\models\LoginForm;
 use wma\models\RegisterForm;
+use wma\models\ForgotPasswordForm;
+use wma\models\ForgotUsernameForm;
 use wma\models\User;
 
 class UserController extends Controller
 {
+    public function actions()
+    {
+        return [
+            'error' => ['class' => 'yii\web\ErrorAction'],
+        ];
+    }
+
     public $layout = '@wma/views/layouts/login';
 
     public function actionLogin()
     {
-        if (!\Yii::$app->user->isGuest) {
+        if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
         $model = new LoginForm();
@@ -27,8 +36,38 @@ class UserController extends Controller
         }
     }
 
+    public function actionForgotPassword()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        $model = new ForgotPasswordForm();
+        if ($model->load(Yii::$app->request->post())) {
+            // handle form
+        }
+        return $this->render('forgot-password', [
+                'model' => $model,
+            ]);
+    }
+
+    public function actionForgotUsername()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        $model = new ForgotUsernameForm();
+        if ($model->load(Yii::$app->request->post())) {
+            // handle form
+        }
+        return $this->render('forgot-username', [
+                'model' => $model,
+            ]);
+    }
+
     public function actionRegister() {
-        if (!\Yii::$app->user->isGuest) {
+        if (   !Yii::$app->user->isGuest
+            || Yii::$app->getAdminModule()->getOption('userRegister', 'webRegistration') !== true
+        ) {
             return $this->goHome();
         }
         $model = new RegisterForm();
@@ -50,6 +89,6 @@ class UserController extends Controller
     {
         Yii::$app->user->logout();
         Yii::$app->session->setFlash('logout', ['heading' => 'Successfully Logged Out','message' => 'User session cleared.', 'icon' => 'sign-out']);
-        return $this->redirect(['/' . \wma\Module::getInstance()->id . '/user/login']);
+        return $this->redirect(['/' . Yii::$app->adminModuleId . '/user/login']);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace wma\widgets;
 
+use Yii;
 use yii\base\Widget;
 use wmc\helpers\Html;
 
@@ -27,24 +28,24 @@ class BodyTag extends Widget
     public function init()
     {
         parent::init();
-        $templateOptions = \wma\Module::getInstance()->templateOptions;
+        $module = Yii::$app->getAdminModule();
         // Theme
-        if ($templateOptions['theme'] !== 'default') {
-            $this->_classes[] = $this->_themeIndex[$templateOptions['theme']];
+        if ($module->getOption('template', 'theme') !== 'default') {
+            $this->_classes[] = $this->_themeIndex[$module->getOption('template', 'theme')];
         }
         // Nav Style
-        if ($templateOptions['navStyle'] !== 'default') {
-            $this->_classes[] = $this->_navStyleIndex[$templateOptions['navStyle']];
+        if ($module->getOption('template', 'navStyle') !== 'default') {
+            $this->_classes[] = $this->_navStyleIndex[$module->getOption('template', 'navStyle')];
         }
         // Fixed Layout
-        if ($templateOptions['fixed-layout'] !== 'none') {
-            if ($templateOptions['fixed-layout'] == 'header') {
+        if ($module->getOption('template', 'fixedLayout') !== 'none') {
+            if ($module->getOption('template', 'fixedLayout') == 'header') {
                 $this->_classes = array_merge($this->_classes, ['fixed-header']);
             } else {
-                if ($templateOptions['fixed-layout'] == 'header+nav') {
+                if ($module->getOption('template', 'fixedLayout') == 'header+nav') {
                     $this->_classes = array_merge($this->_classes, ['fixed-header', 'fixed-navigation']);
                 } else {
-                    if ($templateOptions['fixed-layout'] == 'header+nav+ribbon') {
+                    if ($module->getOption('template', 'fixedLayout') == 'header+nav+ribbon') {
                         $this->_classes = array_merge(
                             $this->_classes,
                             ['fixed-header', 'fixed-navigation', 'fixed-ribbon']
@@ -54,11 +55,11 @@ class BodyTag extends Widget
             }
         }
         // Fixed Footer
-        if ($templateOptions['fixed-footer'] === true) {
+        if ($module->getOption('template', 'fixedFooter') === true) {
             $this->_classes[] = 'fixed-footer';
         }
         // Fixed Width
-        if ($templateOptions['fixed-width'] === true) {
+        if ($module->getOption('template', 'fixedWidth') === true) {
             $this->_classes[] = 'fixed-width';
         }
 

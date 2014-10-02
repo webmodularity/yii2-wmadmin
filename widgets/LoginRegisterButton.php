@@ -14,6 +14,9 @@ class LoginRegisterButton extends Widget
     const LOGIN_BUTTON = 'Sign In';
 
     public function run() {
+        if (Yii::$app->getAdminModule()->getOption('userRegister', 'webRegistration') !== true) {
+            return '';
+        }
         $action = Yii::$app->controller->action->id;
         if ($action == 'login') {
             return Html::tag(
@@ -22,7 +25,7 @@ class LoginRegisterButton extends Widget
                 Html::a(self::REGISTER_BUTTON, 'register', ['class' => 'btn btn-danger']),
                 ['id' => 'extr-page-header-space']
             );
-        } else if ($action == 'register') {
+        } else if (in_array($action, ['register', 'forgot-username', 'forgot-password'])) {
             return Html::tag(
                 'span',
                 Html::tag('span', self::LOGIN_TEXT, ['class' => 'hidden-mobile']) .

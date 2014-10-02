@@ -3,6 +3,7 @@
 namespace wma;
 
 use wmc\helpers\Html;
+use wma\models\User;
 use Yii;
 
 class Module extends \yii\base\Module
@@ -14,13 +15,20 @@ class Module extends \yii\base\Module
     private $_templateOptions = [
         'theme' => 'default',
         'navStyle' => 'default',
-        'fixed-layout' => 'none',
-        'fixed-footer' => false,
-        'fixed-width' => false
-
+        'fixedLayout' => 'none',
+        'fixedFooter' => false,
+        'fixedWidth' => false
     ];
-
-    public $tooltipIconDefaultColor = 'txt-color-teal';
+    private $_userOptions = [
+        'allowCookies' => null, // default defined in wma\components\Application
+        'sessionDuration' => null, // default defined in wma\components\Application
+        'register' => [
+            'webRegistration' => false,
+            'newUserStatus' => User::STATUS_NEW,
+            'newUserRole' => User::ROLE_USER,
+            'confirmationEmail' => false
+        ]
+    ];
 
     /**
      * Publish assets directory and handle module init
@@ -36,7 +44,7 @@ class Module extends \yii\base\Module
     }
 
     /**
-     * Returns file path of published wmadmin/assets/web directory
+     * Returns file path of published admin/assets/web directory
      * @return string admin assets file path
      */
 
@@ -45,7 +53,7 @@ class Module extends \yii\base\Module
     }
 
     /**
-     * Returns URL of published wmadmin/assets/web directory
+     * Returns URL of published admin/assets/web directory
      * @return string admin assets URL
      */
 
@@ -55,14 +63,14 @@ class Module extends \yii\base\Module
 
     /**
      * Set admin template options. Reference SmartAdmin documentation for behaviors.
-     * The fixed-footer,and fixed-width booleans can be combined though the fixed-width toggle
-     * does not work with the 'header+nav' or 'header+nav+ribbon' fixed-layout options.
+     * The fixedFooter,and fixedWidth booleans can be combined though the fixedWidth toggle
+     * does not work with the 'header+nav' or 'header+nav+ribbon' fixedLayout options.
      * options array[
      *  'theme' => (default|dark-elegance|ultra-white|google),
      *  'navStyle' => (default|minified|hidden|top),
-     *  'fixed-layout' => (none|header|header+nav|header+nav+ribbon)
-     *  'fixed-width' => bool (defaults to false),
-     *  'fixed-footer' => bool (defaults to false),
+     *  'fixedLayout' => (none|header|header+nav|header+nav+ribbon)
+     *  'fixedWidth' => bool (defaults to false),
+     *  'fixedFooter' => bool (defaults to false),
      *
      * ]
      * @param $options array set template options via array config
@@ -73,28 +81,81 @@ class Module extends \yii\base\Module
             foreach ($options as $key => $val){
                 if (   ($key == 'theme' && in_array($val,['dark-elegance','ultra-white','google']))
                     || ($key == 'navStyle' && in_array($val,['minified','hidden','top']))
-                    || ($key == 'fixed-layout' && in_array($val,['header','header+nav','header+nav+ribbon']))
+                    || ($key == 'fixedLayout' && in_array($val,['header','header+nav','header+nav+ribbon']))
                 ) {
                     $this->_templateOptions[$key] = $val;
-                } else if (($key == 'fixed-footer' || $key == 'fixed-width') && is_bool($val)) {
-                    $this->_templateOptions[$key] = (bool) $val;
+                } else if (($key == 'fixedFooter' || $key == 'fixedWidth') && is_bool($val)) {
+                    $this->_templateOptions[$key] = $val;
                 }
             }
             // Ensure fixed-layout != header+nav or header+nav+ribbon if fixed-width is true
-            if (    $this->_templateOptions['fixed-width'] === true
-                && ($this->_templateOptions['fixed-layout'] == 'header+nav'
-                || $this->_templateOptions['fixed-layout'] == 'header+nav')
+            if (    $this->_templateOptions['fixedWidth'] === true
+                && ($this->_templateOptions['fixedLayout'] == 'header+nav'
+                || $this->_templateOptions['fixedLayout'] == 'header+nav')
             ) {
-                $this->_templateOptions['fixed-layout'] = 'none';
+                $this->_templateOptions['fixedLayout'] = 'none';
             }
         }
     }
 
     /**
-     * @return array template options
+     * Set admin user options.
+     * options [
+     *  'allowCookies' => bool (default set in wma\components\Application),
+     *  'sessionDuration' => int (seconds) (default *varies based on allowCookies* set in wma\components\Application),
+     *  'register' => [
+     *      'webRegistration' -> bool (allow new admin users via web registration form),
+     *      'confirmationEmail' => bool (send account confirmation email to change status from new to active)
+     *                             Only applies when webRegistration is set to true,
+     *      'newUserStatus' => int (-1:Deleted|0:New|1:Active),
+     *      'newUserRole' => int (1:User->255:SuperAdmin),
+     *   ]
+     * ]
+     * @param $options array set template options via array config
      */
 
-    public function getTemplateOptions() {
-        return $this->_templateOptions;
+    public function setUserOptions($options) {
+        if (is_array($options)) {
+            if (isset($options['register'])) {
+                //register
+                foreach ($options['register'] as $key => $val) {
+                    if (($key == 'newUserStatus'
+                            && filter_var(
+                                $val,
+                                FILTER_VALIDATE_INT,
+                                ["min_range" => User::STATUS_DELETED, "max_range" => User::STATUS_ACTIVE]
+                            )
+                        )
+                        || ($key == 'newUserRole'
+                            && filter_var(
+                                $val,
+                                FILTER_VALIDATE_INT,
+                                ["min_range" => User::ROLE_USER, "max_range" => User::ROLE_SUPERADMIN]
+                            )
+                        )
+
+                    ) {
+                        $this->_userOptions['register'][$key] = $val;
+                    } else {
+                        if (
+                            ($key == 'webRegistration' || $key == 'confirmationEmail')
+                            && is_bool($val)
+                        ) {
+                            $this->_userOptions['register'][$key] = $val;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public function getOption($type, $key) {
+        if ($type == 'userRegister') {
+            $option = $this->_userOptions['register'][$key];
+        } else {
+            $var = '_' . $type . 'Options';
+            $option = isset($this->{$var}[$key]) ? $this->{$var}[$key] : null;
+        }
+        return $option;
     }
 }

@@ -6,6 +6,8 @@ use wmc\helpers\ArrayHelper;
 
 class ActiveForm extends \yii\widgets\ActiveForm
 {
+    public $tooltipIconColorClass = 'txt-color-teal';
+
     /**
      * @inheritdoc
      */
@@ -19,7 +21,9 @@ class ActiveForm extends \yii\widgets\ActiveForm
             'requiredCssClass' => '',
             'errorCssClass' => 'state-error',
             'successCssClass' => 'state-success',
-            'fieldClass' => 'wma\widgets\ActiveField'
+            'fieldClass' => 'wma\widgets\ActiveField',
+            'validateOnBlur' => false,
+            'validateOnChange' => false
         ];
 
         $config = ArrayHelper::mergeClass($mergeConfig, $config, ['options']);
