@@ -5,8 +5,7 @@ use wmc\helpers\Html;
 
 $this->title = 'Reset Password';
 $form = ActiveForm::begin([
-        'options' => ['class' => 'client-form'],
-        'validateOnSubmit' => false
+        'options' => ['class' => 'client-form']
     ]) ?>
     <header>
         <?= $this->title ?>
@@ -14,13 +13,13 @@ $form = ActiveForm::begin([
 
     <fieldset>
         <section>
-            <?= $form->field($model, 'username')->label('Username')->iconAppend('user') ?>
+            <?= $form->field($model, 'username')->label()->iconAppend('user') ?>
         </section>
         <section>
             <span class="timeline-seperator text-center text-primary"> <span class="font-sm">OR</span>
         </section>
         <section>
-            <?= $form->field($model, 'email')->label('Email Address')->iconAppend('envelope')->hint('Enter your username <strong>or</strong> email address and a password reset link will be sent via email.') ?>
+            <?= $form->field($model, 'email')->label()->iconAppend('envelope')->hint('Enter your username <strong>or</strong> email address and a password reset link will be sent via email.') ?>
         </section>
     </fieldset>
 

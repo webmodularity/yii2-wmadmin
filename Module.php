@@ -2,13 +2,17 @@
 
 namespace wma;
 
-use wmc\helpers\Html;
-use wma\models\User;
 use Yii;
+use wma\models\User;
+use yii\base\InvalidConfigException;
 
 class Module extends \yii\base\Module
 {
     public $controllerNamespace = 'wma\controllers';
+
+    public $siteName;
+    public $adminEmail;
+    public $noReplyEmail;
 
     private $_assetPath = null;
     private $_assetUrl = null;
@@ -32,14 +36,23 @@ class Module extends \yii\base\Module
 
     /**
      * Publish assets directory and handle module init
+     * @throws InvalidConfigException
      * @return null
      */
 
     public function init()
     {
-        $asset = \Yii::$app->assetManager->publish('@wma/assets/web',['forceCopy' => false]);
+        if (is_null($this->siteName) || is_null($this->adminEmail) || is_null($this->noReplyEmail)) {
+            throw new InvalidConfigException("wmadmin module requires siteName, adminEmail, and noReplyEmail"
+                . " to be set!");
+        }
+        $asset = Yii::$app->assetManager->publish('@wma/assets/web',['forceCopy' => false]);
         $this->_assetPath = $asset[0];
         $this->_assetUrl = $asset[1];
+
+        // DI
+        Yii::$container->set('yii\behaviors\TimestampBehavior', ['value' => new \yii\db\Expression('NOW()')]);
+
         parent::init();
     }
 
@@ -119,21 +132,12 @@ class Module extends \yii\base\Module
             if (isset($options['register'])) {
                 //register
                 foreach ($options['register'] as $key => $val) {
-                    if (($key == 'newUserStatus'
-                            && filter_var(
-                                $val,
-                                FILTER_VALIDATE_INT,
-                                ["min_range" => User::STATUS_DELETED, "max_range" => User::STATUS_ACTIVE]
-                            )
-                        )
-                        || ($key == 'newUserRole'
-                            && filter_var(
-                                $val,
-                                FILTER_VALIDATE_INT,
-                                ["min_range" => User::ROLE_USER, "max_range" => User::ROLE_SUPERADMIN]
-                            )
-                        )
-
+                    if (
+                        ($key == 'newUserStatus' && is_int($val)
+                            && $val >=  User::STATUS_DELETED && $val <= User::STATUS_ACTIVE)
+                        ||
+                        ($key == 'newUserRole' && is_int($val)
+                            && $val >= User::ROLE_USER && $val <= User::ROLE_SUPERADMIN)
                     ) {
                         $this->_userOptions['register'][$key] = $val;
                     } else {

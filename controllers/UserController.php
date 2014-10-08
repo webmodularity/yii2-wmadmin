@@ -9,17 +9,19 @@ use wma\models\RegisterForm;
 use wma\models\ForgotPasswordForm;
 use wma\models\ForgotUsernameForm;
 use wma\models\User;
+use yii\helpers\Html;
+use wma\models\UserKey;
 
 class UserController extends Controller
 {
+    public $layout = '@wma/views/layouts/login';
+
     public function actions()
     {
         return [
             'error' => ['class' => 'yii\web\ErrorAction'],
         ];
     }
-
-    public $layout = '@wma/views/layouts/login';
 
     public function actionLogin()
     {
@@ -36,14 +38,31 @@ class UserController extends Controller
         }
     }
 
-    public function actionForgotPassword()
-    {
+    public function actionForgotPassword() {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
+
         $model = new ForgotPasswordForm();
-        if ($model->load(Yii::$app->request->post())) {
-            // handle form
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $user = !$model->email ? User::findByUsername($model->username) : User::findByEmail($model->email);
+            if (!is_null($user)) {
+                $key = UserKey::getKey($user->person_id, 'reset-password', Yii::$app->request->getUserIP());
+                Yii::$app->alertManager->addSuccess(
+                    'An email has been sent to the registered email address with instructions on how to reset
+                     your password. Further action is required, check your email.',
+                    'Password Reset Request Sent',
+                    ['icon' => 'hand-o-right']
+                );
+            } else {
+                Yii::$app->alertManager->addDanger(
+                    'Failed to send password reset request, unable to locate user.',
+                    'No Account Found',
+                    ['icon' => 'ban']
+                );
+            }
+
+            return Yii::$app->response->refresh();
         }
         return $this->render('forgot-password', [
                 'model' => $model,
@@ -88,7 +107,7 @@ class UserController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        Yii::$app->session->setFlash('logout', ['heading' => 'Successfully Logged Out','message' => 'User session cleared.', 'icon' => 'sign-out']);
-        return $this->redirect(['/' . Yii::$app->adminModuleId . '/user/login']);
+        Yii::$app->alertManager->addSuccess('User session cleared.', 'Successfully Logged Out', ['icon' => 'sign-out']);
+        return Yii::$app->getResponse()->redirect(Yii::$app->user->loginUrl);
     }
 }

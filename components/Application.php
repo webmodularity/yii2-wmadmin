@@ -55,6 +55,17 @@ class Application extends \yii\web\Application
             $config['components']['session']['timeout'] = $sessionDuration;
         }
 
+        // AlertManager
+        $config['components']['alertManager'] = [
+            'class' => 'wmc\web\AlertManager',
+            'alertClass' => 'wma\widgets\Alert'
+        ];
+
+        // Formatter
+        $config['components']['formatter'] = [
+            'class' => 'wmc\components\Formatter'
+        ];
+
         // errorHandler
         $config['components']['errorHandler'] = isset($config['components']['errorHandler'])
             ? $config['components']['errorHandler']
