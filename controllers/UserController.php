@@ -3,14 +3,14 @@
 namespace wma\controllers;
 
 use Yii;
-use wma\controllers\Controller;
-use wma\models\LoginForm;
-use wma\models\RegisterForm;
-use wma\models\ForgotPasswordForm;
-use wma\models\ForgotUsernameForm;
-use wma\models\User;
 use yii\helpers\Html;
-use wma\models\UserKey;
+use wma\controllers\Controller;
+use wmc\models\LoginForm;
+use wmc\models\RegisterForm;
+use wmc\models\ForgotPasswordForm;
+use wmc\models\ForgotUsernameForm;
+use wmc\models\User;
+use wmc\models\UserKey;
 
 class UserController extends Controller
 {
@@ -28,7 +28,9 @@ class UserController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-        $model = new LoginForm();
+        $model = new LoginForm([
+                'sessionDuration' => Yii::$app->adminModule->getOption('user', 'sessionDuration')
+            ]);
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {

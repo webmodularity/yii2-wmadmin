@@ -3,7 +3,7 @@
 namespace wma;
 
 use Yii;
-use wma\models\User;
+use wmc\models\User;
 use yii\base\InvalidConfigException;
 
 class Module extends \yii\base\Module

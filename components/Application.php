@@ -36,13 +36,13 @@ class Application extends \yii\web\Application
         } else {
             $sessionDuration = isset($wmadmin['userOptions']['sessionDuration']) && is_int($wmadmin['userOptions']['sessionDuration'])
                 ? $wmadmin['userOptions']['sessionDuration']
-                : 60 * 60; // 1 hour
+                : 60 * 60 * 4; // 4 hours
         }
         $wmadmin['userOptions']['sessionDuration'] = $sessionDuration;
 
         // user
         $config['components']['user'] = [
-            'identityClass' => 'wma\models\User',
+            'identityClass' => 'wmc\models\User',
             'loginUrl' => ['/'  . $this->_adminModuleId . '/user/login'],
             'enableAutoLogin' => $enableAutoLogin,
         ];
