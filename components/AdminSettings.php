@@ -1,31 +1,21 @@
 <?php
 
-namespace wma;
+namespace wma\components;
 
-use Yii;
 use wmc\models\User;
 use yii\base\InvalidConfigException;
 
-class Module extends \yii\base\Module
+class AdminSettings extends \yii\base\Component
 {
-    public $controllerNamespace = 'wma\controllers';
-
-    public $siteName;
-    public $adminEmail;
-    public $noReplyEmail;
-
-    private $_assetPath = null;
-    private $_assetUrl = null;
-    private $_templateOptions = [
+    private $_template = [
         'theme' => 'default',
         'navStyle' => 'default',
         'fixedLayout' => 'none',
         'fixedFooter' => false,
         'fixedWidth' => false
     ];
-    private $_userOptions = [
-        'allowCookies' => null, // default defined in wma\components\Application
-        'sessionDuration' => null, // default defined in wma\components\Application
+    private $_user = [
+        'sessionDuration' => 14400,
         'register' => [
             'webRegistration' => false,
             'newUserStatus' => User::STATUS_NEW,
@@ -34,44 +24,10 @@ class Module extends \yii\base\Module
         ]
     ];
 
-    /**
-     * Publish assets directory and handle module init
-     * @throws InvalidConfigException
-     * @return null
-     */
-
-    public function init()
-    {
-        if (is_null($this->siteName) || is_null($this->adminEmail) || is_null($this->noReplyEmail)) {
-            throw new InvalidConfigException("wmadmin module requires siteName, adminEmail, and noReplyEmail"
-                . " to be set!");
+    public function setAdminSettings($settings) {
+        foreach ($settings as $key => $val) {
+            $this->$key = $val;
         }
-        $asset = Yii::$app->assetManager->publish('@wma/assets/web',['forceCopy' => false]);
-        $this->_assetPath = $asset[0];
-        $this->_assetUrl = $asset[1];
-
-        // DI
-        Yii::$container->set('yii\behaviors\TimestampBehavior', ['value' => new \yii\db\Expression('NOW()')]);
-
-        parent::init();
-    }
-
-    /**
-     * Returns file path of published admin/assets/web directory
-     * @return string admin assets file path
-     */
-
-    public function getAssetPath() {
-        return $this->_assetPath;
-    }
-
-    /**
-     * Returns URL of published admin/assets/web directory
-     * @return string admin assets URL
-     */
-
-    public function getAssetUrl() {
-        return $this->_assetUrl;
     }
 
     /**
@@ -89,24 +45,24 @@ class Module extends \yii\base\Module
      * @param $options array set template options via array config
      */
 
-    public function setTemplateOptions($options) {
+    public function setTemplate($options) {
         if (is_array($options)) {
             foreach ($options as $key => $val){
                 if (   ($key == 'theme' && in_array($val,['dark-elegance','ultra-white','google']))
                     || ($key == 'navStyle' && in_array($val,['minified','hidden','top']))
                     || ($key == 'fixedLayout' && in_array($val,['header','header+nav','header+nav+ribbon']))
                 ) {
-                    $this->_templateOptions[$key] = $val;
+                    $this->_template[$key] = $val;
                 } else if (($key == 'fixedFooter' || $key == 'fixedWidth') && is_bool($val)) {
-                    $this->_templateOptions[$key] = $val;
+                    $this->_template[$key] = $val;
                 }
             }
             // Ensure fixed-layout != header+nav or header+nav+ribbon if fixed-width is true
-            if (    $this->_templateOptions['fixedWidth'] === true
-                && ($this->_templateOptions['fixedLayout'] == 'header+nav'
-                || $this->_templateOptions['fixedLayout'] == 'header+nav')
+            if (    $this->_template['fixedWidth'] === true
+                && ($this->_template['fixedLayout'] == 'header+nav'
+                    || $this->_template['fixedLayout'] == 'header+nav')
             ) {
-                $this->_templateOptions['fixedLayout'] = 'none';
+                $this->_template['fixedLayout'] = 'none';
             }
         }
     }
@@ -114,8 +70,8 @@ class Module extends \yii\base\Module
     /**
      * Set admin user options.
      * options [
-     *  'allowCookies' => bool (default set in wma\components\Application),
-     *  'sessionDuration' => int (seconds) (default *varies based on allowCookies* set in wma\components\Application),
+     *  'enableAutoLogin' => bool (default set in wma\web\Application),
+     *  'sessionDuration' => int (seconds) (default *varies based on allowCookies* set in wma\web\Application),
      *  'register' => [
      *      'webRegistration' -> bool (allow new admin users via web registration form),
      *      'confirmationEmail' => bool (send account confirmation email to change status from new to active)
@@ -127,7 +83,7 @@ class Module extends \yii\base\Module
      * @param $options array set template options via array config
      */
 
-    public function setUserOptions($options) {
+    public function setUser($options) {
         if (is_array($options)) {
             if (isset($options['register'])) {
                 //register
@@ -139,13 +95,13 @@ class Module extends \yii\base\Module
                         ($key == 'newUserRole' && is_int($val)
                             && $val >= User::ROLE_USER && $val <= User::ROLE_SUPERADMIN)
                     ) {
-                        $this->_userOptions['register'][$key] = $val;
+                        $this->_user['register'][$key] = $val;
                     } else {
                         if (
                             ($key == 'webRegistration' || $key == 'confirmationEmail')
                             && is_bool($val)
                         ) {
-                            $this->_userOptions['register'][$key] = $val;
+                            $this->_user['register'][$key] = $val;
                         }
                     }
                 }
@@ -153,13 +109,20 @@ class Module extends \yii\base\Module
         }
     }
 
-    public function getOption($type, $key) {
-        if ($type == 'userRegister') {
-            $option = $this->_userOptions['register'][$key];
-        } else {
-            $var = '_' . $type . 'Options';
-            $option = isset($this->{$var}[$key]) ? $this->{$var}[$key] : null;
+    public function getOption($index) {
+        $parts = explode('.', $index);
+        $type = '_' . array_shift($parts);
+        if (isset($this->$type)) {
+            if (count($parts) > 0) {
+                $property = $this->$type;
+                while (count($parts > 0)) {
+                    $val = array_shift($parts);
+                    $property = $property[$val];
+                }
+                return $property;
+            }
         }
-        return $option;
+        throw new InvalidConfigException('No property found at ' . $index . '.');
     }
+
 }
