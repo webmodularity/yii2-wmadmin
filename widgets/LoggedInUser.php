@@ -17,7 +17,8 @@ class LoggedInUser extends Widget
         $validNames = [
             'username' => Yii::$app->user->identity->username,
             'name' => Yii::$app->user->identity->person->first_name,
-            'full_name' => Yii::$app->user->identity->person->first_name . "&nbsp;" . Yii::$app->user->identity->person->last_name,
+            'full_name' => Yii::$app->user->identity->person->first_name
+                . "&nbsp;" . Yii::$app->user->identity->person->last_name,
             'email' => Yii::$app->user->identity->person->email
         ];
             $this->_displayName = $validNames[$type];

@@ -14,7 +14,7 @@ class LogoutButton extends Widget
             'span',
             Html::a(
                 FA::icon('sign-out'),
-                ['/' . Yii::$app->adminModuleId . '/user/logout'],
+                ['/user/logout'],
                 [
                     'title' => 'Sign Out',
                     'data-action' => 'userLogout',

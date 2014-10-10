@@ -14,7 +14,8 @@ class ActiveField extends \yii\widgets\ActiveField
 
     public $inline = false;
     public $placeholder = null;
-    public $template = "{label}\n{beginInputLabel}{iconPrepend}\n{iconAppend}\n{input}\n{tooltip}\n{endInputLabel}\n{error}\n{hint}";
+    public $template = "{label}\n{beginInputLabel}{iconPrepend}\n{iconAppend}
+        {input}\n{tooltip}\n{endInputLabel}\n{error}\n{hint}";
     private $_inputLabelType = 'input';
 
     /**
@@ -59,7 +60,8 @@ class ActiveField extends \yii\widgets\ActiveField
                 $this->parts['{endInputLabel}'] = Html::endTag('label');
             }
             if (!isset($this->parts['{error}'])) {
-                $this->parts['{error}'] = Html::tag('span', '', ['class' => self::ERROR_STATE_CLASS]) . Html::error($this->model, $this->attribute, $this->errorOptions);
+                $this->parts['{error}'] = Html::tag('span', '', ['class' => self::ERROR_STATE_CLASS])
+                    . Html::error($this->model, $this->attribute, $this->errorOptions);
             }
             if (!isset($this->parts['{hint}'])) {
                 $this->parts['{hint}'] = '';
@@ -147,7 +149,12 @@ class ActiveField extends \yii\widgets\ActiveField
     public function checkbox($options = [], $enclosedByLabel = true)
     {
         $class = isset($options['class']) ? $options['class'] . ' checkbox' : 'checkbox';
-        $this->parts['{input}'] = Html::activeCheckbox($this->model, $this->attribute, ['label' => '<i></i>' . $this->model->getAttributeLabel(Html::getAttributeName($this->attribute)),'labelOptions' => ['class' => $class]]);
+        $this->parts['{input}'] = Html::activeCheckbox($this->model, $this->attribute,
+            [
+                'label' => '<i></i>' . $this->model->getAttributeLabel(Html::getAttributeName($this->attribute)),
+                'labelOptions' => ['class' => $class]
+            ]
+        );
         $this->parts['{beginInputLabel}'] = '';
         $this->parts['{endInputLabel}'] = '';
         return $this;
@@ -194,7 +201,9 @@ class ActiveField extends \yii\widgets\ActiveField
             }
         }  elseif (!isset($options['item'])) {
             $options['item'] = function ($index, $label, $name, $checked, $value) {
-                return '<div class="checkbox">' . Html::checkbox($name, $checked, ['label' => $label, 'value' => $value]) . '</div>';
+                return '<div class="checkbox">'
+                    . Html::checkbox($name, $checked, ['label' => $label, 'value' => $value])
+                    . '</div>';
             };
         }
         parent::checkboxList($items, $options);
@@ -220,7 +229,9 @@ class ActiveField extends \yii\widgets\ActiveField
             }
         }  elseif (!isset($options['item'])) {
             $options['item'] = function ($index, $label, $name, $checked, $value) {
-                return '<div class="radio">' . Html::radio($name, $checked, ['label' => $label, 'value' => $value]) . '</div>';
+                return '<div class="radio">'
+                    . Html::radio($name, $checked, ['label' => $label, 'value' => $value])
+                    . '</div>';
             };
         }
         parent::radioList($items, $options);

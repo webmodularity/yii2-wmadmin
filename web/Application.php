@@ -10,6 +10,10 @@ class Application extends \yii\web\Application
 {
     private $_adminAssetPath;
     private $_adminAssetUrl;
+    private $_requiredParams = [
+        'adminEmail',
+        'noReplyEmail'
+    ];
 
     public function preInit(&$config) {
         $adminSettings = ArrayHelper::remove($config, 'adminSettings');
@@ -17,13 +21,14 @@ class Application extends \yii\web\Application
             throw new InvalidConfigException('The WMAdmin Application requires a configuration key
              named adminSettings.');
         }
-
+        // Require params
+        foreach ($this->_requiredParams as $requiredParam) {
+            if (!isset($config['params'][$requiredParam])) {
+                throw new InvalidConfigException('The ' . $requiredParam . ' paramater is required for WMAdmin.');
+            }
+        }
         // Components
-<<<<<<< HEAD
-        $config['components'] = !isset($config['components']) ? $config['components'] : [];
-=======
-        $config['componets'] = !isset($config['components']) ? $config['components'] : [];
->>>>>>> 979b5798df257154b1b3fede1abc781cbabc9294
+        $config['components'] = isset($config['components']) ? $config['components'] : [];
         // Normalize enableAutoLogin
         $enableAutoLogin = isset($adminSettings['user']['enableAutoLogin'])
         && $adminSettings['user']['enableAutoLogin'] === true
@@ -89,6 +94,7 @@ class Application extends \yii\web\Application
     }
 
     public function init() {
+        @parent::init();
         $asset = Yii::$app->assetManager->publish('@wma/assets',['forceCopy' => false]);
         $this->_adminAssetPath = $asset[0];
         $this->_adminAssetUrl = $asset[1];

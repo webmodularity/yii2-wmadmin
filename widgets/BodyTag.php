@@ -28,24 +28,23 @@ class BodyTag extends Widget
     public function init()
     {
         parent::init();
-        $module = Yii::$app->getAdminModule();
         // Theme
-        if ($module->getOption('template', 'theme') !== 'default') {
-            $this->_classes[] = $this->_themeIndex[$module->getOption('template', 'theme')];
+        if (Yii::$app->adminSettings->getOption('template.theme') !== 'default') {
+            $this->_classes[] = $this->_themeIndex[Yii::$app->adminSettings->getOption('template.theme')];
         }
         // Nav Style
-        if ($module->getOption('template', 'navStyle') !== 'default') {
-            $this->_classes[] = $this->_navStyleIndex[$module->getOption('template', 'navStyle')];
+        if (Yii::$app->adminSettings->getOption('template.navStyle') !== 'default') {
+            $this->_classes[] = $this->_navStyleIndex[Yii::$app->adminSettings->getOption('template.navStyle')];
         }
         // Fixed Layout
-        if ($module->getOption('template', 'fixedLayout') !== 'none') {
-            if ($module->getOption('template', 'fixedLayout') == 'header') {
+        if (Yii::$app->adminSettings->getOption('template.fixedLayout') !== 'none') {
+            if (Yii::$app->adminSettings->getOption('template.fixedLayout') == 'header') {
                 $this->_classes = array_merge($this->_classes, ['fixed-header']);
             } else {
-                if ($module->getOption('template', 'fixedLayout') == 'header+nav') {
+                if (Yii::$app->adminSettings->getOption('template.fixedLayout') == 'header+nav') {
                     $this->_classes = array_merge($this->_classes, ['fixed-header', 'fixed-navigation']);
                 } else {
-                    if ($module->getOption('template', 'fixedLayout') == 'header+nav+ribbon') {
+                    if (Yii::$app->adminSettings->getOption('template.fixedLayout') == 'header+nav+ribbon') {
                         $this->_classes = array_merge(
                             $this->_classes,
                             ['fixed-header', 'fixed-navigation', 'fixed-ribbon']
@@ -55,11 +54,11 @@ class BodyTag extends Widget
             }
         }
         // Fixed Footer
-        if ($module->getOption('template', 'fixedFooter') === true) {
+        if (Yii::$app->adminSettings->getOption('template.fixedFooter') === true) {
             $this->_classes[] = 'fixed-footer';
         }
         // Fixed Width
-        if ($module->getOption('template', 'fixedWidth') === true) {
+        if (Yii::$app->adminSettings->getOption('template.fixedWidth') === true) {
             $this->_classes[] = 'fixed-width';
         }
 

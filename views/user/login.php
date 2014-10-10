@@ -31,7 +31,7 @@ $form = ActiveForm::begin([
                 ]
             ])->passwordInput()->iconAppend('lock')->hint(Html::a('Forgot password?', 'forgot-password'));
 
-        if (Yii::$app->getAdminModule()->getOption('user', 'allowCookies') === true) {
+        if (Yii::$app->getUser()->enableAutoLogin === true) {
             echo $form->field($model, 'rememberMe')->checkbox()->label(false);
         }
         ?>

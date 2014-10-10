@@ -1,6 +1,6 @@
 <?php
 use wmc\helpers\Html;
-use wma\assets\AdminAsset;
+use wma\web\AdminAsset;
 use wma\widgets\BodyTag;
 use wma\widgets\LogoImage;
 use wma\widgets\LogoutButton;
@@ -111,7 +111,7 @@ $this->registerJs("pageSetUp();");
         <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
             <li class="">
                 <a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
-                    <img src="<?= Yii::$app->getAdminModule()->assetUrl ?>/img/avatars/sunny.png" alt="John Doe" class="online" />
+                    <img src="<?= Yii::$app->adminAssetUrl ?>/img/avatars/sunny.png" alt="John Doe" class="online" />
                 </a>
                 <ul class="dropdown-menu pull-right">
                     <li>

@@ -15,6 +15,6 @@ class LogoImage extends Widget
     }
 
     public function run() {
-        return Html::tag('span',' ' . Html::img(Yii::$app->getAdminModule()->assetUrl.'/img/logo.png',['alt' => 'Web Modularity']) . ' ',['id' => 'logo']);
+        return Html::tag('span',' ' . Html::img(Yii::$app->adminAssetUrl.'/img/logo.png',['alt' => 'Web Modularity']) . ' ',['id' => 'logo']);
     }
 }

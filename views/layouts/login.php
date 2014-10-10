@@ -1,6 +1,6 @@
 <?php
 use wmc\helpers\Html;
-use wma\assets\AdminAsset;
+use wma\web\AdminAsset;
 use wma\widgets\LogoImage;
 use wma\widgets\LoginRegisterButton;
 use wma\widgets\Alert;

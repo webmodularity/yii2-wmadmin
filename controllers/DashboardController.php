@@ -23,11 +23,11 @@ class DashboardController extends \wma\controllers\Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->render('@wma/views/dashboard/index');
     }
 
     public function actionGo() {
-        return $this->redirect(['dashboard/index']);
+        return $this->redirect(['/dashboard/index']);
     }
 
 }

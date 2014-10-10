@@ -14,7 +14,7 @@ class LoginRegisterButton extends Widget
     const LOGIN_BUTTON = 'Sign In';
 
     public function run() {
-        if (Yii::$app->getAdminModule()->getOption('userRegister', 'webRegistration') !== true) {
+        if (Yii::$app->adminSettings->getOption('user.register.webRegistration') !== true) {
             return '';
         }
         $action = Yii::$app->controller->action->id;

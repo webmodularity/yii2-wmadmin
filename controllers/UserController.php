@@ -3,8 +3,7 @@
 namespace wma\controllers;
 
 use Yii;
-use yii\helpers\Html;
-use wma\controllers\Controller;
+use wmc\helpers\Html;
 use wmc\models\LoginForm;
 use wmc\models\RegisterForm;
 use wmc\models\ForgotPasswordForm;
@@ -12,29 +11,32 @@ use wmc\models\ForgotUsernameForm;
 use wmc\models\User;
 use wmc\models\UserKey;
 
-class UserController extends Controller
+class UserController extends \wma\controllers\Controller
 {
     public $layout = '@wma/views/layouts/login';
 
-    public function actions()
-    {
-        return [
-            'error' => ['class' => 'yii\web\ErrorAction'],
-        ];
+    public function actionError() {
+        Yii::$app->alertManager->addDanger(
+            Yii::$app->errorHandler->exception->getMessage(),
+            Yii::$app->errorHandler->exception->getName(),
+            ['block' => true]
+        );
+        $this->redirect(['/user/login']);
     }
 
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
+            die(var_dump(Yii::$app->getUser()));
             return $this->goHome();
         }
         $model = new LoginForm([
-                'sessionDuration' => Yii::$app->adminModule->getOption('user', 'sessionDuration')
+                'sessionDuration' => Yii::$app->adminSettings->getOption('user.sessionDuration')
             ]);
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
-            return $this->render('login', [
+            return $this->render('@wma/views/user/login', [
                     'model' => $model,
                 ]);
         }
@@ -66,7 +68,7 @@ class UserController extends Controller
 
             return Yii::$app->response->refresh();
         }
-        return $this->render('forgot-password', [
+        return $this->render('@wma/views/user/forgot-password', [
                 'model' => $model,
             ]);
     }
@@ -80,14 +82,14 @@ class UserController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             // handle form
         }
-        return $this->render('forgot-username', [
+        return $this->render('@wma/views/user/forgot-username', [
                 'model' => $model,
             ]);
     }
 
     public function actionRegister() {
         if (   !Yii::$app->user->isGuest
-            || Yii::$app->getAdminModule()->getOption('userRegister', 'webRegistration') !== true
+            || Yii::$app->adminSettings->getOption('user.register.webRegistration') !== true
         ) {
             return $this->goHome();
         }
@@ -101,7 +103,7 @@ class UserController extends Controller
             }
         }
 
-        return $this->render('register', [
+        return $this->render('@wma/views/user/register', [
                 'model' => $model
             ]);
     }

@@ -115,7 +115,7 @@ class AdminSettings extends \yii\base\Component
         if (isset($this->$type)) {
             if (count($parts) > 0) {
                 $property = $this->$type;
-                while (count($parts > 0)) {
+                while (count($parts) > 0) {
                     $val = array_shift($parts);
                     $property = $property[$val];
                 }
