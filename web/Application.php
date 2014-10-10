@@ -19,7 +19,11 @@ class Application extends \yii\web\Application
         }
 
         // Components
+<<<<<<< HEAD
         $config['components'] = !isset($config['components']) ? $config['components'] : [];
+=======
+        $config['componets'] = !isset($config['components']) ? $config['components'] : [];
+>>>>>>> 979b5798df257154b1b3fede1abc781cbabc9294
         // Normalize enableAutoLogin
         $enableAutoLogin = isset($adminSettings['user']['enableAutoLogin'])
         && $adminSettings['user']['enableAutoLogin'] === true
