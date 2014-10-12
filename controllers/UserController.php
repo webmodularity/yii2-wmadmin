@@ -10,6 +10,7 @@ use wmc\models\ForgotPasswordForm;
 use wmc\models\ForgotUsernameForm;
 use wmc\models\User;
 use wmc\models\UserKey;
+use yii\helpers\Url;
 
 class UserController extends \wma\controllers\Controller
 {
@@ -51,7 +52,13 @@ class UserController extends \wma\controllers\Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $user = !$model->email ? User::findByUsername($model->username) : User::findByEmail($model->email);
             if (!is_null($user)) {
-                $key = UserKey::getKey($user->person_id, 'reset-password', Yii::$app->request->getUserIP());
+                $key = UserKey::getKey($user->person_id, 'reset-password');
+                // Generate Email
+                $this->sendEmail('reset-password', $user->person->email,
+                    [
+                        'link' => Url::toRoute(['/user/forgot-password', 'key' => $key->user_key], true),
+                    ]
+                );
                 Yii::$app->alertManager->addSuccess(
                     'An email has been sent to the registered email address with instructions on how to reset
                      your password. Further action is required, check your email.',
@@ -113,5 +120,9 @@ class UserController extends \wma\controllers\Controller
         Yii::$app->user->logout();
         Yii::$app->alertManager->addSuccess('User session cleared.', 'Successfully Logged Out', ['icon' => 'sign-out']);
         return Yii::$app->getResponse()->redirect(Yii::$app->user->loginUrl);
+    }
+
+    protected function sendEmail($type, $emailTo, $emailData = []) {
+        die(var_dump($emailData));
     }
 }
