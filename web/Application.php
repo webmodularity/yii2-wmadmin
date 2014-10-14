@@ -56,10 +56,11 @@ class Application extends \yii\web\Application
         ];
 
         // session
+        $config['components']['session'] = isset($config['components']['session'])
+            ? $config['components']['session']
+            : [];
+        $config['components']['session']['class'] = 'yii\web\DbSession';
         if ($enableAutoLogin === false) {
-            $config['components']['session'] = isset($config['components']['session'])
-                ? $config['components']['session']
-                : [];
             $config['components']['session']['timeout'] = $sessionDuration;
         }
 
@@ -101,7 +102,8 @@ class Application extends \yii\web\Application
 
         // DI
         Yii::$container->set('yii\behaviors\TimestampBehavior', ['value' => new \yii\db\Expression('NOW()')]);
-
+        Yii::$container->set('wmc\models\UserLog', ['backend' => 1]);
+        Yii::$container->set('wmc\models\LoginForm', ['sessionDuration' => Yii::$app->adminSettings->getOption('user.sessionDuration')]);
     }
 
     /**
