@@ -12,6 +12,7 @@ use wmc\models\ForgotUsernameForm;
 use wmc\models\User;
 use wmc\models\UserKey;
 use wmc\models\UserLog;
+use wmc\models\UserLogFailed;
 
 class UserController extends \wma\controllers\Controller
 {
@@ -67,6 +68,16 @@ class UserController extends \wma\controllers\Controller
                     ['icon' => 'hand-o-right']
                 );
             } else {
+                $failedReason = !$model->email
+                    ? UserLogFailed::REASON_BAD_USERNAME
+                    : UserLogFailed::REASON_BAD_EMAIL;
+                $failedData = !$model->email ? $model->username : $model->email;
+                UserLogFailed::add(
+                    UserLogFailed::ACTION_RESET_PASSWORD,
+                    $failedReason,
+                    null,
+                    $failedData
+                );
                 Yii::$app->alertManager->add(
                     'danger',
                     'Failed to send password reset request, unable to locate user.',
