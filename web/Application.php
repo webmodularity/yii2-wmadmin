@@ -50,7 +50,7 @@ class Application extends \yii\web\Application
 
         // user
         $config['components']['user'] = [
-            'identityClass' => 'wmc\models\User',
+            'identityClass' => 'wmu\models\User',
             'loginUrl' => ['/user/login'],
             'enableAutoLogin' => $enableAutoLogin,
         ];
@@ -102,8 +102,7 @@ class Application extends \yii\web\Application
 
         // DI
         Yii::$container->set('yii\behaviors\TimestampBehavior', ['value' => new \yii\db\Expression('NOW()')]);
-        Yii::$container->set('wmc\models\UserLog', ['backend' => 1]);
-        Yii::$container->set('wmc\models\LoginForm', ['sessionDuration' => Yii::$app->adminSettings->getOption('user.sessionDuration')]);
+        Yii::$container->set('wmu\models\LoginForm', ['sessionDuration' => Yii::$app->adminSettings->getOption('user.sessionDuration')]);
     }
 
     /**

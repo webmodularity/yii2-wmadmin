@@ -2,7 +2,7 @@
 
 namespace wma\components;
 
-use wmc\models\User;
+use wmu\models\User;
 use yii\base\InvalidConfigException;
 
 class AdminSettings extends \yii\base\Component

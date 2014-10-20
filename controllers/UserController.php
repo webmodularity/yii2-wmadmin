@@ -4,7 +4,7 @@ namespace wma\controllers;
 
 use Yii;
 
-class UserController extends \wmu\controllers\BackendController
+class UserController extends \wmu\controllers\BackendUserController
 {
     public $layout = '@wma/views/layouts/login';
 
