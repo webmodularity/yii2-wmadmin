@@ -20,7 +20,7 @@ class AdminSettings extends \yii\base\Component
             'webRegistration' => false,
             'newUserStatus' => User::STATUS_NEW,
             'newUserRole' => User::ROLE_USER,
-            'confirmationEmail' => false
+            'confirmEmail' => true
         ]
     ];
 
@@ -74,7 +74,7 @@ class AdminSettings extends \yii\base\Component
      *  'sessionDuration' => int (seconds) (default *varies based on allowCookies* set in wma\web\Application),
      *  'register' => [
      *      'webRegistration' -> bool (allow new admin users via web registration form),
-     *      'confirmationEmail' => bool (send account confirmation email to change status from new to active)
+     *      'confirmEmail' => bool (send account confirmation email to change status from new to active)
      *                             Only applies when webRegistration is set to true,
      *      'newUserStatus' => int (-1:Deleted|0:New|1:Active),
      *      'newUserRole' => int (1:User->255:SuperAdmin),
@@ -98,7 +98,7 @@ class AdminSettings extends \yii\base\Component
                         $this->_user['register'][$key] = $val;
                     } else {
                         if (
-                            ($key == 'webRegistration' || $key == 'confirmationEmail')
+                            ($key == 'webRegistration' || $key == 'confirmEmail')
                             && is_bool($val)
                         ) {
                             $this->_user['register'][$key] = $val;

@@ -11,6 +11,7 @@ class Application extends \yii\web\Application
     private $_adminAssetPath;
     private $_adminAssetUrl;
     private $_requiredParams = [
+        'siteName',
         'adminEmail',
         'noReplyEmail'
     ];
@@ -24,7 +25,7 @@ class Application extends \yii\web\Application
         // Require params
         foreach ($this->_requiredParams as $requiredParam) {
             if (!isset($config['params'][$requiredParam])) {
-                throw new InvalidConfigException('The ' . $requiredParam . ' paramater is required for WMAdmin.');
+                throw new InvalidConfigException('The ' . $requiredParam . ' parameter is required for WMAdmin.');
             }
         }
         // Components
@@ -81,6 +82,12 @@ class Application extends \yii\web\Application
             'class' => 'wmc\components\Formatter'
         ];
 
+        // urlManager
+        $config['components']['urlManager'] = isset($config['components']['urlManager'])
+            ? $config['components']['urlManager']
+            : [];
+        $config['components']['urlManager']['class'] = 'wma\web\UrlManager';
+
         // errorHandler
         $config['components']['errorHandler'] = isset($config['components']['errorHandler'])
             ? $config['components']['errorHandler']
@@ -103,6 +110,7 @@ class Application extends \yii\web\Application
         // DI
         Yii::$container->set('yii\behaviors\TimestampBehavior', ['value' => new \yii\db\Expression('NOW()')]);
         Yii::$container->set('wmu\models\LoginForm', ['sessionDuration' => Yii::$app->adminSettings->getOption('user.sessionDuration')]);
+        Yii::$container->set('wmc\swiftmailer\Mailer', ['htmlLayout' => '@wma/mail/layouts/html']);
     }
 
     /**

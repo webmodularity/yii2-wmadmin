@@ -13,11 +13,4 @@ class UserController extends \wmu\controllers\BackendUserController
     public $viewFileForgotUsername = '@wma/views/user/forgot-username';
     public $viewFileRegister = '@wma/views/user/register';
 
-    public function actionRegister() {
-        if (Yii::$app->adminSettings->getOption('user.register.webRegistration') !== true) {
-            return $this->goHome();
-        }
-        return parent::actionRegister();
-    }
-
 }
