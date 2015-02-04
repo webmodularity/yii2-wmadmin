@@ -13,7 +13,8 @@
         "php": ">=5.4.0",
         "yiisoft/yii2": "*",
         "webmod/yii2-wmuser": "dev-master",
-        "webmod/yii2-wmcommon": "dev-master"
+        "webmod/yii2-wmcommon": "dev-master",
+        "mdmsoft/yii2-admin": "dev-master"
 
     },
     "autoload": {
