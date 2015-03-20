@@ -3,6 +3,7 @@
 namespace wma\components;
 
 use wmu\models\User;
+use wmu\models\UserGroup;
 use yii\base\InvalidConfigException;
 
 class AdminSettings extends \yii\base\Component
@@ -19,7 +20,7 @@ class AdminSettings extends \yii\base\Component
         'register' => [
             'webRegistration' => false,
             'newUserStatus' => User::STATUS_NEW,
-            'newUserRole' => User::ROLE_USER,
+            'newUserRole' => UserGroup::USER,
             'confirmEmail' => true
         ]
     ];
@@ -93,7 +94,7 @@ class AdminSettings extends \yii\base\Component
                             && $val >=  User::STATUS_DELETED && $val <= User::STATUS_ACTIVE)
                         ||
                         ($key == 'newUserRole' && is_int($val)
-                            && $val >= User::ROLE_USER && $val <= User::ROLE_SUPERADMIN)
+                            && $val >= UserGroup::USER && $val <= UserGroup::SU)
                     ) {
                         $this->_user['register'][$key] = $val;
                     } else {
