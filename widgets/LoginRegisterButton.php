@@ -4,9 +4,8 @@ namespace wma\widgets;
 
 use Yii;
 use wmc\helpers\Html;
-use yii\base\Widget;
 
-class LoginRegisterButton extends Widget
+class LoginRegisterButton extends \yii\base\Widget
 {
     const REGISTER_TEXT = 'New User?';
     const REGISTER_BUTTON = 'Register';

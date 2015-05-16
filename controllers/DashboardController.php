@@ -30,4 +30,8 @@ class DashboardController extends \wma\controllers\Controller
         return $this->redirect(['/dashboard/index']);
     }
 
+    public function actionAjax() {
+        return $this->renderAjax('@wma/views/dashboard/random', ['random' => rand(1,100)]);
+    }
+
 }

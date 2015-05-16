@@ -15,13 +15,13 @@ $form = ActiveForm::begin([
         <?php
         echo $form->field(
             $model,
-            'username',
+            'email',
             [
                 'inputOptions' => [
                     'tabindex' => 1,
                     'autofocus' => 'autofocus'
                 ]
-            ])->iconAppend('user')->hint(Html::a('Forgot username?', 'forgot-username'));
+            ])->iconAppend('envelope ');
         echo $form->field(
             $model,
             'password',

@@ -14,74 +14,25 @@ class ActiveField extends \yii\widgets\ActiveField
 
     public $inline = false;
     public $placeholder = null;
-    public $template = "{label}\n{beginInputLabel}{iconPrepend}\n{iconAppend}
-        {input}\n{tooltip}\n{endInputLabel}\n{error}\n{hint}";
+    public $template = "{label}\n<label class='input'>{input}</label>\n{hint}\n{error}";
+    public $hintOptions = [
+        'tag' => 'div',
+        'class' => 'note'
+    ];
+    public $errorOptions = [
+        'tag' => 'em',
+        'class' => 'invalid'
+    ];
+    public $labelOptions = [
+        'class' => 'label'
+    ];
+    public $options = [
+        'tag' => 'section'
+    ];
+
     private $_inputLabelType = 'input';
 
-    /**
-     * @inheritdoc
-     */
-    public function __construct($config = [])
-    {
-        $layoutConfig = [
-            'hintOptions' => [
-                'tag' => 'div',
-                'class' => 'note'
-            ],
-            'errorOptions' => [
-                'tag' => 'em',
-                'class' => 'invalid'
-            ],
-            'labelOptions' => [
-                'class' => 'label'
-            ],
-            'options' => [
-                'tag' => 'section'
-            ]
-        ];
-        $config = ArrayHelper::merge($layoutConfig, $config);
-        return parent::__construct($config);
-    }
 
-    /**
-     * @inheritdoc
-     */
-    public function render($content = null)
-    {
-        if ($content === null) {
-            if (!isset($this->parts['{input}'])) {
-                $this->parts['{input}'] = Html::activeTextInput($this->model, $this->attribute, $this->inputOptions);
-            }
-            if (!isset($this->parts['{label}'])) {
-                $this->parts['{label}'] = Html::activeLabel($this->model, $this->attribute, $this->labelOptions);
-            }
-            if (!isset($this->parts['{beginInputLabel}'])) {
-                $this->parts['{beginInputLabel}'] = Html::beginTag('label', ['class' => $this->_inputLabelType]);
-                $this->parts['{endInputLabel}'] = Html::endTag('label');
-            }
-            if (!isset($this->parts['{error}'])) {
-                $this->parts['{error}'] = Html::tag('span', '', ['class' => self::ERROR_STATE_CLASS])
-                    . Html::error($this->model, $this->attribute, $this->errorOptions);
-            }
-            if (!isset($this->parts['{hint}'])) {
-                $this->parts['{hint}'] = '';
-            }
-            if (!isset($this->parts['{tooltip}'])) {
-                $this->parts['{tooltip}'] = '';
-            }
-            if (!isset($this->parts['{iconAppend}'])) {
-                $this->parts['{iconAppend}'] = '';
-            }
-            if (!isset($this->parts['{iconPrepend}'])) {
-                $this->parts['{iconPrepend}'] = '';
-            }
-            $content = strtr($this->template, $this->parts);
-        } elseif (!is_string($content)) {
-            $content = call_user_func($content, $this);
-        }
-
-        return $this->begin() . "\n" . $content . "\n" . $this->end();
-    }
 
     public function iconAppend($faIconName = null)
     {
@@ -146,106 +97,41 @@ class ActiveField extends \yii\widgets\ActiveField
     /**
      * @inheritdoc
      */
-    public function checkbox($options = [], $enclosedByLabel = true)
-    {
-        $class = isset($options['class']) ? $options['class'] . ' checkbox' : 'checkbox';
-        $this->parts['{input}'] = Html::activeCheckbox($this->model, $this->attribute,
-            [
-                'label' => '<i></i>' . $this->model->getAttributeLabel(Html::getAttributeName($this->attribute)),
-                'labelOptions' => ['class' => $class]
-            ]
-        );
-        $this->parts['{beginInputLabel}'] = '';
-        $this->parts['{endInputLabel}'] = '';
-        return $this;
-    }
 
-    /**
-     * @inheritdoc
-     */
-    public function radio($options = [], $enclosedByLabel = true)
-    {
-        if ($enclosedByLabel) {
-            if (!isset($options['template'])) {
-                $this->template = $this->form->layout === 'horizontal' ?
-                    $this->horizontalRadioTemplate : $this->radioTemplate;
-            } else {
-                $this->template = $options['template'];
-                unset($options['template']);
-            }
-            if ($this->form->layout === 'horizontal') {
-                Html::addCssClass($this->wrapperOptions, $this->horizontalCssClasses['offset']);
-            }
-            $this->labelOptions['class'] = null;
-        }
-
-        return parent::radio($options, false);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function checkboxList($items, $options = [])
-    {
+    public function radioList($items, $options = []) {
         if ($this->inline) {
-            if (!isset($options['template'])) {
-                $this->template = $this->inlineCheckboxListTemplate;
-            } else {
-                $this->template = $options['template'];
-                unset($options['template']);
-            }
-            if (!isset($options['itemOptions'])) {
-                $options['itemOptions'] = [
-                    'labelOptions' => ['class' => 'checkbox-inline'],
-                ];
-            }
-        }  elseif (!isset($options['item'])) {
+            $this->template = "{label}\n{input}<i></i>\n{hint}\n{error}";
+            $options['class'] = 'inline-group';
+            $options['itemOptions'] = ['label' => null];
             $options['item'] = function ($index, $label, $name, $checked, $value) {
-                return '<div class="checkbox">'
-                    . Html::checkbox($name, $checked, ['label' => $label, 'value' => $value])
-                    . '</div>';
+                return '<label class="radio">'
+                    . Html::radio($name, $checked, ['label' => null, 'value' => $value])
+                    . $label
+                    . '<i></i>'
+                    . '</label>';
             };
-        }
-        parent::checkboxList($items, $options);
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function radioList($items, $options = [])
-    {
-        if ($this->inline) {
-            if (!isset($options['template'])) {
-                $this->template = $this->inlineRadioListTemplate;
-            } else {
-                $this->template = $options['template'];
-                unset($options['template']);
-            }
-            if (!isset($options['itemOptions'])) {
-                $options['itemOptions'] = [
-                    'labelOptions' => ['class' => 'radio-inline'],
-                ];
-            }
         }  elseif (!isset($options['item'])) {
+            // TODO: REVIEW THIS, MAKING INLINE WORK FIRST -->
             $options['item'] = function ($index, $label, $name, $checked, $value) {
                 return '<div class="radio">'
-                    . Html::radio($name, $checked, ['label' => $label, 'value' => $value])
-                    . '</div>';
+                . Html::radio($name, $checked, ['label' => $label, 'value' => $value])
+                . '</div>';
             };
         }
-        parent::radioList($items, $options);
+        $this->adjustLabelFor($options);
+        $this->parts['{input}'] = Html::activeRadioList($this->model, $this->attribute, $items, $options);
         return $this;
     }
 
     /**
+     * Make sure you call this method before [[checkboxList()]] or [[radioList()]] to have any effect.
      * @param bool $value whether to render a inline list
      * @return static the field object itself
-     * Make sure you call this method before [[checkboxList()]] or [[radioList()]] to have any effect.
      */
-    public function inline($value = true)
-    {
-        $this->inline = (bool)$value;
-        return $this;
+
+    public function inline($value = true) {
+    $this->inline = (bool)$value;
+    return $this;
     }
+
 }

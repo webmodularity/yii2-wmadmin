@@ -13,7 +13,9 @@ class AdminSettings extends \yii\base\Component
         'navStyle' => 'default',
         'fixedLayout' => 'none',
         'fixedFooter' => false,
-        'fixedWidth' => false
+        'fixedWidth' => false,
+        'headerDropdown' => false,
+        'notificationButton' => false
     ];
     private $_user = [
         'sessionDuration' => 14400,
@@ -41,6 +43,8 @@ class AdminSettings extends \yii\base\Component
      *  'fixedLayout' => (none|header|header+nav|header+nav+ribbon)
      *  'fixedWidth' => bool (defaults to false),
      *  'fixedFooter' => bool (defaults to false),
+     *  'headerDropdown' => bool (defaults to true)
+     *  'notificationButton' => bool (defaults to true)
      *
      * ]
      * @param $options array set template options via array config
@@ -49,9 +53,10 @@ class AdminSettings extends \yii\base\Component
     public function setTemplate($options) {
         if (is_array($options)) {
             foreach ($options as $key => $val){
-                if (   ($key == 'theme' && in_array($val,['dark-elegance','ultra-white','google']))
+                if (   ($key == 'theme' && in_array($val,['dark-elegance','ultra-white','google','pixel-smash', 'glass']))
                     || ($key == 'navStyle' && in_array($val,['minified','hidden','top']))
                     || ($key == 'fixedLayout' && in_array($val,['header','header+nav','header+nav+ribbon']))
+                    || (is_bool($val) && in_array($key, ['headerDropdown', 'notificationButton']))
                 ) {
                     $this->_template[$key] = $val;
                 } else if (($key == 'fixedFooter' || $key == 'fixedWidth') && is_bool($val)) {

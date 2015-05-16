@@ -3,10 +3,9 @@
 namespace wma\widgets;
 
 use Yii;
-use yii\base\Widget;
 use wmc\helpers\Html;
 
-class LogoImage extends Widget
+class LogoImage extends \yii\base\Widget
 {
     public function init() {
         parent::init();

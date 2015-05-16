@@ -1,16 +1,30 @@
 <?php
 
+/**
+ * Creates a <body> tag suitable for SmartAdmin v1.5.* based on options set in adminSettings
+ * Supports 6 skins (default, dark-elegance, ultra-white, google, pixel-smash, glass)
+ */
+
 namespace wma\widgets;
 
 use Yii;
-use yii\base\Widget;
 use wmc\helpers\Html;
 
-class BodyTag extends Widget
+class BodyTag extends \yii\base\Widget
 {
     private $_classes = [];
     private $_htmlOptions = [];
-    private $_themeIndex = ['dark-elegance' => 'smart-style-1','ultra-white' => 'smart-style-2','google' => 'smart-style-3'];
+    /**
+     * When adding a new skin be sure to modify wma\components\AdminSettings to allow new common name to be set
+     * @var array Converts common names to body class name
+     */
+    private $_themeIndex = [
+        'dark-elegance' => 'smart-style-1',
+        'ultra-white' => 'smart-style-2',
+        'google' => 'smart-style-3',
+        'pixel-smash' => 'smart-style-4',
+        'glass' => 'smart-style-5'
+    ];
     private $_navStyleIndex = ['minified' => 'minified','hidden' => 'hidden-menu','top' => 'menu-on-top'];
 
     /**
@@ -59,7 +73,7 @@ class BodyTag extends Widget
         }
         // Fixed Width
         if (Yii::$app->adminSettings->getOption('template.fixedWidth') === true) {
-            $this->_classes[] = 'fixed-width';
+            $this->_classes[] = 'container';
         }
 
         if (count($this->_classes) > 0) {

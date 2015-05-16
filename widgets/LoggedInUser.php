@@ -4,21 +4,17 @@ namespace wma\widgets;
 
 use Yii;
 use wmc\helpers\Html;
-use yii\base\Widget;
 use rmrevin\yii\fontawesome\FA;
 
-class LoggedInUser extends Widget
+class LoggedInUser extends \yii\base\Widget
 {
-    private $_avatarSource;
-
     private $_displayName;
 
     public function setDisplayName($type) {
         $validNames = [
             'username' => Yii::$app->user->identity->username,
-            'name' => Yii::$app->user->identity->person->first_name,
-            'full_name' => Yii::$app->user->identity->person->first_name
-                . "&nbsp;" . Yii::$app->user->identity->person->last_name,
+            'name' => Yii::$app->user->identity->person->personName->first_name,
+            'full_name' => Yii::$app->user->identity->person->personName->fullName,
             'email' => Yii::$app->user->identity->person->email
         ];
             $this->_displayName = $validNames[$type];
@@ -26,34 +22,33 @@ class LoggedInUser extends Widget
 
     public function init() {
         if (!$this->_displayName) {
-            $this->displayName = 'username';
+            $this->_displayName = 'username';
         }
-        // Future support for more than gravatar
-        $gravatarHash = md5(strtolower(Yii::$app->user->identity->person->email));
-        $this->_avatarSource = 'http://www.gravatar.com/avatar/' . $gravatarHash . '?s=120';
         parent::init();
     }
 
     public function run() {
-        return Html::tag(
-            'span',
-            Html::a(
-                Html::img(
-                    $this->_avatarSource,
-                    ['class' => 'online']
+        return Html::tag('div',
+            Html::tag(
+                'span',
+                Html::a(
+                    Html::img(
+                        UserIcon::widget(),
+                        ['class' => 'online']
+                    )
+                    . Html::tag(
+                        'span',
+                        $this->_displayName
+                    )
+                    . '&nbsp;'
+                    . FA::icon('angle-down'),
+                    "javascript:void(0);",
+                    [
+                        'id' => 'show-shortcut',
+                        'data-action' => 'toggleShortcut'
+                    ]
                 )
-                . Html::tag(
-                    'span',
-                    $this->_displayName
-                )
-                . '&nbsp;'
-                . FA::icon('angle-down'),
-                "javascript:void(0);",
-                [
-                    'id' => 'show-shortcut',
-                    'data-action' => 'toggleShortcut'
-                ]
             )
-        );
+        , ['class' => 'login-info']);
     }
 }

@@ -4,10 +4,9 @@ namespace wma\widgets;
 
 use Yii;
 use wmc\helpers\Html;
-use yii\base\Widget;
 use rmrevin\yii\fontawesome\FA;
 
-class LogoutButton extends Widget
+class LogoutButton extends \yii\base\Widget
 {
     public function run() {
         return Html::tag(
