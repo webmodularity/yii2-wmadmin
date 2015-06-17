@@ -5,7 +5,7 @@ use wmc\helpers\Html;
 
 $this->title = 'Register';
 $form = ActiveForm::begin([
-        'options' => ['class' => 'client-form']
+        'options' => ['class' => 'smart-form client-form']
     ]) ?>
     <header>
         Register New Account

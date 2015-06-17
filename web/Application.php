@@ -79,7 +79,8 @@ class Application extends \yii\web\Application
 
         // Formatter
         $config['components']['formatter'] = [
-            'class' => 'wmc\components\Formatter'
+            'class' => 'wmc\components\Formatter',
+            'nullDisplay' => '<em>NULL</span>'
         ];
 
         // urlManager
@@ -111,6 +112,7 @@ class Application extends \yii\web\Application
         Yii::$container->set('yii\behaviors\TimestampBehavior', ['value' => new \yii\db\Expression('NOW()')]);
         Yii::$container->set('wmu\models\LoginForm', ['sessionDuration' => Yii::$app->adminSettings->getOption('user.sessionDuration')]);
         Yii::$container->set('wmc\swiftmailer\Mailer', ['htmlLayout' => '@wma/mail/layouts/html']);
+        Yii::$container->set('yii\bootstrap\BootstrapAsset', ['css' => ['css/bootstrap.min.css'], 'sourcePath' => '@wma/assets']);
     }
 
     /**

@@ -7,7 +7,7 @@ class ActiveForm extends \yii\widgets\ActiveForm
     public $tooltipIconColorClass = 'txt-color-teal';
     public $options = [
         'role' => 'form',
-        'class' => 'smart-form',
+        'class' => 'smart-form'
     ];
     public $requiredCssClass = '';
     public $errorCssClass = 'state-error';
@@ -15,4 +15,5 @@ class ActiveForm extends \yii\widgets\ActiveForm
     public $fieldClass = 'wma\widgets\ActiveField';
     public $validateOnBlur = false;
     public $validateOnChange = false;
+
 }

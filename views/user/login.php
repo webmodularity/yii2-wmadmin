@@ -5,7 +5,7 @@ use wmc\helpers\Html;
 
 $this->title = 'Login';
 $form = ActiveForm::begin([
-        'options' => ['class' => 'client-form']
+        'options' => ['class' => 'smart-form client-form']
     ]) ?>
     <header>
         Sign In
@@ -21,7 +21,7 @@ $form = ActiveForm::begin([
                     'tabindex' => 1,
                     'autofocus' => 'autofocus'
                 ]
-            ])->iconAppend('envelope ');
+            ])->input('email')->iconAppend('envelope');
         echo $form->field(
             $model,
             'password',

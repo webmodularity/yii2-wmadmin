@@ -19,3 +19,13 @@
  */
 
 html { background:none;}
+
+.smart-form .state-error > em {
+     display: block;
+     margin-top: 6px;
+     padding: 0 1px;
+     font-style: normal;
+     font-size: 11px;
+     line-height: 15px;
+     color: #D56161;
+ }

@@ -1,87 +1,68 @@
 <?php
 
-use wmc\helpers\Html;
-use yii\grid\GridView;
+use wma\grid\GridView;
 use wma\widgets\Ribbon;
 use wma\widgets\Widget;
 use wma\widgets\WidgetBody;
 use wma\widgets\WidgetGrid;
 use wma\widgets\WidgetContainer;
-use wma\widgets\Alert;
 use wma\widgets\PageTitle;
 use wma\widgets\ContentContainer;
-use wma\widgets\ActiveForm;
+use wma\grid\ActionColumn;
+use wma\widgets\ModalForm;
+use yii\helpers\Html;
+use yii\bootstrap\Button;
+use kartik\select2\Select2;
+use rmrevin\yii\fontawesome\FA;
 
-$this->title = 'Menu Builder';
+$this->title = 'Menus';
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['wma-nav'] = 'Menus';
+$addText = 'Add New Menu';
 ?>
 <?= Ribbon::widget() ?>
 
 <?php ContentContainer::begin() ?>
 
-<?= PageTitle::widget(['subTitle' => 'Admin Menu Builder', 'icon' => 'cog']) ?>
+<?= PageTitle::widget(['subTitle' => 'All Root Menus', 'icon' => 'cog']) ?>
+
+<?= Yii::$app->alertManager->render() ?>
 
 <?php WidgetGrid::begin() ?>
-<?php WidgetContainer::begin(['htmlOptions' => ['class' => "col-xs-12 col-sm-12 col-md-6 col-lg-6"]]) ?>
+<?php WidgetContainer::begin(['htmlOptions' => ['class' => "col-xs-12 col-sm-12 col-md-12 col-lg-12"]]) ?>
 <?php Widget::begin(
     [
         'id' => 'menu-list-all',
-        'title' => 'Menu Items',
+        'title' => 'Menus',
         'icon' => 'list',
         'buttons' => ['toggle'],
-        'sortable' => true
+        'sortable' => true,
+        'toolbars' => [
+            Button::widget([
+                'options' => [
+                    'class' => 'btn-success',
+                    'data-target' => '#menuAddModal',
+                    'data-toggle' => 'modal'
+                ],
+                'encodeLabel' => false,
+                'label' => FA::icon('plus') . ' ' . Html::tag('span', $addText, ['class' => 'hidden-xs'])
+            ])
+        ]
     ]
 ) ?>
-<?php WidgetBody::begin() ?>
+<?php WidgetBody::begin(['padding' => false]) ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            //'id',
-            'menu_id',
-            'type',
-            //'lft',
-            //'rgt',
-            // 'depth',
-             'name',
-             'link',
-             'icon',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'wma\grid\SerialColumn'],
+            'name',
+            'icon',
+            [
+                'class' => ActionColumn::className()
+            ]
         ],
     ]); ?>
-<?php WidgetBody::end() ?>
-<?php Widget::end() ?>
-<?php WidgetContainer::end() ?>
-
-<?php WidgetContainer::begin(['htmlOptions' => ['class' => "col-xs-12 col-sm-12 col-md-6 col-lg-6"]]) ?>
-<?php Widget::begin(
-    [
-        'id' => 'menu-add-item',
-        'title' => 'Add New Menu Item',
-        'icon' => 'plus',
-        'buttons' => ['toggle'],
-        'sortable' => true
-    ]
-) ?>
-<?php WidgetBody::begin(['padding' => false]) ?>
-
-<?php $form = ActiveForm::begin(); ?>
-<fieldset>
-    <?= $form->field($model, 'child_of') ?>
-    <?= $form->field($model, 'type') ?>
-    <?= $form->field($model, 'name') ?>
-    <?= $form->field($model, 'link') ?>
-    <?= $form->field($model, 'icon') ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
-    </div>
-</fieldset>
-<?php ActiveForm::end(); ?>
-
 <?php WidgetBody::end() ?>
 <?php Widget::end() ?>
 <?php WidgetContainer::end() ?>
@@ -89,3 +70,15 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php WidgetGrid::end() ?>
 
 <?php ContentContainer::end() ?>
+
+<?php
+$form = ModalForm::begin([
+    'id' => 'menuAddModal',
+    'headerText' => $addText,
+    'submitText' => $addText,
+    'size' => ModalForm::SIZE_SMALL,
+    'clientOptions' => ['show' => $addModel->hasErrors()]
+]);
+?>
+<?= $this->render('_form', ['model' => $addModel, 'form' => $form->form]) ?>
+<?php ModalForm::end(); ?>

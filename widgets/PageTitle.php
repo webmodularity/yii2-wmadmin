@@ -84,7 +84,7 @@ class PageTitle extends \yii\base\Widget
 
     protected function getIconHtml() {
         if (!empty($this->_icon)) {
-            return FA::icon($this->_icon)->fixed_width() . ' ';
+            return FA::icon($this->_icon)->fixedWidth() . ' ';
         }
         return ' ';
     }

@@ -32,7 +32,7 @@ class HeaderNavigation extends \yii\base\Widget
 					<li class="">
 						<a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
 EOD;
-        $html .=  Html::img(UserIcon::widget(), ['class' => 'online']);
+        $html .= Html::img(UserIcon::widget(), ['class' => 'online']);
         $html .= <<<EOD
 						</a>
 						<ul class="dropdown-menu pull-right">

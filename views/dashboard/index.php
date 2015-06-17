@@ -10,6 +10,7 @@ use wma\widgets\PageTitle;
 use wma\widgets\ContentContainer;
 
 $this->title = 'Dashboard';
+$this->params['wma-nav'] = "Dashboard";
 ?>
 <?= Ribbon::widget(['links' => ['Dashboard']]) ?>
 
