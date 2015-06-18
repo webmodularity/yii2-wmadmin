@@ -1,76 +1,38 @@
 <?php
 
-/**
- * Needs functionality, currently displays dummy content
- */
-
 namespace wma\widgets;
 
 use Yii;
 use yii\helpers\Html;
+use wmu\models\UserLog;
 
 class Footer extends \yii\base\Widget
 {
+    public $companyName = "WebModularity";
+
+    protected $_lastLogin;
+
     public function init() {
         parent::init();
+        $this->_lastLogin = UserLog::find()->where(['app' => UserLog::APP_BACKEND])->lastLogin(Yii::$app->user->id)->one();
     }
 
     public function run() {
-        return <<<EOD
-<!-- PAGE FOOTER -->
-		<div class="page-footer">
-			<div class="row">
-				<div class="col-xs-12 col-sm-6">
-					<span class="txt-color-white">Webmodularity &copy;2015</span>
-				</div>
-
-				<div class="col-xs-6 col-sm-6 text-right hidden-xs">
-					<div class="txt-color-white inline-block">
-						<i class="txt-color-blueLight hidden-mobile">Last account activity <i class="fa fa-clock-o"></i> <strong>52 mins ago &nbsp;</strong> </i>
-						<div class="btn-group dropup">
-							<button class="btn btn-xs dropdown-toggle bg-color-blue txt-color-white" data-toggle="dropdown">
-								<i class="fa fa-link"></i> <span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu pull-right text-left">
-								<li>
-									<div class="padding-5">
-										<p class="txt-color-darken font-sm no-margin">Download Progress</p>
-										<div class="progress progress-micro no-margin">
-											<div class="progress-bar progress-bar-success" style="width: 50%;"></div>
-										</div>
-									</div>
-								</li>
-								<li class="divider"></li>
-								<li>
-									<div class="padding-5">
-										<p class="txt-color-darken font-sm no-margin">Server Load</p>
-										<div class="progress progress-micro no-margin">
-											<div class="progress-bar progress-bar-success" style="width: 20%;"></div>
-										</div>
-									</div>
-								</li>
-								<li class="divider"></li>
-								<li>
-									<div class="padding-5">
-										<p class="txt-color-darken font-sm no-margin">Memory Load <span class="text-danger">*critical*</span></p>
-										<div class="progress progress-micro no-margin">
-											<div class="progress-bar progress-bar-danger" style="width: 70%;"></div>
-										</div>
-									</div>
-								</li>
-								<li class="divider"></li>
-								<li>
-									<div class="padding-5">
-										<button class="btn btn-block btn-default">refresh</button>
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- END PAGE FOOTER -->
-EOD;
+        return Html::beginTag('div', ['class' => 'page-footer'])
+        . Html::beginTag('div', ['class' => 'row'])
+        . Html::beginTag('div', ['class' => "col-xs-4 col-sm-4"])
+        . Html::tag('span', "&copy;" . date('Y') . " " . $this->companyName, ['class' => 'txt-color-white'])
+        . Html::endTag('div')
+        . Html::beginTag('div', ['class' => "col-xs-8 col-sm-8 text-right"])
+        . Html::beginTag('div', ['class' => "txt-color-blueLight inline-block"])
+        . Html::tag('em', "Last CMS Login: ", ['class' => "hidden-xs"])
+        . Html::tag('i' , '', ['class' => 'fa fa-clock-o txt-color-white']) . '&nbsp;'
+        . Yii::$app->formatter->asLocalDateTime($this->_lastLogin->created_at) . ' '
+        . Html::tag('i' , '', ['class' => 'fa fa-cloud txt-color-white']) . '&nbsp;'
+        . Yii::$app->formatter->asIp($this->_lastLogin->ip)
+        . Html::endTag('div')
+        . Html::endTag('div')
+        . Html::endTag('div')
+        . Html::endTag('div');
     }
 }

@@ -6,20 +6,6 @@ use yii\filters\AccessControl;
 
 class DashboardController extends \wma\controllers\Controller
 {
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ]
-            ],
-        ];
-    }
 
     public function actionIndex()
     {

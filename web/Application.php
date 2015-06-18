@@ -56,6 +56,12 @@ class Application extends \yii\web\Application
             'enableAutoLogin' => $enableAutoLogin,
         ];
 
+        // rbac
+        $config['components']['authManager'] = [
+            'class' => 'wmu\rbac\DbManager',
+            'defaultRoles' => ['su', 'admin', 'author', 'user'],
+        ];
+
         // session
         $config['components']['session'] = isset($config['components']['session'])
             ? $config['components']['session']

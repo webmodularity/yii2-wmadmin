@@ -20,16 +20,8 @@ class MenuController extends \wma\controllers\Controller
 {
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ]
-            ],
+        return ArrayHelper::merge(parent::behaviors(),
+            [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -37,7 +29,7 @@ class MenuController extends \wma\controllers\Controller
                     'delete-item' => ['post']
                 ],
             ],
-        ];
+        ]);
     }
 
     /**
