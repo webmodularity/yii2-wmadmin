@@ -2,10 +2,12 @@
 
 namespace wma\grid;
 
-use yii\helpers\Html;
+use wma\helpers\Html;
 
-class GridView extends \yii\grid\GridView
+class GridViewWidget extends \yii\grid\GridView
 {
+    public $widgetOptions = [];
+
     public $options = [
         'class' => 'table-responsive'
     ];
@@ -22,11 +24,15 @@ class GridView extends \yii\grid\GridView
     public $tableOptions = [
         'class' => 'table table-striped table-bordered smart-form'
     ];
-    public $layout = "{items}\n<div class='widget-footer'>{summary}\n{pager}</div>";
+    public $layout = "<div class='widget-body-toolbar'><div class='row'><div class='col-xs-10'>{summary}\n</div></div></div>{items}\n<div class='widget-footer'>{pager}</div>";
     public $pager = [
         'class' => 'wma\widgets\WidgetFooterPager'
     ];
     public $emptyText = '<a class="btn btn-primary btn-sm disabled pull-left">No Results Found.</a>';
+
+    public function init() {
+
+    }
 
     public function renderSummary() {
         $summary = parent::renderSummary();

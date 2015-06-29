@@ -1,6 +1,6 @@
 <?php
 
-use wma\grid\GridView;
+use wma\widgets\WidgetBodyGridView;
 use wma\widgets\Ribbon;
 use wma\widgets\Widget;
 use wma\widgets\WidgetBody;
@@ -26,7 +26,7 @@ $addText = 'Add New Menu';
 
 <?= PageTitle::widget(['subTitle' => 'All Root Menus', 'icon' => 'cog']) ?>
 
-<?= Yii::$app->alertManager->render() ?>
+<?= Yii::$app->alertManager->get() ?>
 
 <?php WidgetGrid::begin() ?>
 <?php WidgetContainer::begin(['htmlOptions' => ['class' => "col-xs-12 col-sm-12 col-md-12 col-lg-12"]]) ?>
@@ -50,20 +50,21 @@ $addText = 'Add New Menu';
         ]
     ]
 ) ?>
-<?php WidgetBody::begin(['padding' => false]) ?>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'wma\grid\SerialColumn'],
-            'name',
-            'icon',
-            [
-                'class' => ActionColumn::className()
-            ]
-        ],
-    ]); ?>
-<?php WidgetBody::end() ?>
+<?= WidgetBodyGridView::widget([
+    'bodyOptions' => [
+        'padding' => false
+    ],
+    'dataProvider' => $dataProvider,
+    'filterModel' => $searchModel,
+    'columns' => [
+        ['class' => 'wma\grid\SerialColumn'],
+        'name',
+        'icon',
+        [
+            'class' => ActionColumn::className()
+        ]
+    ],
+]); ?>
 <?php Widget::end() ?>
 <?php WidgetContainer::end() ?>
 

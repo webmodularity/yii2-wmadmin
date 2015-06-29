@@ -6,14 +6,11 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQueryInterface;
 use yii\helpers\Inflector;
-use yii\helpers\Html;
+use wma\helpers\Html;
 
 class DataColumn extends \yii\grid\DataColumn
 {
-    public $filterContainerOptions = [
-        'class' => 'no-margin'
-    ];
-
+    public $filterInputOptions = ['id' => null];
     /**
      * @inheritdoc
      */
@@ -53,6 +50,7 @@ class DataColumn extends \yii\grid\DataColumn
     /**
      * @inheritdoc
      */
+
     protected function renderFilterCellContent()
     {
         if (is_string($this->filter)) {
@@ -67,17 +65,10 @@ class DataColumn extends \yii\grid\DataColumn
                 $error = '';
             }
             if (is_array($this->filter)) {
-                // TODO: Convert this to a Select2 widget?
                 $options = array_merge(['prompt' => ''], $this->filterInputOptions);
                 return Html::activeDropDownList($model, $this->attribute, $this->filter, $options) . $error;
             } else {
-                return Html::beginTag('section', $this->filterContainerOptions)
-                . Html::beginTag('label', ['class' => 'input'])
-                . Html::tag('i', '', ['class' => 'icon-append fa fa-search'])
-                . Html::activeTextInput($model, $this->attribute, array_merge($this->filterInputOptions))
-                . Html::endTag('label')
-                . $error
-                . Html::endTag('section');
+                return Html::activeTextInput($model, $this->attribute, array_merge(['iconAppend' => 'search'], $this->filterInputOptions)) . $error;
             }
         } else {
             return parent::renderFilterCellContent();

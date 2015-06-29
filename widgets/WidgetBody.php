@@ -9,6 +9,8 @@ class WidgetBody extends \yii\base\Widget
 {
     protected $_padding = true;
     protected $_editbox = '';
+    protected $_content;
+    protected $_wrap = true;
 
     public function setPadding($padding) {
         if ($padding === false) {
@@ -31,18 +33,50 @@ class WidgetBody extends \yii\base\Widget
         }
     }
 
+    /**
+     * If used as WidgetBody::widget() this will be used as body content
+     * @param $content string Body content
+     */
+
+    public function setContent($content) {
+        $this->_content = $content;
+    }
+
+    /**
+     * Set this to false to turn off the container div tag
+     * @param $wrap bool Include default div wrapper
+     */
+
+    public function setWrap($wrap) {
+        if (is_bool($wrap)) {
+            $this->_wrap = $wrap;
+        }
+    }
+
     public function init()
     {
         parent::init();
-        ob_start();
+        if (empty($this->_content)) {
+            ob_start();
+        }
     }
 
     public function run() {
-        $content = ob_get_clean();
-        return Html::beginTag('div')
-            . $this->getEditboxHtml()
-            . Html::tag('div', $content, $this->getWidgetBodyHtmlOptions())
-        . Html::endTag('div');
+        if (empty($this->_content)) {
+            $content = ob_get_clean();
+        } else {
+            $content = $this->_content;
+        }
+        $bodyParts = [];
+        if ($this->_wrap === true) {
+            $bodyParts[] = Html::beginTag('div');
+        }
+        $bodyParts[] = $this->getEditboxHtml();
+        $bodyParts[] = Html::tag('div', $content, $this->getWidgetBodyHtmlOptions());
+        if ($this->_wrap === true) {
+            $bodyParts[] = Html::endTag('div');;
+        }
+        return implode('', $bodyParts);
     }
 
     protected function getWidgetBodyHtmlOptions() {

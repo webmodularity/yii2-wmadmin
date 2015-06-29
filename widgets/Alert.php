@@ -27,7 +27,7 @@ class Alert extends \wmc\widgets\Alert
     public function getHeadingHtml()
     {
         if ($this->block === true) {
-            return Html::tag('h4', $this->heading, ['class' => 'alert-heading']);
+            return Html::tag('h4', parent::getIconHtml() . $this->heading, ['class' => 'alert-heading']);
         } else {
             return parent::getHeadingHtml();
         }

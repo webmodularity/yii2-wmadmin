@@ -14,6 +14,7 @@ class DeleteButton extends \yii\base\Widget
     public $itemName;
     public $idField = 'id';
     public $deleteUrl = "delete";
+    public $disabled = false;
 
     public function init() {
         if (empty($this->itemName)) {
@@ -27,6 +28,7 @@ class DeleteButton extends \yii\base\Widget
             . Html::tag('span', '&nbsp;' . $this->itemName, ['class' => "hidden-xs hidden-sm"]), null,
             [
                 'class' => 'btn btn-danger',
+                'disabled' => $this->disabled,
                 'data-wma-delete-url' => Url::to([$this->deleteUrl, 'id' => $this->model->{$idField}]),
                 'data-wma-delete-item-name' => $this->itemName
             ]);

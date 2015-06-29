@@ -22,6 +22,23 @@ $this->params['wma-nav'] = "Dashboard";
 <div class="well">
     <div class="row">
         <div class="col-md-4">
+            <?= Html::img(Yii::$app->adminAssetUrl.'/img/server-maintenance.jpg', ['class' => "img-responsive", 'alt' => "Server Maintenance"]) ?>
+            <ul class="list-inline padding-10">
+                <li>
+                    <i class="fa fa-calendar"></i>
+                    <a href="javascript:void(0);"> June 23, 2015 </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-8 padding-left-0">
+            <h3 class="margin-top-0"><a href="javascript:void(0);"> Server Maintenance - Monday June 29th </a><br><small class="font-xs"><i>Published by <a href="mailto:rory@webmodularity.com">Rory</a></i></small></h3>
+            <p>We will be taking the servers offline on Monday June 29th at 10pm PDT. The expected downtime is 8 hours. Servers expected to be back online on Tuesday June 30th at 6am PDT.</p>
+            <p>We will be addressing several CMS bugs as well as continuing to roll out more CMS features. All services will be unavailable during this time.</p>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
             <?= Html::img(Yii::$app->adminAssetUrl.'/img/cms.jpg', ['class' => "img-responsive", 'alt' => "CMS v2"]) ?>
             <ul class="list-inline padding-10">
                 <li>

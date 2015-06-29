@@ -2,19 +2,13 @@
 
 namespace wma\widgets;
 
-use wmc\helpers\Html;
+use wma\helpers\Html;
 use yii\helpers\ArrayHelper;
 use rmrevin\yii\fontawesome\FA;
 
 class ActiveField extends \yii\widgets\ActiveField
 {
-    const INVALID_CLASS = 'invalid';
-    const ERROR_STATE_CLASS = 'state-error';
-    const TOOLTIP_POSITIONS = 'left,right,top-left,top-right,bottom-left,bottom-right';
-    const TOGGLE_ON_TEXT = "ON";
-    const TOGGLE_OFF_TEXT = "OFF";
-
-    public $template = "{label}\n{inputLabelStart}{input}{inputLabelEnd}\n{error}\n{hint}";
+    public $template = "{label}\n{input}\n{error}\n{hint}";
     public $hintOptions = [
         'tag' => 'div',
         'class' => 'note'
@@ -26,62 +20,35 @@ class ActiveField extends \yii\widgets\ActiveField
     public $labelOptions = [
         'class' => 'label'
     ];
+    public $inputOptions = [];
     public $options = [
         'tag' => 'section'
     ];
 
-    public $_inline = false;
-
     /**
-     * @var string The class that will be applied to the input label wrapper, set this to null to disable input label wrapper
-     */
-    private $_inputLabel = 'input';
-    private $_inject = [
-        'label' => [
-            'before' => [],
-            'after' => []
-        ],
-        'input' => [
-            'before' => [],
-            'after' => []
-        ],
-        'error' => [
-            'before' => [],
-            'after' => []
-        ],
-        'hint' => [
-            'before' => [],
-            'after' => []
-        ]
-    ];
-
-    /**
-     * @inheritdoc
+     * Unchanged from parent implementation, using to make ActiveForm::field() get wrapped in SmartAdmin styles
      */
 
-    public function render($content = null) {
-        $this->buildTemplate();
-        return parent::render($content);
-    }
-
-    /**
-     * Builds final template based on assembled settings
-     */
-
-    protected function buildTemplate() {
-        // Handle Label Input Wrapper
-        $start = !empty($this->_inputLabel) ?  Html::beginTag('label', ['class' => $this->_inputLabel]) : '';
-        $end = !empty($this->_inputLabel) ? Html::endTag('label') : '';
-        $this->template = str_replace('{inputLabelStart}', $start, $this->template);
-        $this->template = str_replace('{inputLabelEnd}', $end, $this->template);
-        // Inject
-        foreach ($this->_inject as $injectType => $inject) {
-            if (count($inject['before']) > 0 || count($inject['after']) > 0) {
-                $replace = "{" . $injectType . "}";
-                $content = implode('', $inject['before']) . $replace . implode('', $inject['after']);
-                $this->template = str_replace($replace, $content, $this->template);
+    public function render($content = null)
+    {
+        if ($content === null) {
+            if (!isset($this->parts['{input}'])) {
+                $this->textInput();
             }
+            if (!isset($this->parts['{label}'])) {
+                $this->label();
+            }
+            if (!isset($this->parts['{error}'])) {
+                $this->error();
+            }
+            if (!isset($this->parts['{hint}'])) {
+                $this->hint(null);
+            }
+            $content = strtr($this->template, $this->parts);
+        } elseif (!is_string($content)) {
+            $content = call_user_func($content, $this);
         }
+        return $this->begin() . "\n" . $content . "\n" . $this->end();
     }
 
     /**
@@ -92,42 +59,47 @@ class ActiveField extends \yii\widgets\ActiveField
 
     public function iconAppend($faIconName = null) {
         if (is_string($faIconName) && !empty($faIconName)) {
-            $this->inject('input', 'before', FA::icon($faIconName, ['class' => 'icon-append']));
+            $this->inputOptions['iconAppend'] = $faIconName;
         }
         return $this;
     }
+
+    /**
+     * Attach a FontAwesome icon to front of input
+     * @param null $faIconName FontAwesome icon name, without fa- (use envelope rather than fa-envelope)
+     * @return $this
+     */
 
     public function iconPrepend($faIconName = null) {
         if (is_string($faIconName) && !empty($faIconName)) {
-            $this->inject('input', 'before', FA::icon($faIconName, ['class' => 'icon-prepend']));
+            $this->inputOptions['iconPrepend'] = $faIconName;
         }
         return $this;
     }
 
-    public function tooltip($tooltipText, $position = 'top-right', $tooltipIcon = null, $tooltipIconOptions = [])
-    {
-        $position = in_array($position, explode(',', self::TOOLTIP_POSITIONS)) ? $position : 'top-right';
-            if (!is_null($tooltipIcon)) {
-                if (!is_array($tooltipIconOptions) || count($tooltipIconOptions) < 1) {
-                    // Set to default tooltip color
-                    $tooltipIconOptions = ['class' => $this->form->tooltipIconColorClass];
-                }
-                $tooltip = FA::icon($tooltipIcon, $tooltipIconOptions) . ' ' . $tooltipText;
-            } else {
-                $tooltip = $tooltipText;
-            }
-        $this->inject('input', 'after', Html::tag('b', $tooltip, ['class' => 'tooltip tooltip-' . $position]));
-        $this->iconAppend('question-circle');
+    /**
+     * Add a tooltip to a text or textarea input. The content is not HTML encoded and can include icons, etc.
+     * @param $content string The content of tooltip, not HTML encoded
+     * @param string $position Controls tooltip placement on parent input element. The following positions are recognized:
+     * top-right (default), bottom-right, right, top-left, bottom-left, left
+     * @param string $iconPosition Set to either append (default) or prepend the fa-question-circle icon to parent input element
+     * @return $this
+     */
+
+    public function tooltip($content, $position = 'top-right', $iconPosition = 'append') {
+        $this->inputOptions['tooltip'] = compact('content', 'position', 'iconPosition');
         return $this;
     }
 
+    /**
+     * Adds grid class to field container
+     * @param $colspanLength int The number of grid columns
+     * @return $this
+     */
+
     public function colSpan($colspanLength) {
         if (is_int($colspanLength)) {
-            if (isset($this->options['class'])) {
-                $this->options['class'] .= ' col col-' . $colspanLength;
-            } else {
-                $this->options['class'] = 'col col-' . $colspanLength;
-            }
+            Html::addCssClass($this->options, "col col-" . $colspanLength . "");
         }
         return $this;
     }
@@ -156,132 +128,13 @@ class ActiveField extends \yii\widgets\ActiveField
     }
 
     /**
-     * Modifies radioList to match SmartForm style as well as adds new cols option for displaying radios in row format
-     * Also adds inline() functionality - make sure to call {{static::inline()}} BEFORE radioList!
-     * @param array $items the data item used to generate the radio buttons.
-     * The array values are the labels, while the array keys are the corresponding radio values.
-     * @param array $options options (name => config) for the radio button list.
-     * For the list of available options please refer to the `$options` parameter of [[\yii\helpers\Html::activeRadioList()]].
-     * WMA specific options:
-     * - cols: int Number of columns. (1,2,3,4,6,12) (Defaults to 3)
+     * Make sure you call this method before [[checkboxList()]] or [[radioList()]] to have any effect.
      * @return static the field object itself
      */
 
-    public function radioList($items, $options = []) {
-        // Don't wrap input in <label> tag
-        $this->_inputLabel = null;
-        if ($this->_inline) {
-            $options['class'] = 'inline-group';
-            $options['item'] = function ($index, $label, $name, $checked, $value) {
-                return Html::radio($name, $checked, ['label' => $label . Html::tag('i'), 'labelOptions' => ['class' => 'radio'], 'value' => $value]);
-            };
-        } else {
-            $cols = isset($options['cols']) && 12 % $options['cols'] == 0 ? $options['cols'] : 3;
-            unset($options['cols']);
-            $itemCount = count($items);
-            $colSpan = 12 / $cols;
-            $itemsPerCol = ceil($itemCount / $cols);
-            $options['class'] = 'row';
-            $options['item'] = function ($index, $label, $name, $checked, $value) use ($colSpan, $itemCount, $itemsPerCol) {
-                if ($index == 0 || $index % $itemsPerCol == 0) {
-                    $out = Html::beginTag('div', ['class' => "col col-" . $colSpan . ""]);
-                } else {
-                    $out = '';
-                }
-                $out .= Html::radio($name, $checked, ['label' => $label . Html::tag('i'), 'labelOptions' => ['class' => 'radio'], 'value' => $value]);
-                if ($index == ($itemCount - 1) || ($index + 1) % $itemsPerCol == 0) {
-                    $out .= Html::endTag('div');
-                }
-                return $out;
-            };
-        }
-        parent::radioList($items, $options);
+    public function inline() {
+        $this->inputOptions['inline'] = true;
         return $this;
-    }
-
-
-    public function radioToggleList($items, $options = []) {
-        $this->enableClientValidation = false;
-        $this->_inputLabel = null;
-        $onText = isset($options['onText']) && is_string($options['onText']) ? $options['onText'] : static::TOGGLE_ON_TEXT;
-        $offText = isset($options['offText']) && is_string($options['offText']) ? $options['offText'] : static::TOGGLE_OFF_TEXT;
-        unset($options['onText'], $options['offText']);
-        $this->adjustLabelFor($options);
-        $options['item'] = function ($index, $label, $name, $checked, $value) use ($onText, $offText) {
-            return Html::radio($name, $checked, ['label' => $label . Html::tag('i', '',['data-swchoff-text' => $offText, 'data-swchon-text' => $onText]), 'labelOptions' => ['class' => 'toggle'], 'value' => $value]);
-        };
-        parent::radioList($items, $options);
-        return $this;
-    }
-
-    /**
-     * Modifies checkboxList to match SmartForm style as well as adds new cols option for displaying radios in row format
-     * Also adds inline() functionality - make sure to call {{static::inline()}} BEFORE checkboxList!
-     * @param array $items the data item used to generate the radio buttons.
-     * The array values are the labels, while the array keys are the corresponding radio values.
-     * @param array $options options (name => config) for the checkbox list.
-     * For the list of available options please refer to the `$options` parameter of [[\yii\helpers\Html::activeCheckboxList()]].
-     * WMA specific options:
-     * - cols: int Number of columns. (1,2,3,4,6,12) (Defaults to 3)
-     * @return static the field object itself
-     */
-
-    public function checkboxList($items, $options = []) {
-        // Don't wrap input in <label> tag
-        $this->_inputLabel = null;
-        if ($this->_inline) {
-            $options['class'] = 'inline-group';
-            $options['item'] = function ($index, $label, $name, $checked, $value) {
-                return Html::checkbox($name, $checked, ['label' => $label . Html::tag('i'), 'labelOptions' => ['class' => 'checkbox'], 'value' => $value]);
-            };
-        } else {
-            $cols = isset($options['cols']) && 12 % $options['cols'] == 0 ? $options['cols'] : 3;
-            unset($options['cols']);
-            $itemCount = count($items);
-            $colSpan = 12 / $cols;
-            $itemsPerCol = ceil($itemCount / $cols);
-            $options['class'] = 'row';
-            $options['item'] = function ($index, $label, $name, $checked, $value) use ($colSpan, $itemCount, $itemsPerCol) {
-                if ($index == 0 || $index % $itemsPerCol == 0) {
-                    $out = Html::beginTag('div', ['class' => "col col-" . $colSpan . ""]);
-                } else {
-                    $out = '';
-                }
-                $out .= Html::checkbox($name, $checked, ['label' => $label . Html::tag('i'), 'labelOptions' => ['class' => 'checkbox'], 'value' => $value]);
-                if ($index == ($itemCount - 1) || ($index + 1) % $itemsPerCol == 0) {
-                    $out .= Html::endTag('div');
-                }
-                return $out;
-            };
-        }
-        parent::checkboxList($items, $options);
-        return $this;
-    }
-
-
-    public function checkboxToggleList($items, $options = []) {
-        $this->enableClientValidation = false;
-        $this->_inputLabel = null;
-        $onText = isset($options['onText']) && is_string($options['onText']) ? $options['onText'] : static::TOGGLE_ON_TEXT;
-        $offText = isset($options['offText']) && is_string($options['offText']) ? $options['offText'] : static::TOGGLE_OFF_TEXT;
-        unset($options['onText'], $options['offText']);
-        $this->adjustLabelFor($options);
-        $options['item'] = function ($index, $label, $name, $checked, $value) use ($onText, $offText) {
-            return Html::checkbox($name, $checked, ['label' => $label . Html::tag('i', '',['data-swchoff-text' => $offText, 'data-swchon-text' => $onText]), 'labelOptions' => ['class' => 'toggle'], 'value' => $value]);
-        };
-        parent::checkboxList($items, $options);
-        return $this;
-    }
-
-    /**
-     * @param $type string What {block} to inject around, (label|input|inputLabel|error|hint)
-     * @param $position string before or after
-     */
-
-    protected function inject($type, $position, $code) {
-        if (in_array($type, ['label', 'input', 'error', 'hint']) && in_array($position, ['before', 'after'])) {
-            $this->_inject[$type][$position][] = $code;
-        }
     }
 
     /**
@@ -289,8 +142,57 @@ class ActiveField extends \yii\widgets\ActiveField
      * @return static the field object itself
      */
 
-    public function inline() {
-        $this->_inline = true;
+    public function toggle() {
+        $this->enableClientValidation = false;
+        $this->inputOptions['toggle'] = true;
+        return $this;
+    }
+
+    public function checkboxList($items, $options = [])
+    {
+        $options = array_merge($this->inputOptions, $options);
+        $this->adjustLabelFor($options);
+        $this->parts['{input}'] = Html::activeCheckboxList($this->model, $this->attribute, $items, $options);
+        return $this;
+    }
+
+    public function radioList($items, $options = [])
+    {
+        $options = array_merge($this->inputOptions, $options);
+        $this->adjustLabelFor($options);
+        $this->parts['{input}'] = Html::activeRadioList($this->model, $this->attribute, $items, $options);
+        return $this;
+    }
+
+    public function input($type, $options = [])
+    {
+        $options = array_merge($this->inputOptions, $options);
+        $this->adjustLabelFor($options);
+        $this->parts['{input}'] = Html::activeInput($type, $this->model, $this->attribute, $options);
+        return $this;
+    }
+
+    public function textInput($options = [])
+    {
+        $options = array_merge($this->inputOptions, $options);
+        $this->adjustLabelFor($options);
+        $this->parts['{input}'] = Html::activeTextInput($this->model, $this->attribute, $options);
+        return $this;
+    }
+
+    public function passwordInput($options = [])
+    {
+        $options = array_merge($this->inputOptions, $options);
+        $this->adjustLabelFor($options);
+        $this->parts['{input}'] = Html::activePasswordInput($this->model, $this->attribute, $options);
+        return $this;
+    }
+
+    public function dropDownList($items, $options = [])
+    {
+        $options = array_merge($this->inputOptions, $options);
+        $this->adjustLabelFor($options);
+        $this->parts['{input}'] = Html::activeDropDownList($this->model, $this->attribute, $items, $options);
         return $this;
     }
 

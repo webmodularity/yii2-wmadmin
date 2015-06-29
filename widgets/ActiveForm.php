@@ -2,9 +2,10 @@
 
 namespace wma\widgets;
 
+use Yii;
+
 class ActiveForm extends \yii\widgets\ActiveForm
 {
-    public $tooltipIconColorClass = 'txt-color-teal';
     public $options = [
         'role' => 'form',
         'class' => 'smart-form'

@@ -11,7 +11,7 @@ use wma\widgets\ActiveForm;
 use wma\widgets\DeleteButton;
 use wma\widgets\UpdateButton;
 use wma\widgets\NestedList;
-use yii\helpers\Html;
+use wma\helpers\Html;
 use yii\bootstrap\Button;
 use kartik\select2\Select2;
 use rmrevin\yii\fontawesome\FA;
@@ -28,7 +28,7 @@ $this->params['wma-nav'] = 'Menus';
 
 <?= PageTitle::widget(['title' => 'Menu Item', 'subTitle' => $menuItemForm->name, 'icon' => 'cog']) ?>
 
-<?= Yii::$app->alertManager->render() ?>
+<?= Yii::$app->alertManager->get() ?>
 
 <?php WidgetGrid::begin() ?>
 <?php WidgetContainer::begin(['htmlOptions' => ['class' => "col-xs-12 col-sm-12 col-md-6 col-lg-6"]]) ?>

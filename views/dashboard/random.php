@@ -1,1 +1,0 @@
-<p>This page generates a random number between 1 and 100. <br />Your number has been chosen: <strong><?= $random ?></strong><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />Design stuff that relies on height of content to function sucks....</p>

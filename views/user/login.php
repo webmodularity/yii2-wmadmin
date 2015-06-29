@@ -1,7 +1,7 @@
 <?php
 
 use wma\widgets\ActiveForm;
-use wmc\helpers\Html;
+use wma\helpers\Html;
 
 $this->title = 'Login';
 $form = ActiveForm::begin([
@@ -21,7 +21,7 @@ $form = ActiveForm::begin([
                     'tabindex' => 1,
                     'autofocus' => 'autofocus'
                 ]
-            ])->input('email')->iconAppend('envelope');
+            ])->iconAppend('envelope')->input('email');
         echo $form->field(
             $model,
             'password',
@@ -29,7 +29,7 @@ $form = ActiveForm::begin([
                 'inputOptions' => [
                     'tabindex' => 2
                 ]
-            ])->passwordInput()->iconAppend('lock')->hint(Html::a('Forgot password?', 'forgot-password'));
+            ])->iconAppend('lock')->passwordInput()->hint(Html::a('Forgot password?', 'forgot-password'));
 
         if (Yii::$app->getUser()->enableAutoLogin === true) {
             echo $form->field($model, 'rememberMe')->checkbox()->label(false);

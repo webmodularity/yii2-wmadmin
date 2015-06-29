@@ -12,6 +12,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
+use wma\widgets\Alert;
 
 /**
  * MenuController implements the CRUD actions for Menu model.
@@ -22,14 +23,26 @@ class MenuController extends \wma\controllers\Controller
     {
         return ArrayHelper::merge(parent::behaviors(),
             [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                    'delete-item' => ['post']
+                'access' =>
+                    [
+                        'class' => \yii\filters\AccessControl::className(),
+                        'rules' =>
+                            [
+                                [
+                                    'allow' => true,
+                                    'roles' => ['su'],
+                                ]
+                            ]
+                    ],
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['post'],
+                        'delete-item' => ['post']
+                    ],
                 ],
-            ],
-        ]);
+            ]
+        );
     }
 
     /**
@@ -43,12 +56,14 @@ class MenuController extends \wma\controllers\Controller
         $addModel = new MenuForm();
 
         if (Yii::$app->request->isPost === true && $addModel->load(Yii::$app->request->post()) && $addModel->save()) {
-            Yii::$app->alertManager->add(
-                'success',
-                "The Menu (".$addModel->name.") has been inserted.",
-                'Add Sucessful.',
-                ['block' => true]
-            );
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => "Add Successful!",
+                    'message' => "The Menu (".$addModel->name.") has been inserted.",
+                    'style' => 'success',
+                    'block' => true,
+                    'icon' => 'check-square-o'
+                ]));
             return $this->refresh();
         }
 
@@ -75,31 +90,37 @@ class MenuController extends \wma\controllers\Controller
             && $menuItemForm->position->validate()
         ) {
             if ($menuItemForm->save()) {
-                Yii::$app->alertManager->add(
-                    'success',
-                    "Successfully added a new Menu " . $menuItemForm->typeName . ": (" . $menuItemForm->name . ")",
-                    "Menu " . $menuItemForm->typeName . " Added!",
-                    ['block' => true]
-                );
+                Yii::$app->alertManager->add(Alert::widget(
+                    [
+                        'heading' => "Menu " . $menuItemForm->typeName . " Added!",
+                        'message' => "Successfully added a new Menu " . $menuItemForm->typeName . ": (" . $menuItemForm->name . ")",
+                        'style' => 'success',
+                        'block' => true,
+                        'icon' => 'check-square-o'
+                    ]));
                 return $this->refresh();
             }
         } else if ($menuForm->load(Yii::$app->request->post()) && $menuForm->save()) {
-            Yii::$app->alertManager->add(
-                'success',
-                "Successfully updated ".$menuForm->name."",
-                'Menu Updated!',
-                ['block' => true]
-            );
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => "Menu Updated!",
+                    'message' => "Successfully updated ".$menuForm->name."",
+                    'style' => 'success',
+                    'block' => true,
+                    'icon' => 'check-square-o'
+                ]));
             return $this->refresh();
         }
 
         if ($menuItemForm->hasErrors()) {
-            Yii::$app->alertManager->add(
-                'danger',
-                "Failed to add new ".$menuItemForm->typeName." to Menu!",
-                "Menu ".$menuItemForm->typeName." Add Failed!",
-                ['block' => true]
-            );
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => "Menu ".$menuItemForm->typeName." Add Failed!",
+                    'message' => "Failed to add new ".$menuItemForm->typeName." to Menu!",
+                    'style' => 'danger',
+                    'block' => true,
+                    'icon' => 'times-circle-o'
+                ]));
         }
 
         return $this->render('@wma/views/menu/update', [
@@ -125,30 +146,36 @@ class MenuController extends \wma\controllers\Controller
         );
 
         if ($menuItemForm->load(Yii::$app->request->post(), "MenuItemForm") && $menuItemForm->save()) {
-            Yii::$app->alertManager->add(
-                'success',
-                "Successfully updated " . $menuItemForm->typeName . ": (" . $menuItemForm->name . ")",
-                "Menu " . $menuItemForm->typeName . " Updated!",
-                ['block' => true]
-            );
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => "Menu " . $menuItemForm->typeName . " Updated!",
+                    'message' => "Successfully updated " . $menuItemForm->typeName . ": (" . $menuItemForm->name . ")",
+                    'style' => 'success',
+                    'block' => true,
+                    'icon' => 'check-square-o'
+                ]));
             return $this->refresh();
         } else if ($menuItemForm->position->load(Yii::$app->request->post(), "MenuItemPositionForm") && $menuItemForm->position->validate()) {
             if ($menuAttach = Menu::findOne($menuItemForm->position->item_id)) {
                 if ($menuItemForm->position->moveItem($menuItem, $menuAttach)) {
-                    Yii::$app->alertManager->add(
-                        'success',
-                        "Successfully moved " . $menuItemForm->typeName . ": (" . $menuItemForm->name . ")",
-                        "Menu " . $menuItemForm->typeName . " Moved!",
-                        ['block' => true]
-                    );
+                    Yii::$app->alertManager->add(Alert::widget(
+                        [
+                            'heading' => "Menu " . $menuItemForm->typeName . " Moved!",
+                            'message' => "Successfully moved " . $menuItemForm->typeName . ": (" . $menuItemForm->name . ")",
+                            'style' => 'success',
+                            'block' => true,
+                            'icon' => 'check-square-o'
+                        ]));
                     return $this->refresh();
                 } else {
-                    Yii::$app->alertManager->add(
-                        'danger',
-                        "Failed to move ".$menuItemForm->name."",
-                        "Menu Move Failed!",
-                        ['block' => true]
-                    );
+                    Yii::$app->alertManager->add(Alert::widget(
+                        [
+                            'heading' => "Menu Move Failed!",
+                            'message' => "Failed to move ".$menuItemForm->name."",
+                            'style' => 'danger',
+                            'block' => true,
+                            'icon' => 'times-circle-o'
+                        ]));
                 }
             } else {
                 $menuItemForm->addError('item_id', "Could not locate the specified Menu Item.");
@@ -156,12 +183,14 @@ class MenuController extends \wma\controllers\Controller
         }
 
         if ($menuItemForm->hasErrors()) {
-            Yii::$app->alertManager->add(
-                'danger',
-                "Failed to update ".$menuItemForm->name."",
-                "Menu Update Failed!",
-                ['block' => true]
-            );
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => "Menu Update Failed!",
+                    'message' => "Failed to update ".$menuItemForm->name."",
+                    'style' => 'danger',
+                    'block' => true,
+                    'icon' => 'times-circle-o'
+                ]));
         }
 
         return $this->render('@wma/views/menu/update-item', [
@@ -187,21 +216,23 @@ class MenuController extends \wma\controllers\Controller
             $error = $e->getMessage();
         }
         if ($error !== false) {
-            // Add failed alert
-            Yii::$app->alertManager->add(
-                'danger',
-                "The Menu could not be deleted, the server encountered an error: (".$error.")",
-                'Delete Failed!',
-                ['block' => true]
-            );
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => 'Delete Failed!',
+                    'message' => "The Menu could not be deleted, the server encountered an error: (".$error.")",
+                    'style' => 'danger',
+                    'block' => true,
+                    'icon' => 'times-circle-o'
+                ]));
         } else {
-            // Add success alert
-            Yii::$app->alertManager->add(
-                'success',
-                "The Menu has been removed from the database.",
-                'Menu Deleted!',
-                ['block' => true]
-            );
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => 'Menu Deleted!',
+                    'message' => "The Menu has been removed from the database.",
+                    'style' => 'success',
+                    'block' => true,
+                    'icon' => 'check-square-o'
+                ]));
         }
 
         return $this->redirect(['index']);
@@ -226,22 +257,24 @@ class MenuController extends \wma\controllers\Controller
             $error = $e->getMessage();
         }
         if ($error !== false) {
-            // Add failed alert
-            Yii::$app->alertManager->add(
-                'danger',
-                "The Menu Item could not be deleted, the server encountered an error: (".$error.")",
-                'Menu Item Delete Failed!',
-                ['block' => true]
-            );
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => 'Menu Item Delete Failed!',
+                    'message' => "The Menu Item could not be deleted, the server encountered an error: (".$error.")",
+                    'style' => 'danger',
+                    'block' => true,
+                    'icon' => 'times-circle-o'
+                ]));
             return $this->refresh();
         } else {
-            // Add success alert
-            Yii::$app->alertManager->add(
-                'success',
-                "The Menu Item has been removed from the database.",
-                'Menu Item Deleted!',
-                ['block' => true]
-            );
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => 'Menu Item Deleted!',
+                    'message' => "The Menu Item has been removed from the database.",
+                    'style' => 'success',
+                    'block' => true,
+                    'icon' => 'check-square-o'
+                ]));
             return $this->redirect(['update', 'id' => $treeId]);
         }
     }

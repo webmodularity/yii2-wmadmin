@@ -28,6 +28,16 @@ class Application extends \yii\web\Application
                 throw new InvalidConfigException('The ' . $requiredParam . ' parameter is required for WMAdmin.');
             }
         }
+        // Controller Map
+        $adminControllerMap = [
+            'user' => 'wma\controllers\UserController',
+            'user-admin' => 'wma\controllers\UserAdminController',
+            'dashboard' => 'wma\controllers\DashboardController',
+            'menu' => 'wma\controllers\MenuController'
+        ];
+        $config['controllerMap'] = isset($config['controllerMap']) ? ArrayHelper::merge($adminControllerMap, $config['controllerMap']) : $adminControllerMap;
+
+
         // Components
         $config['components'] = isset($config['components']) ? $config['components'] : [];
         // Normalize enableAutoLogin
@@ -48,6 +58,12 @@ class Application extends \yii\web\Application
                 : 60 * 60 * 4; // 4 hours
         }
         $adminSettings['user']['sessionDuration'] = $sessionDuration;
+
+        // bootstrap
+        $bootstrap = ['log'];
+        $config['bootstrap'] = isset($config['bootstrap'])
+            ? ArrayHelper::merge($bootstrap, $config['bootstrap'])
+            : $bootstrap;
 
         // user
         $config['components']['user'] = [
@@ -73,8 +89,7 @@ class Application extends \yii\web\Application
 
         // AlertManager
         $config['components']['alertManager'] = [
-            'class' => 'wmc\web\AlertManager',
-            'alertClass' => 'wma\widgets\Alert'
+            'class' => 'wmc\web\AlertManager'
         ];
 
         // AdminSettings
@@ -86,7 +101,7 @@ class Application extends \yii\web\Application
         // Formatter
         $config['components']['formatter'] = [
             'class' => 'wmc\components\Formatter',
-            'nullDisplay' => '<em>NULL</span>'
+            'nullDisplay' => '<em>NULL</em>'
         ];
 
         // urlManager
@@ -94,6 +109,23 @@ class Application extends \yii\web\Application
             ? $config['components']['urlManager']
             : [];
         $config['components']['urlManager']['class'] = 'wma\web\UrlManager';
+
+        // Log
+        $config['components']['log'] = isset($config['components']['log'])
+            ? $config['components']['log']
+            : [];
+        $config['components']['log']['traceLevel'] = YII_DEBUG ? 3 : 0;
+        $logTargets = isset($config['components']['log']['targets']) ? $config['components']['log']['targets'] : [];
+        $logTargets[] = [
+            'class' => 'yii\log\DbTarget',
+            'levels' => ['error', 'warning'],
+        ];
+        $config['components']['log']['targets'] = $logTargets;
+
+        // Asset Manager - Link Assets
+        $config['components']['assetManager']['linkAssets'] = isset($config['components']['assetManager']['linkAssets'])
+            ? $config['components']['assetManager']['linkAssets']
+            : true;
 
         // errorHandler
         $config['components']['errorHandler'] = isset($config['components']['errorHandler'])
@@ -109,7 +141,7 @@ class Application extends \yii\web\Application
     }
 
     public function init() {
-        @parent::init();
+        parent::init();
         $asset = Yii::$app->assetManager->publish('@wma/assets',['forceCopy' => false]);
         $this->_adminAssetPath = $asset[0];
         $this->_adminAssetUrl = $asset[1];

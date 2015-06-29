@@ -26,7 +26,7 @@ $this->params['wma-nav'] = 'Menus';
 
 <?= PageTitle::widget(['title' => 'Menu', 'subTitle' => $menu->name, 'icon' => 'cog']) ?>
 
-<?= Yii::$app->alertManager->render() ?>
+<?= Yii::$app->alertManager->get() ?>
 
 <?php WidgetGrid::begin() ?>
 <?php WidgetContainer::begin(['htmlOptions' => ['class' => "col-xs-12 col-sm-12 col-md-6 col-lg-6"]]) ?>
