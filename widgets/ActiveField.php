@@ -3,7 +3,7 @@
 namespace wma\widgets;
 
 use wma\helpers\Html;
-use yii\helpers\ArrayHelper;
+use wmc\helpers\ArrayHelper;
 use rmrevin\yii\fontawesome\FA;
 
 class ActiveField extends \yii\widgets\ActiveField
@@ -100,6 +100,19 @@ class ActiveField extends \yii\widgets\ActiveField
     public function colSpan($colspanLength) {
         if (is_int($colspanLength)) {
             Html::addCssClass($this->options, "col col-" . $colspanLength . "");
+        } else if (is_array($colspanLength)) {
+            if (!ArrayHelper::isAssoc($colspanLength)) {
+
+            }
+            $class = ['col'];
+            $sizes = ['xs','sm', 'md', 'lg'];
+            foreach ($sizes as $size) {
+                $sizeVal = array_shift($colspanLength);
+                if (!is_null($sizeVal) && is_int($sizeVal) && $colspanLength > 0) {
+                    $class[] = "col-".$size."-".$sizeVal."";
+                }
+            }
+            Html::addCssClass($this->options, $class);
         }
         return $this;
     }

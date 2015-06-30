@@ -23,3 +23,9 @@
         </section>
     </div>
 </fieldset>
+
+<!-- <header>Primary Address</header> -->
+<?php /*$this->render('@wma/views/user/_formAddress.php', [
+    'form' => $form,
+    'model' => $primaryAddress
+]);*/ ?>

@@ -100,7 +100,7 @@ class Application extends \yii\web\Application
 
         // Formatter
         $config['components']['formatter'] = [
-            'class' => 'wmc\components\Formatter',
+            'class' => 'wma\components\Formatter',
             'nullDisplay' => '<em>NULL</em>'
         ];
 

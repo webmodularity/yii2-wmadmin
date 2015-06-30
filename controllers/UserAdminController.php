@@ -11,6 +11,7 @@ use wma\widgets\Alert;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use wmc\models\Address;
 
 /**
  * UserAdminController implements the CRUD actions for User model.
@@ -46,6 +47,28 @@ class UserAdminController extends Controller
     }
 
     /**
+     * Displays a single User model.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException On permission violation
+     */
+    public function actionViewUserLog($id)
+    {
+        $model = $this->findUserLogModel($id);
+        $userModel = $this->findModel($model->user_id);
+
+        if ($userModel->group_id > Yii::$app->user->identity->group_id) {
+            UserLog::add(UserLog::ACTION_ACCESS, UserLog::RESULT_FAIL, null, "User attempting to ACCESS UserLog record without proper UserGroup access. User ID: (".$userModel->id.")");
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        return $this->render('@wma/views/user-admin/view', [
+            'model' => $model,
+            'userModel' => $userModel
+        ]);
+    }
+
+    /**
      * Updates an existing User model.
      * If update is successful, the browser will be refresh()ed
      * @param integer $id
@@ -54,6 +77,14 @@ class UserAdminController extends Controller
      */
     public function actionUpdate($id) {
         $model = $this->findModel($id);
+        $primaryAddress = $model->person->getPersonAddresses()->where(['address_type_id' => Address::TYPE_PRIMARY])->one();
+        if (is_null($primaryAddress)) {
+            $primaryAddress = new Address();
+        }
+        $shippingAddress = $model->person->getPersonAddresses()->where(['address_type_id' => Address::TYPE_SHIPPING])->one();
+        if (is_null($shippingAddress)) {
+            $shippingAddress = new Address();
+        }
         $logSearchModel = new UserLogSearch(['user_id' => $model->id]);
         $logDataProvider = $logSearchModel->search(Yii::$app->request->queryParams);
 
@@ -77,6 +108,8 @@ class UserAdminController extends Controller
         } else {
             return $this->render('@wma/views/user-admin/update', [
                 'model' => $model,
+                'primaryAddress' => $primaryAddress,
+                'shippingAddress' => $shippingAddress,
                 'logSearchModel' => $logSearchModel,
                 'logDataProvider' => $logDataProvider
             ]);
@@ -121,7 +154,16 @@ class UserAdminController extends Controller
                     ]));
             }
         } else {
+            $deletedUser = $model->getAttributes();
+            $deletedPerson = $model->person->getAttributes();
+            $deletedPersonName = $model->person->personName->getAttributes();
             if ($model->delete()) {
+                // Dump info to Yii Log
+                Yii::warning("User Deleted: (ID: ".$model->id.") (".$model->person->email.")\n\n
+                User: ".\yii\helpers\VarDumper::dumpAsString($deletedUser)."\n\n
+                Person: ".\yii\helpers\VarDumper::dumpAsString($deletedPerson)."\n\n
+                PersonName: ".\yii\helpers\VarDumper::dumpAsString($deletedPersonName)."\n\n
+                ", 'user.delete');
                 Yii::$app->alertManager->add(Alert::widget(
                     [
                         'heading' => 'User PERMANENTLY Deleted!',
@@ -153,6 +195,21 @@ class UserAdminController extends Controller
      */
     protected function findModel($id) {
         if (($model = User::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * Finds the UserLog model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return User the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findUserLogModel($id) {
+        if (($model = UserLog::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

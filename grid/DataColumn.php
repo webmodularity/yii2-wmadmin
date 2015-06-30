@@ -59,7 +59,7 @@ class DataColumn extends \yii\grid\DataColumn
         $model = $this->grid->filterModel;
         if ($this->filter !== false && $model instanceof Model && $this->attribute !== null && $model->isAttributeActive($this->attribute)) {
             if ($model->hasErrors($this->attribute)) {
-                Html::addCssClass($this->filterContainerOptions, 'state-error');
+                Html::addCssClass($this->filterOptions, 'state-error');
                 $error = ' ' . Html::error($model, $this->attribute, $this->grid->filterErrorOptions);
             } else {
                 $error = '';

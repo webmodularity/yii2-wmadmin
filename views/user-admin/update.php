@@ -57,7 +57,7 @@ $this->params['wma-nav'] = 'Users';
 
 ?>
 <?php $form = ActiveForm::begin(['options' => ['class' => 'smart-form']]) ?>
-<?= $this->render('_form', ['form' => $form, 'model' => $model]) ?>
+<?= $this->render('_form', ['form' => $form, 'model' => $model, 'primaryAddress' => $primaryAddress, 'shippingAddress' => $shippingAddress]) ?>
     <footer>
         <?= UpdateButton::widget(['itemName' => 'User']) ?>
         <?= DeleteButton::widget(['model' => $model, 'disabled' => Yii::$app->user->id == $model->id]) ?>
@@ -99,8 +99,28 @@ $this->params['wma-nav'] = 'Users';
             'class' => 'wma\grid\data\UserLogResultColumn',
             'attribute' => 'result_type'
         ],
-            'ip:ip',
-            'created_at:datetime:Time',
+        [
+            'class' => 'wma\grid\DataColumn',
+            'attribute' => 'ip',
+            'format' => 'ip',
+            'enableSorting' => false
+        ],
+        [
+            'class' => 'wma\grid\DataColumn',
+            'attribute' => 'created_at',
+            'format' => 'datetime',
+            'label' => "From the Last",
+            'filter' => \wmu\models\UserLog::getIntervalList(),
+            'enableSorting' => false
+        ],
+        [
+            'class' => 'wma\grid\ActionColumn',
+            'template' => '{view}',
+            'iconOnly' => true,
+            'urlCreator' => function($action, $model, $key, $index) {
+                return \yii\helpers\Url::toRoute(['view-user-log', 'id' => $model->id]);
+            }
+        ],
     ],
 ]); ?>
 <?php Widget::end() ?>
