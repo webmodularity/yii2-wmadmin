@@ -49,7 +49,7 @@ $this->params['wma-nav'] = 'Error Log';
         'attributes' => [
             'level',
             'category',
-            'log_time',
+            'log_time:datetime',
             'prefix:ntext',
             'message:ntext',
         ],

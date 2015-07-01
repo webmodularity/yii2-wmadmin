@@ -89,6 +89,7 @@ class UserAdminController extends Controller
         $logDataProvider = $logSearchModel->search(Yii::$app->request->queryParams);
 
         if ($model->group_id > Yii::$app->user->identity->group_id) {
+            Yii::error("User attempting to UPDATE user record without proper UserGroup access. User ID: (".$model->id.")");
             UserLog::add(UserLog::ACTION_USER_UPDATE, UserLog::RESULT_FAIL, null, "User attempting to UPDATE user record without proper UserGroup access. User ID: (".$model->id.")");
             throw new NotFoundHttpException('The requested page does not exist.');
         }

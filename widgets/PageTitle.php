@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Needs functionality, currently displays dummy content
- */
-
 namespace wma\widgets;
 
 use Yii;
