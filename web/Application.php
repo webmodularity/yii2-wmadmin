@@ -33,7 +33,8 @@ class Application extends \yii\web\Application
             'user' => 'wma\controllers\UserController',
             'user-admin' => 'wma\controllers\UserAdminController',
             'dashboard' => 'wma\controllers\DashboardController',
-            'menu' => 'wma\controllers\MenuController'
+            'menu' => 'wma\controllers\MenuController',
+            'log' => 'wma\controllers\LogController'
         ];
         $config['controllerMap'] = isset($config['controllerMap']) ? ArrayHelper::merge($adminControllerMap, $config['controllerMap']) : $adminControllerMap;
 

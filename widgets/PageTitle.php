@@ -25,7 +25,7 @@ class PageTitle extends \yii\base\Widget
     }
 
     public function setSubTitle($subTitle) {
-        if (is_string($subTitle)) {
+        if (!empty($subTitle)) {
             $this->_subTitle = $subTitle;
         }
     }

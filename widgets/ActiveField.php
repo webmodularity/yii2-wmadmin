@@ -93,26 +93,16 @@ class ActiveField extends \yii\widgets\ActiveField
 
     /**
      * Adds grid class to field container
-     * @param $colspanLength int The number of grid columns
+     * @param $cols int|array If int will add class "col col-*int*"
+     * If array will be sent to {{\wma\helpers\Html::gridColsFromArray()}}
      * @return $this
      */
 
-    public function colSpan($colspanLength) {
-        if (is_int($colspanLength)) {
-            Html::addCssClass($this->options, "col col-" . $colspanLength . "");
-        } else if (is_array($colspanLength)) {
-            if (!ArrayHelper::isAssoc($colspanLength)) {
-
-            }
-            $class = ['col'];
-            $sizes = ['xs','sm', 'md', 'lg'];
-            foreach ($sizes as $size) {
-                $sizeVal = array_shift($colspanLength);
-                if (!is_null($sizeVal) && is_int($sizeVal) && $colspanLength > 0) {
-                    $class[] = "col-".$size."-".$sizeVal."";
-                }
-            }
-            Html::addCssClass($this->options, $class);
+    public function colSpan($cols) {
+        if (is_int($cols)) {
+            Html::addCssClass($this->options, "col col-" . $cols . "");
+        } else if (is_array($cols)) {
+            Html::addGridColsClass($this->options, $cols);
         }
         return $this;
     }
