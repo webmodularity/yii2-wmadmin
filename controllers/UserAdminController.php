@@ -78,9 +78,7 @@ class UserAdminController extends Controller
     public function actionUpdate($id) {
         $model = $this->findModel($id);
         $primaryAddress = $model->person->getPersonAddresses()->where(['address_type_id' => Address::TYPE_PRIMARY])->one();
-        if (is_null($primaryAddress)) {
-            $primaryAddress = new Address();
-        }
+        $primaryAddress = !is_null($primaryAddress) ? $primaryAddress->address : new Address();
         $shippingAddress = $model->person->getPersonAddresses()->where(['address_type_id' => Address::TYPE_SHIPPING])->one();
         if (is_null($shippingAddress)) {
             $shippingAddress = new Address();
