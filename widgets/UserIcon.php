@@ -18,7 +18,7 @@ class UserIcon extends \yii\base\Widget
 
     public function run() {
         if ($this->_iconSource == 'gravatar') {
-            $gravatarHash = md5(strtolower(Yii::$app->user->identity->person->email));
+            $gravatarHash = md5(strtolower(Yii::$app->user->identity->email));
             $source = 'https://www.gravatar.com/avatar/' . $gravatarHash;
             return is_null($this->_size) ? $source : $source . '?s=' . $this->_size;
         }

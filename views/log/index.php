@@ -15,15 +15,15 @@ use rmrevin\yii\fontawesome\FA;
 use wmu\models\User;
 use wmu\models\UserGroup;
 
-$this->title = 'Error Log';
+$this->title = 'Backend Log';
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['wma-nav'] = 'Error Log';
+$this->params['wma-nav'] = 'Backend Log';
 ?>
 <?= Ribbon::widget() ?>
 
 <?php ContentContainer::begin() ?>
 
-<?= PageTitle::widget(['subTitle' => 'Error Log', 'icon' => 'ban']) ?>
+<?= PageTitle::widget(['title' => 'Log','subTitle' => 'Backend', 'icon' => 'history']) ?>
 
 <?= Yii::$app->alertManager->get() ?>
 
@@ -32,8 +32,8 @@ $this->params['wma-nav'] = 'Error Log';
 <?php Widget::begin(
     [
         'id' => 'error-log-list-all',
-        'title' => 'Error Log',
-        'icon' => 'ban',
+        'title' => 'Backend Log',
+        'icon' => 'history',
         'buttons' => ['toggle'],
         'sortable' => true,
         'toolbars' => []

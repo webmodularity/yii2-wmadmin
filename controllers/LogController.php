@@ -3,8 +3,8 @@
 namespace wma\controllers;
 
 use Yii;
-use wmc\models\Log;
-use wmc\models\LogSearch;
+use wma\models\Log;
+use wma\models\LogSearch;
 use wma\controllers\Controller;
 use yii\web\NotFoundHttpException;
 use wmc\helpers\ArrayHelper;

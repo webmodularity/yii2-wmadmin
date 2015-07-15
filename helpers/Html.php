@@ -13,7 +13,7 @@ class Html extends \wmc\helpers\Html
             $class = ['col'];
             $validSizes = ['xs', 'sm', 'md', 'lg'];
 
-            if (!ArrayHelper::isAssoc($gridCols)) {
+            if (!ArrayHelper::isAssociative($gridCols)) {
                 $keyedCols = [];
                 foreach ($validSizes as $size) {
                     $next = array_shift($gridCols);
@@ -37,6 +37,19 @@ class Html extends \wmc\helpers\Html
 
             static::addCssClass($options, implode(' ', $class));
         }
+    }
+
+    /**
+     * Adds SmartAdmin styling
+     */
+
+    public static function textarea($name, $value = '', $options = [])
+    {
+        $labelOptions = ['class' => 'textarea'];
+        if (isset($options['disabled']) && $options['disabled']) {
+            static::addCssClass($labelOptions, 'state-disabled');
+        }
+        return static::tag('label',  parent::textarea($name, $value, $options), $labelOptions);
     }
 
     /**

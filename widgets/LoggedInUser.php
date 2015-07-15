@@ -13,9 +13,9 @@ class LoggedInUser extends \yii\base\Widget
     public function setDisplayName($type) {
         $validNames = [
             'username' => Yii::$app->user->identity->username,
-            'name' => Yii::$app->user->identity->person->personName->first_name,
-            'full_name' => Yii::$app->user->identity->person->personName->fullName,
-            'email' => Yii::$app->user->identity->person->email
+            'name' => Yii::$app->user->identity->person->first_name,
+            'full_name' => Yii::$app->user->identity->person->fullName,
+            'email' => Yii::$app->user->identity->email
         ];
             $this->_displayName = $validNames[$type];
     }

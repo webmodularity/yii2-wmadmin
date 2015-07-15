@@ -13,8 +13,8 @@ $form = ActiveForm::begin([
 
     <fieldset>
         <div class="row">
-            <?= $form->field($model, 'first_name')->placeholder()->colspan(6)->iconAppend('user') ?>
-            <?= $form->field($model, 'last_name')->placeholder()->colspan(6)->iconAppend('user') ?>
+            <?= $form->field($model->person, 'first_name')->placeholder()->colspan(6)->iconAppend('user') ?>
+            <?= $form->field($model->person, 'last_name')->placeholder()->colspan(6)->iconAppend('user') ?>
         </div>
         <?= $form->field($model, 'email')->placeholder()->iconAppend('envelope') ?>
         <div class="row">

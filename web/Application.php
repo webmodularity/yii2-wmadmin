@@ -120,6 +120,7 @@ class Application extends \yii\web\Application
         $logTargets[] = [
             'class' => 'yii\log\DbTarget',
             'levels' => ['error', 'warning'],
+            'logTable' => 'log_backend'
         ];
         $config['components']['log']['targets'] = $logTargets;
 

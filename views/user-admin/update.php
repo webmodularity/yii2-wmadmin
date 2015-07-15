@@ -16,7 +16,7 @@ use yii\helpers\Html;
 use yii\bootstrap\Button;
 use rmrevin\yii\fontawesome\FA;
 
-$this->title = "User: ".$model->person->email."";
+$this->title = "User: ".$model->email."";
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['wma-nav'] = 'Users';
@@ -25,7 +25,7 @@ $this->params['wma-nav'] = 'Users';
 
 <?php ContentContainer::begin() ?>
 
-<?= PageTitle::widget(['title' => 'User', 'subTitle' => $model->person->email, 'icon' => 'user']) ?>
+<?= PageTitle::widget(['title' => 'User', 'subTitle' => $model->email, 'icon' => 'user']) ?>
 
 <?= Yii::$app->alertManager->get() ?>
 
@@ -72,7 +72,7 @@ $this->params['wma-nav'] = 'Users';
 <?php Widget::begin(
     [
         'id' => 'user-list-all',
-        'title' => "User Log: ".$model->person->email."",
+        'title' => "User Log: ".$model->email."",
         'icon' => 'user',
         'buttons' => ['toggle', 'fullscreen'],
         'sortable' => true,

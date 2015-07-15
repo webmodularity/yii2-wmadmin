@@ -142,30 +142,33 @@ class UserController extends \wmu\controllers\UserController
     */
 
     public function actionRegister() {
-        $model = new RegisterFormBasicCaptcha();
+        $model = new User([
+            'scenario' => 'registerEmail',
+            'group_id' => Yii::$app->adminSettings->getOption('user.register.newUserRole'),
+            'status' => Yii::$app->adminSettings->getOption('user.register.newUserStatus')
+            ]);
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         } else if (Yii::$app->adminSettings->getOption('user.register.webRegistration') !== true) {
+            Yii::error("User registration attempted without user.register.webRegistration being set to true!", 'user');
             throw new \yii\web\HttpException(404, 'Registration is not allowed.');
         } else if (UserCooldown::IPOnCooldown(Yii::$app->request->userIP) === true) {
             // IP is on cooldown
+            Yii::warning("IP on cooldown attempting to register!", 'user');
             static::addCooldownAlert();
-        } else if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->registerUser(
-                Yii::$app->adminSettings->getOption('user.register.newUserRole'),
-                Yii::$app->adminSettings->getOption('user.register.newUserStatus')
-            )) {
-                if (Yii::$app->adminSettings->getOption('user.register.confirmEmail') === true) {
-                    $userKey = UserKey::generateKey($user->person_id, UserKey::TYPE_CONFIRM_EMAIL);
-                    $this->sendConfirmEmail($user->person->email, $userKey->user_key);
-                }
+        } else if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if (Yii::$app->adminSettings->getOption('user.register.confirmEmail') === true) {
+                $userKey = UserKey::generateKey($model->id, UserKey::TYPE_CONFIRM_EMAIL);
+                $this->sendConfirmEmail($model->email, $userKey->user_key);
+            }
 
-                if (Yii::$app->getUser()->login($user)) {
-                    UserLog::add(UserLog::ACTION_LOGIN, UserLog::RESULT_SUCCESS);
-                    return $this->goHome();
-                }
+            // Simply attempts to log new user in
+            if (Yii::$app->getUser()->login($model)) {
+                UserLog::add(UserLog::ACTION_LOGIN, UserLog::RESULT_SUCCESS);
+                return $this->goHome();
             }
         }
+
         return $this->render($this->viewFileRegister, ['model' => $model]);
     }
 /*

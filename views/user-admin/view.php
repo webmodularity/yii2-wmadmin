@@ -18,7 +18,7 @@ use rmrevin\yii\fontawesome\FA;
 
 $this->title = "User Log ID: ".$model->id."";
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $userModel->person->email, 'url' => ['update', 'id' => $userModel->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->user->email, 'url' => ['update', 'id' => $model->user->id]];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['wma-nav'] = 'Users';
 ?>
@@ -49,7 +49,7 @@ $this->params['wma-nav'] = 'Users';
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'user.person.email:raw:User',
+            'user.email:raw:User',
             'app:userLogApp',
             'action_type:userLogAction',
             'result_type:userLogResult',

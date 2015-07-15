@@ -53,11 +53,11 @@ $addText = 'Add New User';
         [
             'attribute' => 'fullName',
             'label' => 'Name',
-            'value' => 'person.personName.fullName',
+            'value' => 'person.fullName',
         ],
         [
             'attribute' => 'email',
-            'value' => 'person.email'
+            'value' => 'email'
         ],
         [
             'class' => 'wma\grid\data\UserGroupColumn',

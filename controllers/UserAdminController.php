@@ -55,16 +55,14 @@ class UserAdminController extends Controller
     public function actionViewUserLog($id)
     {
         $model = $this->findUserLogModel($id);
-        $userModel = $this->findModel($model->user_id);
 
-        if ($userModel->group_id > Yii::$app->user->identity->group_id) {
-            UserLog::add(UserLog::ACTION_ACCESS, UserLog::RESULT_FAIL, null, "User attempting to ACCESS UserLog record without proper UserGroup access. User ID: (".$userModel->id.")");
+        if ($model->user->group_id > Yii::$app->user->identity->group_id) {
+            UserLog::add(UserLog::ACTION_ACCESS, UserLog::RESULT_FAIL, null, "User attempting to ACCESS UserLog record without proper UserGroup access. User ID: (".$model->user->id.")");
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
         return $this->render('@wma/views/user-admin/view', [
             'model' => $model,
-            'userModel' => $userModel
         ]);
     }
 
@@ -80,31 +78,39 @@ class UserAdminController extends Controller
         $primaryAddress = $model->person->getPersonAddresses()->where(['address_type_id' => Address::TYPE_PRIMARY])->one();
         $primaryAddress = !is_null($primaryAddress) ? $primaryAddress->address : new Address();
         $shippingAddress = $model->person->getPersonAddresses()->where(['address_type_id' => Address::TYPE_SHIPPING])->one();
-        if (is_null($shippingAddress)) {
-            $shippingAddress = new Address();
-        }
+        $shippingAddress = !is_null($shippingAddress) ? $shippingAddress->address : new Address();
         $logSearchModel = new UserLogSearch(['user_id' => $model->id]);
         $logDataProvider = $logSearchModel->search(Yii::$app->request->queryParams);
 
         if ($model->group_id > Yii::$app->user->identity->group_id) {
             Yii::error("User attempting to UPDATE user record without proper UserGroup access. User ID: (".$model->id.")");
-            UserLog::add(UserLog::ACTION_USER_UPDATE, UserLog::RESULT_FAIL, null, "User attempting to UPDATE user record without proper UserGroup access. User ID: (".$model->id.")");
+            UserLog::add(UserLog::ACTION_ACCESS, UserLog::RESULT_FAIL, null, "User attempting to UPDATE user record without proper UserGroup access. User ID: (".$model->id.")");
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()
-            && $model->person->load(Yii::$app->request->post())&& $model->person->save()
-            && $model->person->personName->load(Yii::$app->request->post())&& $model->person->personName->save()) {
+        if ($primaryAddress->load(Yii::$app->request->post()) && $primaryAddress->saveAddress('people', $model->person, Address::TYPE_PRIMARY)
+                && ($model->id == Yii::$app->user->id || ($model->load(Yii::$app->request->post()) && $model->save()))
+        ) {
             Yii::$app->alertManager->add(Alert::widget(
                 [
                     'heading' => "User Updated!",
-                    'message' => "Successfully updated record for ".$model->person->email."",
+                    'message' => "Successfully updated record for ".$model->email."",
                     'style' => 'success',
                     'block' => true,
                     'icon' => 'check-square-o'
                 ]));
             return $this->refresh();
         } else {
+            if (Yii::$app->request->isPost) {
+                Yii::$app->alertManager->add(Alert::widget(
+                    [
+                        'heading' => "User Updated Failed!",
+                        'message' => "Failed to update user!",
+                        'style' => 'danger',
+                        'block' => true,
+                        'icon' => 'times-circle-o'
+                    ]));
+            }
             return $this->render('@wma/views/user-admin/update', [
                 'model' => $model,
                 'primaryAddress' => $primaryAddress,
@@ -127,7 +133,7 @@ class UserAdminController extends Controller
         $model = $this->findModel($id);
 
         if ($model->group_id > Yii::$app->user->identity->group_id) {
-            UserLog::add(UserLog::ACTION_USER_UPDATE, UserLog::RESULT_FAIL, null, "User attempting to DELETE user record without proper UserGroup access. User ID: (".$model->id.")");
+            UserLog::add(UserLog::ACTION_ACCESS, UserLog::RESULT_FAIL, null, "User attempting to DELETE user record without proper UserGroup access. User ID: (".$model->id.")");
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
@@ -155,14 +161,11 @@ class UserAdminController extends Controller
         } else {
             $deletedUser = $model->getAttributes();
             $deletedPerson = $model->person->getAttributes();
-            $deletedPersonName = $model->person->personName->getAttributes();
             if ($model->delete()) {
                 // Dump info to Yii Log
-                Yii::warning("User Deleted: (ID: ".$model->id.") (".$model->person->email.")\n\n
+                Yii::warning("User Deleted: (ID: ".$model->id.") (".$model->email.")\n\n
                 User: ".\yii\helpers\VarDumper::dumpAsString($deletedUser)."\n\n
-                Person: ".\yii\helpers\VarDumper::dumpAsString($deletedPerson)."\n\n
-                PersonName: ".\yii\helpers\VarDumper::dumpAsString($deletedPersonName)."\n\n
-                ", 'user.delete');
+                Person: ".\yii\helpers\VarDumper::dumpAsString($deletedPerson)."", 'user.delete');
                 Yii::$app->alertManager->add(Alert::widget(
                     [
                         'heading' => 'User PERMANENTLY Deleted!',
@@ -208,7 +211,7 @@ class UserAdminController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findUserLogModel($id) {
-        if (($model = UserLog::findOne($id)) !== null) {
+        if (($model = UserLog::find()->where([UserLog::getTableSchema()->name . '.id' => $id])->joinWith('user')->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

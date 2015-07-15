@@ -183,6 +183,14 @@ class ActiveField extends \yii\widgets\ActiveField
         return $this;
     }
 
+    public function textarea($options = [])
+    {
+        $options = array_merge($this->inputOptions, $options);
+        $this->adjustLabelFor($options);
+        $this->parts['{input}'] = Html::activeTextarea($this->model, $this->attribute, $options);
+        return $this;
+    }
+
     public function passwordInput($options = [])
     {
         $options = array_merge($this->inputOptions, $options);
