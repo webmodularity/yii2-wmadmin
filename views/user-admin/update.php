@@ -57,7 +57,7 @@ $this->params['wma-nav'] = 'Users';
 
 ?>
 <?php $form = ActiveForm::begin(['options' => ['class' => 'smart-form']]) ?>
-<?= $this->render('_form', ['form' => $form, 'model' => $model, 'primaryAddress' => $primaryAddress, 'shippingAddress' => $shippingAddress]) ?>
+<?= $this->render('_form', ['form' => $form, 'model' => $model]) ?>
     <footer>
         <?= UpdateButton::widget(['itemName' => 'User']) ?>
         <?= DeleteButton::widget(['model' => $model, 'disabled' => Yii::$app->user->id == $model->id]) ?>
@@ -71,7 +71,7 @@ $this->params['wma-nav'] = 'Users';
 <?php WidgetContainer::begin(['htmlOptions' => ['class' => "col-xs-12 col-sm-12 col-md-12 col-lg-6"]]) ?>
 <?php Widget::begin(
     [
-        'id' => 'user-list-all',
+        'id' => 'user-log-all',
         'title' => "User Log: ".$model->email."",
         'icon' => 'user',
         'buttons' => ['toggle', 'fullscreen'],

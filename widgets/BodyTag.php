@@ -8,7 +8,7 @@
 namespace wma\widgets;
 
 use Yii;
-use wmc\helpers\Html;
+use yii\helpers\Html;
 
 class BodyTag extends \yii\base\Widget
 {

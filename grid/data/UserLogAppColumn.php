@@ -4,7 +4,7 @@ namespace wma\grid\data;
 
 use Yii;
 use wmu\models\UserLog;
-use wma\helpers\Html;
+use yii\helpers\Html;
 
 class UserLogAppColumn extends \wma\grid\DataColumnStyled
 {

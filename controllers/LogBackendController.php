@@ -3,8 +3,8 @@
 namespace wma\controllers;
 
 use Yii;
-use wma\models\Log;
-use wma\models\LogSearch;
+use wma\models\LogBackend;
+use wma\models\LogBackendSearch;
 use wma\controllers\Controller;
 use yii\web\NotFoundHttpException;
 use wmc\helpers\ArrayHelper;
@@ -12,7 +12,7 @@ use wmc\helpers\ArrayHelper;
 /**
  * LogController implements the CRUD actions for Log model.
  */
-class LogController extends Controller
+class LogBackendController extends Controller
 {
     public function behaviors()
     {
@@ -39,10 +39,10 @@ class LogController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new LogSearch();
+        $searchModel = new LogBackendSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('@wma/views/log/index', [
+        return $this->render('@wma/views/log-backend/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -57,7 +57,7 @@ class LogController extends Controller
     {
         $model = $this->findModel($id);
 
-        return $this->render('@wma/views/log/view', [
+        return $this->render('@wma/views/log-backend/view', [
             'model' => $model
         ]);
     }
@@ -71,7 +71,7 @@ class LogController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Log::findOne($id)) !== null) {
+        if (($model = LogBackend::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

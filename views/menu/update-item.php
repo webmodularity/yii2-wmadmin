@@ -11,7 +11,7 @@ use wma\widgets\ActiveForm;
 use wma\widgets\DeleteButton;
 use wma\widgets\UpdateButton;
 use wma\widgets\NestedList;
-use wma\helpers\Html;
+use yii\helpers\Html;
 use yii\bootstrap\Button;
 use kartik\select2\Select2;
 use rmrevin\yii\fontawesome\FA;

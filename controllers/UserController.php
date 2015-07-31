@@ -5,7 +5,7 @@ namespace wma\controllers;
 use Yii;
 use wmu\models\UserCooldownLog;
 use yii\helpers\Url;
-use wmc\helpers\Html;
+use yii\helpers\Html;
 use wmc\helpers\ArrayHelper;
 use wmu\models\LoginForm;
 use wmu\models\RegisterFormBasicCaptcha;

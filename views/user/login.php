@@ -1,7 +1,7 @@
 <?php
 
 use wma\widgets\ActiveForm;
-use wma\helpers\Html;
+use yii\helpers\Html;
 
 $this->title = 'Login';
 $form = ActiveForm::begin([

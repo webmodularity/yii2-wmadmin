@@ -1,11 +1,11 @@
 <?php
 
-namespace wma\helpers;
+namespace yii\helpers;
 
 use rmrevin\yii\fontawesome\FA;
-use wmc\helpers\ArrayHelper;
+//use wmc\helpers\ArrayHelper;
 
-class Html extends \wmc\helpers\Html
+class Html extends \yii\helpers\BaseHtml
 {
 
     public static function addGridColsClass(&$options, $gridCols) {

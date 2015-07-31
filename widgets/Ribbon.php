@@ -15,7 +15,7 @@
 namespace wma\widgets;
 
 use Yii;
-use wmc\helpers\Html;
+use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use rmrevin\yii\fontawesome\FA;
 

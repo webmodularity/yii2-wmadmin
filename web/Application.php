@@ -17,6 +17,7 @@ class Application extends \yii\web\Application
     ];
 
     public function preInit(&$config) {
+        Yii::$classMap['yii\helpers\Html'] = '@wma/helpers/Html.php';
         $adminSettings = ArrayHelper::remove($config, 'adminSettings');
         if (is_null($adminSettings)) {
             throw new InvalidConfigException('The WMAdmin Application requires a configuration key
@@ -34,7 +35,8 @@ class Application extends \yii\web\Application
             'user-admin' => 'wma\controllers\UserAdminController',
             'dashboard' => 'wma\controllers\DashboardController',
             'menu' => 'wma\controllers\MenuController',
-            'log' => 'wma\controllers\LogController'
+            'log-backend' => 'wma\controllers\LogBackendController',
+            'log-frontend' => 'wma\controllers\LogFrontendController'
         ];
         $config['controllerMap'] = isset($config['controllerMap']) ? ArrayHelper::merge($adminControllerMap, $config['controllerMap']) : $adminControllerMap;
 

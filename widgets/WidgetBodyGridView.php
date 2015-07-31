@@ -2,7 +2,7 @@
 
 namespace wma\widgets;
 
-use wma\helpers\Html;
+use yii\helpers\Html;
 
 class WidgetBodyGridView extends \yii\grid\GridView
 {

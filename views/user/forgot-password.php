@@ -1,7 +1,7 @@
 <?php
 
 use wma\widgets\ActiveForm;
-use wmc\helpers\Html;
+use yii\helpers\Html;
 
 $this->title = 'Reset Password';
 $form = ActiveForm::begin([

@@ -2,7 +2,7 @@
 
 namespace wma\widgets;
 
-use wma\helpers\Html;
+use yii\helpers\Html;
 use wmc\helpers\ArrayHelper;
 use rmrevin\yii\fontawesome\FA;
 
@@ -150,61 +150,4 @@ class ActiveField extends \yii\widgets\ActiveField
         $this->inputOptions['toggle'] = true;
         return $this;
     }
-
-    public function checkboxList($items, $options = [])
-    {
-        $options = array_merge($this->inputOptions, $options);
-        $this->adjustLabelFor($options);
-        $this->parts['{input}'] = Html::activeCheckboxList($this->model, $this->attribute, $items, $options);
-        return $this;
-    }
-
-    public function radioList($items, $options = [])
-    {
-        $options = array_merge($this->inputOptions, $options);
-        $this->adjustLabelFor($options);
-        $this->parts['{input}'] = Html::activeRadioList($this->model, $this->attribute, $items, $options);
-        return $this;
-    }
-
-    public function input($type, $options = [])
-    {
-        $options = array_merge($this->inputOptions, $options);
-        $this->adjustLabelFor($options);
-        $this->parts['{input}'] = Html::activeInput($type, $this->model, $this->attribute, $options);
-        return $this;
-    }
-
-    public function textInput($options = [])
-    {
-        $options = array_merge($this->inputOptions, $options);
-        $this->adjustLabelFor($options);
-        $this->parts['{input}'] = Html::activeTextInput($this->model, $this->attribute, $options);
-        return $this;
-    }
-
-    public function textarea($options = [])
-    {
-        $options = array_merge($this->inputOptions, $options);
-        $this->adjustLabelFor($options);
-        $this->parts['{input}'] = Html::activeTextarea($this->model, $this->attribute, $options);
-        return $this;
-    }
-
-    public function passwordInput($options = [])
-    {
-        $options = array_merge($this->inputOptions, $options);
-        $this->adjustLabelFor($options);
-        $this->parts['{input}'] = Html::activePasswordInput($this->model, $this->attribute, $options);
-        return $this;
-    }
-
-    public function dropDownList($items, $options = [])
-    {
-        $options = array_merge($this->inputOptions, $options);
-        $this->adjustLabelFor($options);
-        $this->parts['{input}'] = Html::activeDropDownList($this->model, $this->attribute, $items, $options);
-        return $this;
-    }
-
 }

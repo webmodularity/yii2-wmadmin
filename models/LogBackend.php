@@ -14,7 +14,7 @@ use Yii;
  * @property string $prefix
  * @property string $message
  */
-class Log extends \wmc\db\ActiveRecord
+class LogBackend extends \wmc\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -60,6 +60,6 @@ class Log extends \wmc\db\ActiveRecord
      */
     public static function find()
     {
-        return new LogQuery(get_called_class());
+        return new LogBackendQuery(get_called_class());
     }
 }

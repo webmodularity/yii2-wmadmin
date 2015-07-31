@@ -13,20 +13,18 @@ use yii\bootstrap\Button;
 use rmrevin\yii\fontawesome\FA;
 
 /* @var $this yii\web\View */
-/* @var $model wmu\models\UserLog */
-/* @var $userModel wmu\models\User */
+/* @var $model wmc\models\Log */
 
-$this->title = "User Log ID: ".$model->id."";
-$this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->user->email, 'url' => ['update', 'id' => $model->user->id]];
+$this->title = "Log ID: ".$model->id."";
+$this->params['breadcrumbs'][] = ['label' => 'Error Log', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['wma-nav'] = 'Users';
+$this->params['wma-nav'] = 'Backend Log';
 ?>
 <?= Ribbon::widget() ?>
 
 <?php ContentContainer::begin() ?>
 
-<?= PageTitle::widget(['title' => 'UserLog', 'subTitle' => $model->id, 'icon' => 'user']) ?>
+<?= PageTitle::widget(['title' => 'Error Log', 'subTitle' => $model->id, 'icon' => 'ban']) ?>
 
 <?= Yii::$app->alertManager->get() ?>
 
@@ -36,10 +34,10 @@ $this->params['wma-nav'] = 'Users';
 
 <?php Widget::begin(
     [
-        'id' => 'user-update',
-        'title' => 'User Log',
-        'icon' => 'user',
-        'buttons' => ['toggle'],
+        'id' => 'error-log-view',
+        'title' => 'Error Log Detail View',
+        'icon' => 'ban',
+        'buttons' => ['fullscreen', 'toggle'],
         'sortable' => true,
         'toolbars' => [Html::tag('span', "ID: ".$model->id."", ['class' => 'label label-default'])]
     ]
@@ -49,16 +47,11 @@ $this->params['wma-nav'] = 'Users';
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'user.email:raw:User',
-            'app:userLogApp',
-            'action_type:userLogAction',
-            'result_type:userLogResult',
-            'data',
-            'path.path',
-            'userAgent.user_agent',
-            'session_id',
-            'ip:ip',
-            'created_at:datetime',
+            'level',
+            'category',
+            'log_time:datetime',
+            'prefix:ntext',
+            'message:ntext',
         ],
     ]) ?>
 

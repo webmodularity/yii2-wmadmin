@@ -3,7 +3,7 @@
 namespace wma\widgets;
 
 use Yii;
-use wmc\helpers\Html;
+use yii\helpers\Html;
 
 class LoginRegisterButton extends \yii\base\Widget
 {

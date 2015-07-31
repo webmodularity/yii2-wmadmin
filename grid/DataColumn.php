@@ -6,7 +6,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQueryInterface;
 use yii\helpers\Inflector;
-use wma\helpers\Html;
+use yii\helpers\Html;
 
 class DataColumn extends \yii\grid\DataColumn
 {

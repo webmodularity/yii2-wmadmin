@@ -1,6 +1,6 @@
 <?php
 
-use wmc\helpers\Html;
+use yii\helpers\Html;
 
 $this->title = 'Error';
 ?>

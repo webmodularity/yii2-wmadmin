@@ -7,7 +7,7 @@ namespace wma\models;
  *
  * @see Log
  */
-class LogQuery extends \yii\db\ActiveQuery
+class LogBackendQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {

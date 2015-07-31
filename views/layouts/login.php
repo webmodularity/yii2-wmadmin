@@ -1,5 +1,5 @@
 <?php
-use wmc\helpers\Html;
+use yii\helpers\Html;
 use wma\web\AdminAsset;
 use wma\widgets\LogoImage;
 use wma\widgets\LoginRegisterButton;

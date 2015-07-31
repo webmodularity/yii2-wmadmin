@@ -2,7 +2,7 @@
 
 namespace wma\widgets;
 
-use wmc\helpers\Html;
+use yii\helpers\Html;
 
 class Alert extends \wmc\widgets\Alert
 {

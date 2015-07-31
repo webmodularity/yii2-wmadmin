@@ -18,6 +18,12 @@ use wmc\models\Address;
  */
 class UserAdminController extends Controller
 {
+    protected $_views = [
+        'index' => '@wma/views/user-admin/index',
+        'update' => '@wma/views/user-admin/update',
+        'viewUserLog' => '@wma/views/user-admin/view'
+    ];
+
     public function behaviors()
     {
         return ArrayHelper::merge(parent::behaviors(),
@@ -40,7 +46,7 @@ class UserAdminController extends Controller
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('@wma/views/user-admin/index', [
+        return $this->render($this->_views['index'], [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -61,7 +67,7 @@ class UserAdminController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        return $this->render('@wma/views/user-admin/view', [
+        return $this->render($this->_views['viewUserLog'], [
             'model' => $model,
         ]);
     }
@@ -75,10 +81,7 @@ class UserAdminController extends Controller
      */
     public function actionUpdate($id) {
         $model = $this->findModel($id);
-        $primaryAddress = $model->person->getPersonAddresses()->where(['address_type_id' => Address::TYPE_PRIMARY])->one();
-        $primaryAddress = !is_null($primaryAddress) ? $primaryAddress->address : new Address();
-        $shippingAddress = $model->person->getPersonAddresses()->where(['address_type_id' => Address::TYPE_SHIPPING])->one();
-        $shippingAddress = !is_null($shippingAddress) ? $shippingAddress->address : new Address();
+
         $logSearchModel = new UserLogSearch(['user_id' => $model->id]);
         $logDataProvider = $logSearchModel->search(Yii::$app->request->queryParams);
 
@@ -88,9 +91,7 @@ class UserAdminController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        if ($primaryAddress->load(Yii::$app->request->post()) && $primaryAddress->saveAddress('people', $model->person, Address::TYPE_PRIMARY)
-                && ($model->id == Yii::$app->user->id || ($model->load(Yii::$app->request->post()) && $model->save()))
-        ) {
+        if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             Yii::$app->alertManager->add(Alert::widget(
                 [
                     'heading' => "User Updated!",
@@ -111,10 +112,8 @@ class UserAdminController extends Controller
                         'icon' => 'times-circle-o'
                     ]));
             }
-            return $this->render('@wma/views/user-admin/update', [
+            return $this->render($this->_views['update'], [
                 'model' => $model,
-                'primaryAddress' => $primaryAddress,
-                'shippingAddress' => $shippingAddress,
                 'logSearchModel' => $logSearchModel,
                 'logDataProvider' => $logDataProvider
             ]);

@@ -4,7 +4,7 @@ namespace wma\grid\data;
 
 use Yii;
 use wmu\models\UserGroup;
-use wma\helpers\Html;
+use yii\helpers\Html;
 
 class UserGroupColumn extends \wma\grid\DataColumnStyled
 {

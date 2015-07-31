@@ -8,7 +8,7 @@ use wma\widgets\WidgetGrid;
 use wma\widgets\WidgetContainer;
 use wma\widgets\PageTitle;
 use wma\widgets\ContentContainer;
-use wma\helpers\Html;
+use yii\helpers\Html;
 use yii\bootstrap\Button;
 use rmrevin\yii\fontawesome\FA;
 
@@ -18,7 +18,7 @@ use rmrevin\yii\fontawesome\FA;
 $this->title = "Log ID: ".$model->id."";
 $this->params['breadcrumbs'][] = ['label' => 'Error Log', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['wma-nav'] = 'Error Log';
+$this->params['wma-nav'] = 'Frontend Log';
 ?>
 <?= Ribbon::widget() ?>
 
@@ -34,7 +34,7 @@ $this->params['wma-nav'] = 'Error Log';
 
 <?php Widget::begin(
     [
-        'id' => 'error-log-view',
+        'id' => 'error-log-frontend-view',
         'title' => 'Error Log Detail View',
         'icon' => 'ban',
         'buttons' => ['fullscreen', 'toggle'],

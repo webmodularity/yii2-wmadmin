@@ -5,12 +5,12 @@ namespace wma\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use wma\models\Log;
+use wma\models\LogFrontend;
 
 /**
- * LogSearch represents the model behind the search form about `\wmc\models\Log`.
+ * LogSearch represents the model behind the search form about `\wmc\models\LogFrontend`.
  */
-class LogSearch extends Log
+class LogFrontendSearch extends LogFrontend
 {
     /**
      * @inheritdoc
@@ -42,7 +42,7 @@ class LogSearch extends Log
      */
     public function search($params)
     {
-        $query = Log::find()->orderBy(['id' => SORT_DESC]);
+        $query = LogFrontend::find()->orderBy(['id' => SORT_DESC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
