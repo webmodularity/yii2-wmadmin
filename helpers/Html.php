@@ -3,7 +3,6 @@
 namespace yii\helpers;
 
 use rmrevin\yii\fontawesome\FA;
-//use wmc\helpers\ArrayHelper;
 
 class Html extends \yii\helpers\BaseHtml
 {

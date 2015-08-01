@@ -3,7 +3,7 @@
 namespace wma\widgets;
 
 use yii\helpers\Html;
-use wmc\helpers\ArrayHelper;
+use yii\helpers\ArrayHelper;
 use rmrevin\yii\fontawesome\FA;
 
 class ActiveField extends \yii\widgets\ActiveField

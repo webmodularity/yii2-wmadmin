@@ -39,7 +39,11 @@ $this->params['wma-nav'] = 'Backend Log';
         'icon' => 'ban',
         'buttons' => ['fullscreen', 'toggle'],
         'sortable' => true,
-        'toolbars' => [Html::tag('span', "ID: ".$model->id."", ['class' => 'label label-default'])]
+        'toolbars' => [
+            Html::tag('span', "ID: ".$model->id."", ['class' => 'label label-default']),
+            Html::a('Next ' . FA::icon('chevron-right'), ['view', 'id' => ($model->id)+1], ['class' => 'btn btn-success']),
+            Html::a(FA::icon('chevron-left') . ' Previous', ['view', 'id' => ($model->id)-1], ['class' => 'btn btn-success']),
+        ]
     ]
 ) ?>
 <?php WidgetBody::begin(['padding' => false]) ?>

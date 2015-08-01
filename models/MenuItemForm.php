@@ -1,11 +1,11 @@
 <?php
 namespace wma\models;
 
-use wmc\helpers\ArrayHelper;
-use wmu\models\UserGroup;
-use yii\base\Model;
 use Yii;
+use yii\helpers\ArrayHelper;
+use yii\base\Model;
 use wmc\models\Menu;
+use wmu\models\UserGroup;
 
 class MenuItemForm extends Model
 {

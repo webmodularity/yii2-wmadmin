@@ -3,20 +3,12 @@
 namespace wma\controllers;
 
 use Yii;
-use wmu\models\UserCooldownLog;
-use yii\helpers\Url;
 use yii\helpers\Html;
-use wmc\helpers\ArrayHelper;
-use wmu\models\LoginForm;
 use wmu\models\RegisterFormBasicCaptcha;
-use wmu\models\ForgotPasswordForm;
-use wmu\models\ForgotUsernameForm;
 use wmu\models\User;
 use wmu\models\UserKey;
 use wmu\models\UserLog;
 use wmu\models\UserCooldown;
-use wma\widgets\Alert;
-use yii\web\ForbiddenHttpException;
 
 class UserController extends \wmu\controllers\UserController
 {

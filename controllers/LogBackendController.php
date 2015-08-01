@@ -5,9 +5,8 @@ namespace wma\controllers;
 use Yii;
 use wma\models\LogBackend;
 use wma\models\LogBackendSearch;
-use wma\controllers\Controller;
 use yii\web\NotFoundHttpException;
-use wmc\helpers\ArrayHelper;
+use yii\helpers\ArrayHelper;
 
 /**
  * LogController implements the CRUD actions for Log model.

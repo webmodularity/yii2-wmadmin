@@ -3,7 +3,7 @@
 namespace wma\web;
 
 use Yii;
-use wmc\helpers\ArrayHelper;
+use yii\helpers\ArrayHelper;
 use yii\base\InvalidConfigException;
 
 class Application extends \yii\web\Application
