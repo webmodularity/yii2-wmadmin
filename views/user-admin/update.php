@@ -35,7 +35,7 @@ $this->params['wma-nav'] = 'Users';
 <?php Widget::begin(
     [
         'id' => 'user-update',
-        'title' => 'User Update',
+        'title' => 'User',
         'icon' => 'user',
         'buttons' => ['toggle'],
         'sortable' => true,

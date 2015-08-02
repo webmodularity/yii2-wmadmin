@@ -11,7 +11,6 @@ use wma\widgets\Alert;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
-use wmc\models\Address;
 
 /**
  * UserAdminController implements the CRUD actions for User model.
