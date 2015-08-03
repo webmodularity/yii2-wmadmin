@@ -113,6 +113,24 @@ class Application extends \yii\web\Application
             : [];
         $config['components']['urlManager']['class'] = 'wma\web\UrlManager';
 
+        // urlManagerFrontend
+        $config['components']['urlManagerFrontend'] = isset($config['components']['urlManagerFrontend'])
+            ? $config['components']['urlManagerFrontend']
+            : [];
+        if (empty($config['components']['urlManagerFrontend'])) {
+            $frontendUrlConfig = [
+                'class' => 'yii\web\urlManager',
+                'enablePrettyUrl' => true,
+                'showScriptName' => false
+            ];
+            $serverName = $_SERVER['SERVER_NAME'];
+            if (preg_match('/^admin\.(.+)$/', $serverName, $hostMatch)) {
+                $frontendUrlConfig['baseUrl'] = 'http://' . $hostMatch[1];
+            }
+            $config['components']['urlManagerFrontend'] = $frontendUrlConfig;
+        }
+
+
         // Log
         $config['components']['log'] = isset($config['components']['log'])
             ? $config['components']['log']
