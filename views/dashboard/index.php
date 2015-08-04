@@ -26,6 +26,23 @@ $this->params['wma-nav'] = "Dashboard";
             <ul class="list-inline padding-10">
                 <li>
                     <i class="fa fa-calendar"></i>
+                    <a href="javascript:void(0);"> August 03, 2015 </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-8 padding-left-0">
+            <h3 class="margin-top-0"><a href="javascript:void(0);"> Server Maintenance - Friday August 7th </a><br><small class="font-xs"><i>Published by <a href="mailto:rory@webmodularity.com">Rory</a></i></small></h3>
+            <p>We will be taking the servers offline on Friday August 7th at 10pm PDT. The expected downtime is 8 hours. Servers expected to be back online on Saturday August 8th at 6am PDT.</p>
+            <p>We will be adding additional user functionality as well as publishing some bug fixes. All services will be unavailable during this time.</p>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            <?= Html::img(Yii::$app->adminAssetUrl.'/img/server-maintenance.jpg', ['class' => "img-responsive", 'alt' => "Server Maintenance"]) ?>
+            <ul class="list-inline padding-10">
+                <li>
+                    <i class="fa fa-calendar"></i>
                     <a href="javascript:void(0);"> June 23, 2015 </a>
                 </li>
             </ul>
