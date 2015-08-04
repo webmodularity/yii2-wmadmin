@@ -5,7 +5,7 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use yii\base\Model;
 use wmc\models\Menu;
-use wmu\models\UserGroup;
+use wmc\models\user\UserGroup;
 
 class MenuItemForm extends Model
 {

@@ -2,7 +2,7 @@
 
 namespace wma\components;
 
-use wmu\models\UserLog;
+use wmc\models\user\UserLog;
 use yii\helpers\ArrayHelper;
 
 class Formatter extends \wmc\components\Formatter

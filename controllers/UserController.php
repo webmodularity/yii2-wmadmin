@@ -4,13 +4,12 @@ namespace wma\controllers;
 
 use Yii;
 use yii\helpers\Html;
-use wmu\models\RegisterFormBasicCaptcha;
-use wmu\models\User;
-use wmu\models\UserKey;
-use wmu\models\UserLog;
-use wmu\models\UserCooldown;
+use wmc\models\user\User;
+use wmc\models\user\UserKey;
+use wmc\models\user\UserLog;
+use wmc\models\user\UserCooldown;
 
-class UserController extends \wmu\controllers\UserController
+class UserController extends \wmc\controllers\UserController
 {
     public $userType = 'email';
 

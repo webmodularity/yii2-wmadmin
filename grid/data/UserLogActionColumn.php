@@ -3,7 +3,7 @@
 namespace wma\grid\data;
 
 use Yii;
-use wmu\models\UserLog;
+use wmc\models\user\UserLog;
 use yii\helpers\Html;
 
 class UserLogActionColumn extends \wma\grid\DataColumnStyled

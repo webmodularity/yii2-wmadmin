@@ -7,13 +7,10 @@ use wma\widgets\WidgetGrid;
 use wma\widgets\WidgetContainer;
 use wma\widgets\PageTitle;
 use wma\widgets\ContentContainer;
-use wma\grid\ActionColumn;
 use yii\helpers\Html;
 use yii\bootstrap\Button;
 use kartik\select2\Select2;
 use rmrevin\yii\fontawesome\FA;
-use wmu\models\User;
-use wmu\models\UserGroup;
 
 $this->title = 'Backend Log';
 $this->params['breadcrumbs'][] = $this->title;

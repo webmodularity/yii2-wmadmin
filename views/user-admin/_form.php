@@ -21,9 +21,9 @@
     </div>
 
     <div class="row">
-        <?= $form->field($model, 'group_id')->label("User Group")->dropdownList(\wmu\models\UserGroup::getUserGroupList(Yii::$app->user->identity->group_id),
+        <?= $form->field($model, 'group_id')->label("User Group")->dropdownList(\wmc\models\user\UserGroup::getUserGroupList(Yii::$app->user->identity->group_id),
             ['options' => \wma\grid\data\UserGroupColumn::getDropdownOptions(), 'disabled' => Yii::$app->user->id === $model->id])->colSpan(6) ?>
-        <?= $form->field($model, 'status')->label("Status")->dropdownList(\wmu\models\User::getUserStatusList(),
+        <?= $form->field($model, 'status')->label("Status")->dropdownList(\wmc\models\user\User::getUserStatusList(),
             ['options' => \wma\grid\data\UserStatusColumn::getDropdownOptions(), 'disabled' => Yii::$app->user->id === $model->id])->colSpan(6) ?>
     </div>
 

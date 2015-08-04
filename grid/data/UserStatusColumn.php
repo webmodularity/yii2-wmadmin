@@ -3,7 +3,7 @@
 namespace wma\grid\data;
 
 use Yii;
-use wmu\models\User;
+use wmc\models\user\User;
 use yii\helpers\Html;
 
 class UserStatusColumn extends \wma\grid\DataColumnStyled

@@ -1,7 +1,6 @@
 <?php
 namespace wma\models;
 
-use wmu\models\UserGroup;
 use yii\base\Model;
 use Yii;
 use wmc\models\Menu;

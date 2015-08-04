@@ -4,7 +4,7 @@ namespace wma\widgets;
 
 use Yii;
 use yii\helpers\Html;
-use wmu\models\UserLog;
+use wmc\models\user\UserLog;
 
 class Footer extends \yii\base\Widget
 {

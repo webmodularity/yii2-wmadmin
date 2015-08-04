@@ -3,10 +3,10 @@
 namespace wma\controllers;
 
 use Yii;
-use wmu\models\User;
-use wmu\models\UserSearch;
-use wmu\models\UserLog;
-use wmu\models\UserLogSearch;
+use wmc\models\user\User;
+use wmc\models\user\UserSearch;
+use wmc\models\user\UserLog;
+use wmc\models\user\UserLogSearch;
 use wma\widgets\Alert;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

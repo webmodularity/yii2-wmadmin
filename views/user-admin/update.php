@@ -110,7 +110,7 @@ $this->params['wma-nav'] = 'Users';
             'attribute' => 'created_at',
             'format' => 'datetime',
             'label' => "From the Last",
-            'filter' => \wmu\models\UserLog::getIntervalList(),
+            'filter' => \wmc\models\user\UserLog::getIntervalList(),
             'enableSorting' => false
         ],
         [
