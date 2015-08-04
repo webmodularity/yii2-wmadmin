@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "webmod/yii2-wmcommon": "dev-master",
+        "webmod/yii2-wmcommon": "dev-master"
     },
     "autoload": {
         "psr-4": {
