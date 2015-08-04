@@ -70,14 +70,14 @@ class Application extends \yii\web\Application
 
         // user
         $config['components']['user'] = [
-            'identityClass' => 'wmu\models\User',
+            'identityClass' => 'wmc\models\user\User',
             'loginUrl' => ['/user/login'],
             'enableAutoLogin' => $enableAutoLogin,
         ];
 
         // rbac
         $config['components']['authManager'] = [
-            'class' => 'wmu\rbac\DbManager',
+            'class' => 'wmc\rbac\DbManager',
             'defaultRoles' => ['su', 'admin', 'author', 'user'],
         ];
 
@@ -170,7 +170,7 @@ class Application extends \yii\web\Application
 
         // DI
         Yii::$container->set('yii\behaviors\TimestampBehavior', ['value' => new \yii\db\Expression('NOW()')]);
-        Yii::$container->set('wmu\models\LoginForm', ['sessionDuration' => Yii::$app->adminSettings->getOption('user.sessionDuration')]);
+        Yii::$container->set('wmc\models\user\LoginForm', ['sessionDuration' => Yii::$app->adminSettings->getOption('user.sessionDuration')]);
         Yii::$container->set('wmc\swiftmailer\Mailer', ['htmlLayout' => '@wma/mail/layouts/html']);
         Yii::$container->set('yii\bootstrap\BootstrapAsset', ['css' => ['css/bootstrap.min.css'], 'sourcePath' => '@wma/assets']);
     }
