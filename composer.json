@@ -1,6 +1,6 @@
 {
     "name": "webmod/yii2-wmadmin",
-    "description": "Yii 2 based WebModularity admin module.",
+    "description": "Yii 2 based WebModularity CMS.",
     "type": "yii2-extension",
     "authors": [
         {
@@ -10,11 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "yiisoft/yii2": "*",
-        "webmod/yii2-wmuser": "dev-master",
         "webmod/yii2-wmcommon": "dev-master",
-        "kartik-v/yii2-widget-select2": "*"
     },
     "autoload": {
         "psr-4": {
@@ -22,4 +18,3 @@
         }
     }
 }
-
