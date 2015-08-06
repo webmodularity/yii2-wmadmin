@@ -3,7 +3,7 @@
 use wma\widgets\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = 'Reset Password';
+$this->title = 'Forgot Password';
 $form = ActiveForm::begin([
         'options' => ['class' => 'smart-form client-form']
     ]) ?>

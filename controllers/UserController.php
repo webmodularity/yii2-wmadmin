@@ -29,7 +29,7 @@ class UserController extends \wmc\controllers\UserController
     public $viewFile = [
         'login' => '@wma/views/user/login',
         'forgotPassword' => '@wma/views/user/forgot-password',
-        'resetPassword' => '@wma/views/user/forgot-username',
+        'resetPassword' => '@wma/views/user/reset-password',
         'register' => '@wma/views/user/register'
     ];
 
@@ -160,7 +160,7 @@ class UserController extends \wmc\controllers\UserController
             }
         }
 
-        return $this->render($this->viewFileRegister, ['model' => $model]);
+        return $this->render($this->viewFile['register'], ['model' => $model]);
     }
 /*
     public function actionConfirm($key) {
