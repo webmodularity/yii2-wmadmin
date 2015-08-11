@@ -7,24 +7,11 @@ use yii\helpers\Html;
 use wmc\models\user\User;
 use wmc\models\user\UserKey;
 use wmc\models\user\UserLog;
-use wmc\models\user\UserCooldown;
 
 class UserController extends \wmc\controllers\UserController
 {
-    public $userType = 'email';
 
     public $layout = '@wma/views/layouts/login';
-
-    public $viewFileLogin = '@wma/views/user/login';
-    public $viewFileForgotPassword = '@wma/views/user/forgot-password';
-    public $viewFileForgotUsername = '@wma/views/user/forgot-username';
-    public $viewFileRegister = '@wma/views/user/register';
-
-    ///////
-///////
-// NEEDS CONVERSION TO extends UserController methods!
-///////
-///////
 
     public $viewFile = [
         'login' => '@wma/views/user/login',
@@ -33,104 +20,12 @@ class UserController extends \wmc\controllers\UserController
         'register' => '@wma/views/user/register'
     ];
 
-    public $loginRedirect = ["dashboard/index"];
-
     public $emailData = [
         'confirm-email' => [
             'title' => "Confirm Email",
             'subject' => "User Email Confirmation"
         ]
     ];
-
-    public function actionError() {
-        return $this->render($this->viewFile['error'],  [
-            'exception' => Yii::$app->errorHandler->exception
-        ]);
-    }
-    /*
-        public function actionLogin() {
-            $model = new LoginForm();
-            if (!Yii::$app->user->isGuest) {
-                // Already logged in
-                return $this->goHome();
-            } else if (UserCooldown::IPOnCooldown(Yii::$app->request->userIP) === true) {
-                // IP is on cooldown
-                static::addCooldownAlert();
-                return $this->render($this->viewFileLogin, ['model' => $model]);
-            } else if ($model->load(Yii::$app->request->post()) && $model->login()) {
-                // Successful login
-                UserLog::add(UserLog::ACTION_LOGIN, UserLog::RESULT_SUCCESS);
-                return $this->goBack();
-            } else {
-                // Failed login
-                Yii::$app->session->set('wmu.cooldown_count', Yii::$app->session->get('wmu.cooldown_count', 0) + 1);
-                if (Yii::$app->session->get('wmu.cooldown_count', 0) == UserCooldownLog::$cooldownThreshold) {
-                    static::addCooldownAlert();
-                } else if (Yii::$app->session->get('wmu.cooldown_count', 0) >= (UserCooldownLog::$cooldownThreshold - 2)) {
-                    static::addCooldownWarningAlert();
-                }
-                return $this->render($this->viewFileLogin,['model' => $model]);
-            }
-        }
-
-        public function actionForgotPassword($key = null) {
-            $model = new ForgotPasswordForm();
-            if (!Yii::$app->user->isGuest) {
-                return $this->goHome();
-            } else if (UserCooldown::IPOnCooldown(Yii::$app->request->userIP) === true) {
-                // IP is on cooldown
-                static::addCooldownAlert();
-            } else if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                $user = !$model->email ? User::findByUsername($model->username) : User::findByEmail($model->email);
-                if (!is_null($user)) {
-                    $userKey = UserKey::generateKey($user->person_id, UserKey::TYPE_RESET_PASSWORD);
-                    UserLog::add(UserLog::ACTION_RESET_PASSWORD, UserLog::RESULT_REQUEST, $user->person_id);
-                    // Generate Email
-                    $this->sendEmail('reset-password', $user->person->email,
-                        [
-                            'link' => Url::toRoute(['/user/forgot-password', 'key' => $userKey->user_key], true),
-                        ]
-                    );
-                    Yii::$app->alertManager->add(
-                        'success',
-                        'An email has been sent to the registered email address with instructions on how to reset
-                         your password. Further action is required, check your email.',
-                        'Password Reset Request Sent.',
-                        ['icon' => 'hand-o-right']
-                    );
-                } else {
-                    $failedReason = !$model->email
-                        ? UserCooldownLog::ACTION_RESET_PASSWORD_USER
-                        : UserCooldownLog::ACTION_RESET_PASSWORD_EMAIL;
-                    $failedData = !$model->email ? $model->username : $model->email;
-                    UserCooldownLog::add(UserCooldownLog::ACTION_RESET_PASSWORD);
-                    Yii::$app->alertManager->add(
-                        'danger',
-                        'Failed to send password reset request, unable to locate user.',
-                        'No Account Found!',
-                        ['icon' => 'ban']
-                    );
-                }
-
-                return Yii::$app->response->refresh();
-            }
-            return $this->render($this->viewFileForgotPassword, ['model' => $model]);
-        }
-    */
-    /*
-    public function actionForgotUsername() {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-        $model = new ForgotUsernameForm();
-        if ($model->load(Yii::$app->request->post())) {
-            // handle form
-        }
-        return $this->render($this->viewFileForgotUsername, [
-            'model' => $model,
-        ]);
-    }
-    */
 
     public function actionRegister() {
         $model = new User([
@@ -143,11 +38,7 @@ class UserController extends \wmc\controllers\UserController
         } else if (Yii::$app->adminSettings->getOption('user.register.webRegistration') !== true) {
             Yii::error("User registration attempted without user.register.webRegistration being set to true!", 'user');
             throw new \yii\web\HttpException(404, 'Registration is not allowed.');
-        } else if (UserCooldown::IPOnCooldown(Yii::$app->request->userIP) === true) {
-            // IP is on cooldown
-            Yii::warning("IP on cooldown attempting to register!", 'user');
-            static::addCooldownAlert();
-        } else if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        }  else if ($model->load(Yii::$app->request->post()) && $model->save()) {
             if (Yii::$app->adminSettings->getOption('user.register.confirmEmail') === true) {
                 $userKey = UserKey::generateKey($model->id, UserKey::TYPE_CONFIRM_EMAIL);
                 $this->sendConfirmEmail($model->email, $userKey->user_key);
@@ -202,19 +93,7 @@ class UserController extends \wmc\controllers\UserController
             }
         }
     }
-    /*
-        public function actionLogout() {
-            UserLog::add(UserLog::ACTION_LOGOUT, UserLog::RESULT_SUCCESS);
-            Yii::$app->user->logout();
-            Yii::$app->alertManager->add(
-                'success',
-                'User session cleared.',
-                'Successfully Logged Out',
-                ['icon' => 'sign-out']
-            );
-            return Yii::$app->response->redirect(Yii::$app->user->loginUrl);
-        }
-    */
+*/
 
     protected function sendConfirmEmail($to, $key) {
         $params =
