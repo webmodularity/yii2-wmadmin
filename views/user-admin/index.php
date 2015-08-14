@@ -8,9 +8,6 @@ use wma\widgets\WidgetContainer;
 use wma\widgets\PageTitle;
 use wma\widgets\ContentContainer;
 use yii\helpers\Html;
-use yii\bootstrap\Button;
-use kartik\select2\Select2;
-use rmrevin\yii\fontawesome\FA;
 
 $this->title = 'Users';
 $this->params['breadcrumbs'][] = $this->title;
