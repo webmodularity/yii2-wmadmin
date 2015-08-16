@@ -77,9 +77,12 @@ class Html extends \yii\helpers\BaseHtml
 
     public static function input($type, $name = null, $value = null, $options = []) {
         $tooltip = $icon = $begin = $end = '';
-        $iconTypes = ['text', 'password', 'email'];
+        $iconTypes = ['text', 'password', 'email', 'file'];
         if (in_array($type, $iconTypes)) {
             $labelOptions = ['class' => 'input'];
+            if ($type == 'file') {
+                static::addCssClass($labelOptions, 'input-file');
+            }
             if (isset($options['disabled']) && $options['disabled']) {
                 static::addCssClass($labelOptions, 'state-disabled');
             }
