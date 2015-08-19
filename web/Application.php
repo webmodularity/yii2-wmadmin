@@ -5,6 +5,7 @@ namespace wma\web;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\base\InvalidConfigException;
+use yii\helpers\VarDumper;
 
 class Application extends \yii\web\Application
 {
@@ -14,6 +15,12 @@ class Application extends \yii\web\Application
         'siteName',
         'adminEmail',
         'noReplyEmail'
+    ];
+
+    protected $_urlRules = [
+        'user/confirm/<key:.{32}>' => 'user/confirm',
+        'file/<filename>' => 'site/file',
+        'file/<pathAlias:[a-zA-Z0-9\-\_]+>/<filename>' => 'site/file'
     ];
 
     public function preInit(&$config) {
@@ -36,7 +43,8 @@ class Application extends \yii\web\Application
             'dashboard' => 'wma\controllers\DashboardController',
             'menu' => 'wma\controllers\MenuController',
             'log-backend' => 'wma\controllers\LogBackendController',
-            'log-frontend' => 'wma\controllers\LogFrontendController'
+            'log-frontend' => 'wma\controllers\LogFrontendController',
+            'site' => 'wma\controllers\SiteController'
         ];
         $config['controllerMap'] = isset($config['controllerMap']) ? ArrayHelper::merge($adminControllerMap, $config['controllerMap']) : $adminControllerMap;
 
@@ -108,10 +116,11 @@ class Application extends \yii\web\Application
         ];
 
         // urlManager
-        $config['components']['urlManager'] = isset($config['components']['urlManager'])
-            ? $config['components']['urlManager']
-            : [];
-        $config['components']['urlManager']['class'] = 'wma\web\UrlManager';
+        $config['components']['urlManager'] = isset($config['components']['urlManager']) ? $config['components']['urlManager'] : [];
+        $urlRules = isset($config['components']['urlManager']['rules']) ? $config['components']['urlManager']['rules'] : [];
+        $config['components']['urlManager']['rules'] = ArrayHelper::merge($this->_urlRules, $urlRules);
+        $config['components']['urlManager'] = ArrayHelper::merge($config['components']['urlManager'],
+            ['enablePrettyUrl' => true, 'showScriptName' => false]);
 
         // urlManagerFrontend
         $config['components']['urlManagerFrontend'] = isset($config['components']['urlManagerFrontend'])
@@ -121,11 +130,16 @@ class Application extends \yii\web\Application
             $frontendUrlConfig = [
                 'class' => 'yii\web\urlManager',
                 'enablePrettyUrl' => true,
-                'showScriptName' => false
+                'showScriptName' => false,
+                'rules' => [
+                    'file/<filename>' => 'site/file',
+                    'file/<pathAlias:[a-zA-Z0-9\-\_]+>/<filename>' => 'site/file',
+                    'page/<name:.+>' => 'site/page',
+                ],
             ];
             $serverName = $_SERVER['SERVER_NAME'];
             if (preg_match('/^admin\.(.+)$/', $serverName, $hostMatch)) {
-                $frontendUrlConfig['baseUrl'] = 'http://' . $hostMatch[1];
+                $frontendUrlConfig['baseUrl'] = 'http://www.' . $hostMatch[1];
             }
             $config['components']['urlManagerFrontend'] = $frontendUrlConfig;
         }

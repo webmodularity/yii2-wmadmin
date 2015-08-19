@@ -26,32 +26,6 @@ class ActiveField extends \yii\widgets\ActiveField
     ];
 
     /**
-     * Unchanged from parent implementation, using to make ActiveForm::field() get wrapped in SmartAdmin styles
-     */
-
-    public function render($content = null)
-    {
-        if ($content === null) {
-            if (!isset($this->parts['{input}'])) {
-                $this->textInput();
-            }
-            if (!isset($this->parts['{label}'])) {
-                $this->label();
-            }
-            if (!isset($this->parts['{error}'])) {
-                $this->error();
-            }
-            if (!isset($this->parts['{hint}'])) {
-                $this->hint(null);
-            }
-            $content = strtr($this->template, $this->parts);
-        } elseif (!is_string($content)) {
-            $content = call_user_func($content, $this);
-        }
-        return $this->begin() . "\n" . $content . "\n" . $this->end();
-    }
-
-    /**
      * Attach a FontAwesome icon to end of input
      * @param null $faIconName FontAwesome icon name, without fa- (use envelope rather than fa-envelope)
      * @return $this

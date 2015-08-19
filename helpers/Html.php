@@ -76,13 +76,20 @@ class Html extends \yii\helpers\BaseHtml
      */
 
     public static function input($type, $name = null, $value = null, $options = []) {
+        if ($type == 'file') {
+            // Special handling of fileInput for this form design
+            $labelOptions = ['class' => 'input input-file'];
+            if (isset($options['disabled']) && $options['disabled']) {
+                static::addCssClass($labelOptions, 'state-disabled');
+            }
+            $options['onchange'] = "this.parentNode.nextSibling.value = this.value";
+            return static::tag('div', parent::tag('span', parent::input('file', $name, $value, $options)  . "Browse", ['class' => 'button']) . parent::beginTag('input', ['type' => 'text', 'value' => $value, 'readonly' => true]), $labelOptions);
+        }
+
         $tooltip = $icon = $begin = $end = '';
         $iconTypes = ['text', 'password', 'email', 'file'];
         if (in_array($type, $iconTypes)) {
             $labelOptions = ['class' => 'input'];
-            if ($type == 'file') {
-                static::addCssClass($labelOptions, 'input-file');
-            }
             if (isset($options['disabled']) && $options['disabled']) {
                 static::addCssClass($labelOptions, 'state-disabled');
             }

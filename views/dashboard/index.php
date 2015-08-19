@@ -32,7 +32,7 @@ $this->params['wma-nav'] = "Dashboard";
         </div>
         <div class="col-md-8 padding-left-0">
             <h3 class="margin-top-0"><a href="javascript:void(0);"> Server Maintenance - <s>Friday August 7th</s> Monday August 10th </a><br><small class="font-xs"><i>Published by <a href="mailto:rory@webmodularity.com">Rory</a></i></small></h3>
-            <p>We will be taking the servers offline on <strike>Friday August 7th</strike> Monday August 10th at 10pm PDT. The expected downtime is 8 hours. Servers expected to be back online on <s>Saturday August 8th</s> Tuesday August 11th at 6am PDT.</p>
+            <p>We will be taking the servers offline on <s>Friday August 7th</s> Monday August 10th at 10pm PDT. The expected downtime is 8 hours. Servers expected to be back online on <s>Saturday August 8th </s> Tuesday August 11th at 6am PDT.</p>
             <p>We will be adding additional user functionality as well as publishing some bug fixes. All services will be unavailable during this time.</p>
         </div>
     </div>
