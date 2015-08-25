@@ -2,11 +2,13 @@
 
 namespace wma\controllers;
 
+use wmc\models\user\UserKey;
 use Yii;
 use wmc\models\user\User;
 use wmc\models\user\UserSearch;
 use wmc\models\user\UserLog;
 use wmc\models\user\UserLogSearch;
+use wmc\models\user\UserKeySearch;
 use wma\widgets\Alert;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -23,17 +25,36 @@ class UserAdminController extends Controller
         'viewUserLog' => '@wma/views/user-admin/view'
     ];
 
-    public function behaviors()
-    {
-        return ArrayHelper::merge(parent::behaviors(),
+    public function behaviors() {
+        return
             [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ],
-        ]);
+                'access' =>
+                    [
+                        'class' => \yii\filters\AccessControl::className(),
+                        'rules' =>
+                            [
+                                [
+                                    'allow' => true,
+                                    'actions' => ['user-key-delete', 'user-key-create'],
+                                    'roles' => ['su']
+                                ],
+                                [
+                                    'allow' => false,
+                                    'actions' => ['user-key-delete', 'user-key-create']
+                                ],
+                                [
+                                    'allow' => true,
+                                    'roles' => ['admin'],
+                                ]
+                            ]
+                    ],
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['post'],
+                    ],
+                ]
+            ];
     }
 
     /**
@@ -84,6 +105,9 @@ class UserAdminController extends Controller
         $logSearchModel = new UserLogSearch(['user_id' => $model->id]);
         $logDataProvider = $logSearchModel->search(Yii::$app->request->queryParams);
 
+        $keySearchModel = new UserKeySearch();
+        $keyDataProvider = $keySearchModel->search(['UserKeySearch' => ['user_id' => $model->id]]);
+
         if ($model->group_id > Yii::$app->user->identity->group_id) {
             Yii::error("User attempting to UPDATE user record without proper UserGroup access. User ID: (".$model->id.")");
             UserLog::add(UserLog::ACTION_ACCESS, UserLog::RESULT_FAIL, null, "User attempting to UPDATE user record without proper UserGroup access. User ID: (".$model->id.")");
@@ -114,7 +138,8 @@ class UserAdminController extends Controller
             return $this->render($this->_views['update'], [
                 'model' => $model,
                 'logSearchModel' => $logSearchModel,
-                'logDataProvider' => $logDataProvider
+                'logDataProvider' => $logDataProvider,
+                'keyDataProvider' => $keyDataProvider
             ]);
         }
     }
@@ -186,6 +211,66 @@ class UserAdminController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionUserKeyDelete($id, $user_id) {
+        $userKey = $this->findUserKeyModel($id);
+
+        if ($userKey->delete()) {
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => 'User Key Deleted!',
+                    'message' => "The User Key has been successfully deleted.",
+                    'style' => 'success',
+                    'block' => true,
+                    'icon' => 'check-square-o'
+                ]));
+        } else {
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => 'Delete User Key Failed!',
+                    'message' => "The User Key could not be deleted, the server encountered an error:",
+                    'style' => 'danger',
+                    'block' => true,
+                    'icon' => 'times-circle-o'
+                ]));
+        }
+
+        return $this->redirect(['update', 'id' => $user_id]);
+    }
+
+    public function actionUserKeyCreate($user_id) {
+        $user = $this->findModel($user_id);
+
+        // Find and delete existing AUTH key
+        $userKey = UserKey::find()->where(['user_id' => $user_id, 'type' => UserKey::TYPE_AUTH])->one();
+        if (!is_null($userKey)) {
+            $userKey->delete();
+        }
+
+        if ($user->generateAuthKey()) {
+            UserLog::add(UserLog::ACTION_USER_KEY, UserLog::RESULT_SUCCESS, $user->id, 'Created new AUTH Key.');
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => 'New User AUTH Key Created!',
+                    'message' => "The old AUTH key has been replaced with a new random key.",
+                    'style' => 'success',
+                    'block' => true,
+                    'icon' => 'check-square-o'
+                ]));
+        } else {
+            UserLog::add(UserLog::ACTION_USER_KEY, UserLog::RESULT_FAIL, $user->id, 'Failed to create new AUTH Key.');
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => 'New User AUTH Key Failed!',
+                    'message' => "The User AUTH Key could not be regenerated, the server encountered an error:",
+                    'style' => 'danger',
+                    'block' => true,
+                    'icon' => 'times-circle-o'
+                ]));
+        }
+
+        return $this->redirect(['update', 'id' => $user_id]);
+    }
+
     /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -210,6 +295,14 @@ class UserAdminController extends Controller
      */
     protected function findUserLogModel($id) {
         if (($model = UserLog::find()->where([UserLog::getTableSchema()->name . '.id' => $id])->joinWith('user')->one()) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    protected function findUserKeyModel($id) {
+        if (($model = UserKey::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

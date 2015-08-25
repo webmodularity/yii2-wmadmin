@@ -72,7 +72,7 @@ $this->params['wma-nav'] = 'Users';
 <?php Widget::begin(
     [
         'id' => 'user-log-all',
-        'title' => "User Log: ".$model->email."",
+        'title' => 'User Log',
         'icon' => 'user',
         'buttons' => ['toggle', 'fullscreen'],
         'sortable' => true,
@@ -124,6 +124,49 @@ $this->params['wma-nav'] = 'Users';
     ],
 ]); ?>
 <?php Widget::end() ?>
+
+<?php Widget::begin(
+    [
+        'id' => 'user-keys',
+        'title' => "User Keys",
+        'icon' => 'key',
+        'buttons' => ['toggle'],
+        'sortable' => true,
+        'toolbars' => [Html::a(FA::icon('plus') . ' Generate New Auth Key', ['user-key-create', 'user_id' => $model->id], ['class' => 'btn btn-success'])],
+        'hidden' => !Yii::$app->user->can('su')
+    ]
+) ?>
+<?php if (Yii::$app->user->can('su')) {
+    echo WidgetBodyGridView::widget([
+        'bodyOptions' => [
+            'padding' => false
+        ],
+        'dataProvider' => $keyDataProvider,
+        'columns' => [
+            ['class' => 'wma\grid\SerialColumn'],
+            [
+                'attribute' => 'type',
+                'value' => function ($model, $key, $index, $column) {
+                    return \wmc\models\user\UserKey::getReadableConstantList('TYPE_', $model->type);
+                },
+                'enableSorting' => false
+            ],
+            ['attribute' => 'user_key', 'enableSorting' => false],
+            ['attribute' => 'created_at', 'format' => 'datetime', 'enableSorting' => false],
+            ['attribute' => 'expire', 'format' => 'datetime', 'enableSorting' => false],
+            [
+                'class' => 'wma\grid\ActionColumn',
+                'template' => '{delete}',
+                'iconOnly' => true,
+                'urlCreator' => function($action, $keyModel, $key, $index) use ($model) {
+                    return \yii\helpers\Url::toRoute(['user-key-delete', 'id' => $keyModel->id, 'user_id' => $model->id]);
+                }
+            ],
+        ],
+    ]);
+}?>
+<?php Widget::end() ?>
+
 <?php WidgetContainer::end() ?>
 
 <?php WidgetGrid::end() ?>
