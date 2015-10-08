@@ -2,6 +2,9 @@
 
 namespace wma\controllers;
 
+use yii\filters\VerbFilter;
+use \yii\filters\AccessControl;
+
 class Controller extends \yii\web\Controller {
     public $layout = '@wma/views/layouts/main';
 
@@ -10,7 +13,7 @@ class Controller extends \yii\web\Controller {
             [
                 'access' =>
                     [
-                        'class' => \yii\filters\AccessControl::className(),
+                        'class' => AccessControl::className(),
                         'rules' =>
                             [
                                 [
@@ -18,7 +21,13 @@ class Controller extends \yii\web\Controller {
                                     'roles' => ['admin'],
                                 ]
                             ]
-                    ]
+                    ],
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['post'],
+                    ],
+                ]
             ];
     }
 }

@@ -44,7 +44,8 @@ class Application extends \yii\web\Application
             'menu' => 'wma\controllers\MenuController',
             'log-backend' => 'wma\controllers\LogBackendController',
             'log-frontend' => 'wma\controllers\LogFrontendController',
-            'site' => 'wma\controllers\SiteController'
+            'site' => 'wma\controllers\SiteController',
+            'page' => 'wma\controllers\PageController'
         ];
         $config['controllerMap'] = isset($config['controllerMap']) ? ArrayHelper::merge($adminControllerMap, $config['controllerMap']) : $adminControllerMap;
 
@@ -139,7 +140,8 @@ class Application extends \yii\web\Application
             ];
             $serverName = $_SERVER['SERVER_NAME'];
             if (preg_match('/^admin\.(.+)$/', $serverName, $hostMatch)) {
-                $frontendUrlConfig['baseUrl'] = 'http://www.' . $hostMatch[1];
+                $prefix = YII_ENV_DEV ? 'http://' : 'http://www.';
+                $frontendUrlConfig['baseUrl'] = $prefix . $hostMatch[1];
             }
             $config['components']['urlManagerFrontend'] = $frontendUrlConfig;
         }
