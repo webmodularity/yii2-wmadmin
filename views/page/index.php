@@ -50,15 +50,8 @@ $addText = 'Add New ' . 'Page';
     'filterModel' => $searchModel,
     'columns' => [
         ['class' => 'wma\grid\SerialColumn'],
-        [
-            'attribute' => 'name',
-            'value' => function ($model, $key, $index, $column) {
-                return Html::a($model->name, Yii::$app->urlManagerFrontend->createAbsoluteUrl(["page/".$model->name.""]));
-            },
-            'format' => 'raw'
-        ],
+        'name',
         'title',
-        'layout',
         [
             'class' => 'wma\grid\data\StatusColumn',
             'attribute' => 'status'

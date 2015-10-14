@@ -87,7 +87,7 @@ class Application extends \yii\web\Application
         // rbac
         $config['components']['authManager'] = [
             'class' => 'wmc\rbac\DbManager',
-            'defaultRoles' => ['su', 'admin', 'author', 'user'],
+            'defaultRoles' => ['su', 'admin', 'author', 'user', 'guest'],
         ];
 
         // session

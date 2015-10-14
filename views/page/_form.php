@@ -17,7 +17,26 @@ use yii\helpers\Html;
         <?= $form->field($page, 'status')->dropDownList(    [0 => 'Disabled', 1 => 'Active'])->colSpan(4) ?>
     </div>
 
-    <?= $form->field($pageMarkdown, 'markdown')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($page, 'layout')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($pageMarkdown, 'markdown')->widget(\wmc\widgets\input\SimpleMDE::className(), ['clientOptions' => [
+        'toolbar' =>
+            [
+                'bold',
+                'italic',
+                'strikethrough',
+                'heading',
+                '|',
+                'quote',
+                'code',
+                '|',
+                'unordered-list',
+                'ordered-list',
+                '|',
+                'link',
+                'image',
+                '|',
+                'preview',
+                'guide'
+            ],
+        'spellChecker' => false
+    ]]) ?>
 </fieldset>

@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = 'Update: ' . $page->name;
 <?php $form = ActiveForm::begin(['options' => ['class' => 'smart-form']]) ?>
 <?= $this->render('_form', ['form' => $form, 'page' => $page, 'pageMarkdown' => $pageMarkdown]) ?>
     <footer>
-        <?= UpdateButton::widget(['itemName' =>  'Page']) ?>
+        <?= UpdateButton::widget(['itemName' =>  'Page', 'updateText' => 'Publish']) ?>
         <?= DeleteButton::widget(['model' => $page]) ?>
     </footer>
 <?php ActiveForm::end() ?>

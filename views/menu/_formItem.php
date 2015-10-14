@@ -9,5 +9,5 @@
     </div>
 </fieldset>
 <fieldset>
-    <?= $form->field($model, 'user_groups')->checkboxList(\wmc\models\user\UserGroup::getUserGroupList(false, true), ['cols' => 2]) ?>
+    <?= $form->field($model, 'user_groups')->checkboxList(\wmc\models\user\UserGroup::getUserGroupList(), ['cols' => 2]) ?>
 </fieldset>

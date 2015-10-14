@@ -18,7 +18,7 @@ class UserGroupColumn extends \wma\grid\DataColumnStyled
     ];
 
     public function init() {
-        $this->filter = UserGroup::getUserGroupList(Yii::$app->user->identity->group_id);
+        $this->filter = UserGroup::getUserGroupList(Yii::$app->user->identity->group_id, [UserGroup::GUEST]);
         $this->value = function ($model, $key, $index, $column) {
             if (isset(static::$colorMap[$model->{$this->attribute}])) {
                 return Html::tag('span', $model->group->name, ['class' => static::$colorMap[$model->{$this->attribute}]]);
