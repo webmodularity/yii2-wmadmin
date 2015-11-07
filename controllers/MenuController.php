@@ -3,16 +3,14 @@
 namespace wma\controllers;
 
 use Yii;
-use wma\models\MenuForm;
-use wma\models\MenuSearch;
 use wmc\models\Menu;
-use wma\models\MenuItemForm;
-use wma\models\MenuItemPositionForm;
+use wma\models\MenuSearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use wma\widgets\Alert;
+use wmc\models\user\UserGroup;
 
 /**
  * MenuController implements the CRUD actions for Menu model.
@@ -25,7 +23,7 @@ class MenuController extends \wma\controllers\Controller
             [
                 'access' =>
                     [
-                        'class' => \yii\filters\AccessControl::className(),
+                        'class' => AccessControl::className(),
                         'rules' =>
                             [
                                 [
@@ -38,7 +36,8 @@ class MenuController extends \wma\controllers\Controller
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['post'],
-                        'delete-item' => ['post']
+                        'delete-item' => ['post'],
+                        'move-item' => ['post']
                     ],
                 ],
             ]
@@ -52,14 +51,13 @@ class MenuController extends \wma\controllers\Controller
     public function actionIndex() {
         $searchModel = new MenuSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $model = new Menu();
-        $addModel = new MenuForm();
+        $model = new Menu(['type' => Menu::TYPE_ROOT]);
 
-        if (Yii::$app->request->isPost === true && $addModel->load(Yii::$app->request->post()) && $addModel->save()) {
+        if (Yii::$app->request->isPost === true && $model->load(Yii::$app->request->post()) && $model->makeRoot()) {
             Yii::$app->alertManager->add(Alert::widget(
                 [
                     'heading' => "Add Successful!",
-                    'message' => "The Menu (".$addModel->name.") has been inserted.",
+                    'message' => "The Menu (".$model->name.") has been inserted.",
                     'style' => 'success',
                     'block' => true,
                     'icon' => 'check-square-o'
@@ -70,8 +68,7 @@ class MenuController extends \wma\controllers\Controller
         return $this->render('@wma/views/menu/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'model' => $model,
-            'addModel' => $addModel
+            'model' => $model
         ]);
     }
 
@@ -79,124 +76,111 @@ class MenuController extends \wma\controllers\Controller
      * View/update root node as well as CRUD for MenuItems
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the menu is not a root node
      */
     public function actionUpdate($id) {
-        $menu = $this->findModel($id);
-        $menuForm = new MenuForm(['menu_id' => $menu->id, 'name' => $menu->name, 'icon' => $menu->icon]);
-        $menuItemForm = new MenuItemForm(['position' => new MenuItemPositionForm()]);
-
-        if ($menuItemForm->load(Yii::$app->request->post(), "MenuItemForm")
-            && $menuItemForm->position->load(Yii::$app->request->post(), "MenuItemPositionForm")
-            && $menuItemForm->position->validate()
-        ) {
-            if ($menuItemForm->save()) {
-                Yii::$app->alertManager->add(Alert::widget(
+        $menu = $this->findModel($id, 1);
+        if ($menu->type !== Menu::TYPE_ROOT) {
+            throw new NotFoundHttpException("The requested page doesn't exist");
+        }
+        $menuItem = new Menu(
+            [
+                'tree_id' => $menu->id,
+                'type' => Menu::TYPE_LINK,
+                'userGroupIds' =>
                     [
-                        'heading' => "Menu " . $menuItemForm->typeName . " Added!",
-                        'message' => "Successfully added a new Menu " . $menuItemForm->typeName . ": (" . $menuItemForm->name . ")",
-                        'style' => 'success',
-                        'block' => true,
-                        'icon' => 'check-square-o'
-                    ]));
-                return $this->refresh();
-            }
-        } else if ($menuForm->load(Yii::$app->request->post()) && $menuForm->save()) {
+                        UserGroup::GUEST,
+                        UserGroup::USER,
+                        UserGroup::AUTHOR,
+                        UserGroup::ADMIN,
+                        UserGroup::SU
+
+                    ]
+            ]);
+        $menuItem->setScenario('move');
+
+        $postData = Yii::$app->request->isPost ? Yii::$app->request->post() : null;
+        $postMenuUpdate = !is_null($postData) && $postData['Menu']['type'] == Menu::TYPE_ROOT ? true : false;
+        $postAddItem = !is_null($postData) && $postData['Menu']['type'] != Menu::TYPE_ROOT ? true : false;
+
+        if ($postMenuUpdate && $menu->load($postData)  && $menu->save()) {
             Yii::$app->alertManager->add(Alert::widget(
                 [
                     'heading' => "Menu Updated!",
-                    'message' => "Successfully updated ".$menuForm->name."",
+                    'message' => "Successfully updated ".$menu->name."",
                     'style' => 'success',
                     'block' => true,
                     'icon' => 'check-square-o'
                 ]));
             return $this->refresh();
-        }
-
-        if ($menuItemForm->hasErrors()) {
+        } else if ($postAddItem && $menuItem->load($postData) && $menuItem->saveNode()) {
             Yii::$app->alertManager->add(Alert::widget(
                 [
-                    'heading' => "Menu ".$menuItemForm->typeName." Add Failed!",
-                    'message' => "Failed to add new ".$menuItemForm->typeName." to Menu!",
-                    'style' => 'danger',
+                    'heading' => "Menu Item Added!",
+                    'message' => "Successfully added a new Menu Item: (" . $menuItem->name . ")",
+                    'style' => 'success',
                     'block' => true,
-                    'icon' => 'times-circle-o'
+                    'icon' => 'check-square-o'
                 ]));
+            return $this->refresh();
         }
 
         return $this->render('@wma/views/menu/update', [
             'menu' => $menu,
-            'menuForm' => $menuForm,
-            'menuItemForm' => $menuItemForm
+            'menuItem' => $menuItem
         ]);
     }
 
     public function actionUpdateItem($id) {
-        $menuItem = $this->findItemModel($id);
-        $menu = $this->findModel($menuItem->tree_id);
-        $menuItemForm = new MenuItemForm(
-            [
-                'id' => $menuItem->id,
-                'type' => $menuItem->type,
-                'name' => $menuItem->name,
-                'link' => $menuItem->link,
-                'icon' => $menuItem->icon,
-                'user_groups' => ArrayHelper::getColumn($menuItem->userGroups, 'id'),
-                'position' => new MenuItemPositionForm()
-            ]
-        );
+        $menuItem = $this->findModel($id, 2);
+        $menu = $this->findModel($menuItem->tree_id, 1);
+        $menuMove = $this->findModel($id, 2);
+        $menuMove->setScenario('move');
 
-        if ($menuItemForm->load(Yii::$app->request->post(), "MenuItemForm") && $menuItemForm->save()) {
+        if ($menuItem->load(Yii::$app->request->post()) && $menuItem->save()) {
             Yii::$app->alertManager->add(Alert::widget(
                 [
-                    'heading' => "Menu " . $menuItemForm->typeName . " Updated!",
-                    'message' => "Successfully updated " . $menuItemForm->typeName . ": (" . $menuItemForm->name . ")",
+                    'heading' => "Menu Item Updated!",
+                    'message' => "Successfully updated: " . $menuItem->name . "",
                     'style' => 'success',
                     'block' => true,
                     'icon' => 'check-square-o'
                 ]));
             return $this->refresh();
-        } else if ($menuItemForm->position->load(Yii::$app->request->post(), "MenuItemPositionForm") && $menuItemForm->position->validate()) {
-            if ($menuAttach = Menu::findOne($menuItemForm->position->item_id)) {
-                if ($menuItemForm->position->moveItem($menuItem, $menuAttach)) {
-                    Yii::$app->alertManager->add(Alert::widget(
-                        [
-                            'heading' => "Menu " . $menuItemForm->typeName . " Moved!",
-                            'message' => "Successfully moved " . $menuItemForm->typeName . ": (" . $menuItemForm->name . ")",
-                            'style' => 'success',
-                            'block' => true,
-                            'icon' => 'check-square-o'
-                        ]));
-                    return $this->refresh();
-                } else {
-                    Yii::$app->alertManager->add(Alert::widget(
-                        [
-                            'heading' => "Menu Move Failed!",
-                            'message' => "Failed to move ".$menuItemForm->name."",
-                            'style' => 'danger',
-                            'block' => true,
-                            'icon' => 'times-circle-o'
-                        ]));
-                }
-            } else {
-                $menuItemForm->addError('item_id', "Could not locate the specified Menu Item.");
-            }
         }
 
-        if ($menuItemForm->hasErrors()) {
+        return $this->render('@wma/views/menu/update-item', [
+            'menu' => $menu,
+            'menuItem' => $menuItem,
+            'menuMove' => $menuMove
+        ]);
+    }
+
+    public function actionMoveItem() {
+        $postData = Yii::$app->request->post('Menu');
+        $menuItem = $this->findModel($postData['id'], 2);
+        $menuItem->setScenario('move');
+
+        if ($menuItem->load(Yii::$app->request->post()) && $menuItem->saveNode()) {
             Yii::$app->alertManager->add(Alert::widget(
                 [
-                    'heading' => "Menu Update Failed!",
-                    'message' => "Failed to update ".$menuItemForm->name."",
+                    'heading' => "Menu Item Moved!",
+                    'message' => "Successfully moved: " . $menuItem->name . "",
+                    'style' => 'success',
+                    'block' => true,
+                    'icon' => 'check-square-o'
+                ]));
+        } else {
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => "Menu Move Failed!",
+                    'message' => "Failed to move ".$menuItem->name."",
                     'style' => 'danger',
                     'block' => true,
                     'icon' => 'times-circle-o'
                 ]));
         }
-
-        return $this->render('@wma/views/menu/update-item', [
-            'menu' => $menu,
-            'menuItemForm' => $menuItemForm
-        ]);
+        return $this->redirect(['update-item', 'id' => $postData['id']]);
     }
 
     /**
@@ -206,105 +190,57 @@ class MenuController extends \wma\controllers\Controller
      * @return mixed
      */
     public function actionDelete($id) {
-        try {
-            $error = false;
-            $deleted = $this->findModel($id)->deleteWithChildren();
-            if ($deleted === false) {
-                $error = "Delete Failed";
-            }
-        } catch (\Exception $e) {
-            $error = $e->getMessage();
+        $model = $this->findModel($id);
+        if ($model->type == Menu::TYPE_ROOT) {
+            $redirectUrl = ['index'];
+            $itemText = '';
+        } else {
+            $redirectUrl = ['update', 'id' => $model->tree_id];
+            $itemText = ' Item';
         }
-        if ($error !== false) {
+
+        if ($model->deleteWithChildren()) {
+            Yii::$app->alertManager->add(Alert::widget(
+                [
+                    'heading' => "Menu".$itemText." Deleted!",
+                    'message' => "The Menu".$itemText." has been removed from the database.",
+                    'style' => 'success',
+                    'block' => true,
+                    'icon' => 'check-square-o'
+                ]));
+        } else {
             Yii::$app->alertManager->add(Alert::widget(
                 [
                     'heading' => 'Delete Failed!',
-                    'message' => "The Menu could not be deleted, the server encountered an error: (".$error.")",
+                    'message' => "The Menu".$itemText." could not be deleted, the server encountered an internal error!",
                     'style' => 'danger',
                     'block' => true,
                     'icon' => 'times-circle-o'
                 ]));
-        } else {
-            Yii::$app->alertManager->add(Alert::widget(
-                [
-                    'heading' => 'Menu Deleted!',
-                    'message' => "The Menu has been removed from the database.",
-                    'style' => 'success',
-                    'block' => true,
-                    'icon' => 'check-square-o'
-                ]));
         }
 
-        return $this->redirect(['index']);
+        return $this->redirect($redirectUrl);
     }
 
     /**
-     * Deletes an existing Menu model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDeleteItem($id) {
-        try {
-            $error = false;
-            $menuItem = $this->findItemModel($id);
-            $treeId = $menuItem->tree_id;
-            $deleted = $menuItem->deleteWithChildren();
-            if ($deleted === false) {
-                $error = "Delete Failed";
-            }
-        } catch (\Exception $e) {
-            $error = $e->getMessage();
-        }
-        if ($error !== false) {
-            Yii::$app->alertManager->add(Alert::widget(
-                [
-                    'heading' => 'Menu Item Delete Failed!',
-                    'message' => "The Menu Item could not be deleted, the server encountered an error: (".$error.")",
-                    'style' => 'danger',
-                    'block' => true,
-                    'icon' => 'times-circle-o'
-                ]));
-            return $this->refresh();
-        } else {
-            Yii::$app->alertManager->add(Alert::widget(
-                [
-                    'heading' => 'Menu Item Deleted!',
-                    'message' => "The Menu Item has been removed from the database.",
-                    'style' => 'success',
-                    'block' => true,
-                    'icon' => 'check-square-o'
-                ]));
-            return $this->redirect(['update', 'id' => $treeId]);
-        }
-    }
-
-    /**
-     * Finds the (ROOT) Menu model based on its primary key value.
+     * Finds the Menu model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
+     * @param integer $rootConfig [0 => Both Root + Non Root Types, 1 => Force Root Type, 2 => Force Non Root Type]
      * @return Menu the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
-        if (($model = Menu::find()->where(['id' => $id])->roots()->one()) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+    protected function findModel($id, $rootConfig = 0) {
+        $query = Menu::find()->where(['id' => $id])->limit(1);
+        if ($rootConfig === 1) {
+            $query = $query->roots();
+        } else if ($rootConfig === 2) {
+            $query = $query->nonRoots();
         }
-    }
 
-    /**
-     * Finds the (NON-ROOT) Menu model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Menu the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findItemModel($id)
-    {
-        if (($model = Menu::find()->where(['id' => $id])->nonRoots()->one()) !== null) {
+        $model = $query->one();
+
+        if ($model !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

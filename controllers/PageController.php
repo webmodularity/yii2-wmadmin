@@ -11,6 +11,7 @@ use yii\base\InvalidCallException;
 use yii\helpers\VarDumper;
 use yii\web\NotFoundHttpException;
 use wma\widgets\Alert;
+use wma\models\PageMenuIntegrationForm;
 
 /**
  * PageController implements the CRUD actions for Page model.
@@ -41,6 +42,7 @@ class PageController extends Controller
     {
         $page = new Page();
         $pageMarkdown = new PageMarkdown();
+        $pageMenuIntegration = new PageMenuIntegrationForm(['active' => 0]);
 
         if ($pageMarkdown->load(Yii::$app->request->post()) && $page->load(Yii::$app->request->post()) && $pageMarkdown->validate() && $page->validate()) {
             $page->html = Markdown::process($pageMarkdown->markdown, 'gfm');
@@ -61,7 +63,8 @@ class PageController extends Controller
         }
         return $this->render('@wma/views/page/create', [
             'page' => $page,
-            'pageMarkdown' => $pageMarkdown
+            'pageMarkdown' => $pageMarkdown,
+            'pageMenuIntegration' => $pageMenuIntegration
         ]);
     }
 
@@ -75,8 +78,9 @@ class PageController extends Controller
     {
         $page = $this->findModel($id);
         $pageMarkdown = $page->latestMarkdown;
+        $pageMenuIntegration = new PageMenuIntegrationForm(['active' => 0]);
 
-        if ($pageMarkdown->load(Yii::$app->request->post()) && $page->load(Yii::$app->request->post()) && $pageMarkdown->validate() && $page->validate()) {
+        if ($pageMarkdown->load(Yii::$app->request->post()) && $page->load(Yii::$app->request->post()) && $pageMarkdown->validate() && $page->save()) {
             if (in_array('markdown', array_keys($pageMarkdown->getDirtyAttributes(['markdown'])))) {
                 $newMarkdown = new PageMarkdown();
                 $newMarkdown->page_id = $page->id;
@@ -100,7 +104,8 @@ class PageController extends Controller
         } else {
             return $this->render('@wma/views/page/update', [
                 'page' => $page,
-                'pageMarkdown' => $pageMarkdown
+                'pageMarkdown' => $pageMarkdown,
+                'pageMenuIntegration' => $pageMenuIntegration
             ]);
         }
     }

@@ -16,7 +16,7 @@ use yii\bootstrap\Button;
 use kartik\select2\Select2;
 use rmrevin\yii\fontawesome\FA;
 
-$this->title = "Menu Item: ".$menuItemForm->name."";
+$this->title = "Menu Item: ".$menuItem->name."";
 $this->params['breadcrumbs'][] = ['label' => 'Menus', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => "Menu: ".$menu->name."", 'url' => ['update', 'id' => $menu->id]];
 $this->params['breadcrumbs'][] = $this->title;
@@ -26,7 +26,7 @@ $this->params['wma-nav'] = 'Menus';
 
 <?php ContentContainer::begin() ?>
 
-<?= PageTitle::widget(['title' => 'Menu Item', 'subTitle' => $menuItemForm->name, 'icon' => 'cog']) ?>
+<?= PageTitle::widget(['title' => 'Menu Item', 'subTitle' => $menuItem->name, 'icon' => 'cog']) ?>
 
 <?= Yii::$app->alertManager->get() ?>
 
@@ -40,15 +40,15 @@ $this->params['wma-nav'] = 'Menus';
         'icon' => 'list',
         'buttons' => ['toggle'],
         'sortable' => true,
-        'toolbars' => [Html::tag('span', "ID: ".$menuItemForm->id."", ['class' => 'label label-default'])]
+        'toolbars' => [Html::tag('span', "ID: ".$menuItem->id."", ['class' => 'label label-default'])]
     ]
 ) ?>
 <?php WidgetBody::begin(['padding' => false]) ?>
 <?php $form = ActiveForm::begin(['options' => ['class' => 'smart-form']]) ?>
-<?= $this->render('_formItem', ['form' => $form, 'model' => $menuItemForm, 'menu' => $menu]) ?>
+<?= $this->render('_formItem', ['form' => $form, 'menuItem' => $menuItem, 'menu' => $menu]) ?>
     <footer>
         <?= UpdateButton::widget(['itemName' => 'Menu Item']) ?>
-        <?= DeleteButton::widget(['model' => $menuItemForm, 'itemName' => 'Menu Item', 'deleteUrl' => "delete-item"]) ?>
+        <?= DeleteButton::widget(['model' => $menuItem, 'itemName' => 'Menu Item']) ?>
     </footer>
 <?php ActiveForm::end() ?>
 <?php WidgetBody::end() ?>
@@ -64,8 +64,9 @@ $this->params['wma-nav'] = 'Menus';
     ]
 ) ?>
 <?php WidgetBody::begin(['padding' => false]) ?>
-<?php $form = ActiveForm::begin(['options' => ['class' => 'smart-form']]) ?>
-<?= $this->render('_formItemPosition', ['form' => $form, 'model' => $menuItemForm->position, 'menu' => $menu]) ?>
+<?php $form = ActiveForm::begin(['action' => ['move-item'], 'options' => ['class' => 'smart-form']]) ?>
+<?= Html::activeHiddenInput($menuItem, 'id') ?>
+<?= $this->render('_formItemPosition', ['form' => $form, 'menuItem' => $menuMove, 'menu' => $menu]) ?>
     <footer>
         <?= UpdateButton::widget(['updateText' => 'Move', 'itemName' => 'Menu Item']) ?>
     </footer>
@@ -93,7 +94,7 @@ $this->params['wma-nav'] = 'Menus';
 ) ?>
 <?php WidgetBody::begin() ?>
 
-<?= NestedList::widget(['menuId' => $menu->id, 'userPermissionFilter' => false, 'childDepth' => 6, 'currentId' => $menuItemForm->id]) ?>
+<?= NestedList::widget(['menuId' => $menu->id, 'userPermissionFilter' => false, 'childDepth' => 6, 'currentId' => $menuItem->id]) ?>
 
 <?php WidgetBody::end() ?>
 <?php Widget::end() ?>

@@ -47,7 +47,7 @@ $this->params['wma-nav'] = 'Pages';
 <?php WidgetBody::begin(['padding' => false]) ?>
 
 <?php $form = ActiveForm::begin(['options' => ['class' => 'smart-form']]) ?>
-<?= $this->render('_form', ['form' => $form, 'page' => $page, 'pageMarkdown' => $pageMarkdown]) ?>
+<?= $this->render('_form', ['form' => $form, 'page' => $page, 'pageMarkdown' => $pageMarkdown, 'pageMenuIntegration' => $pageMenuIntegration]) ?>
     <footer>
         <?= AddButton::widget(['itemName' => 'Page']) ?>
     </footer>

@@ -20,6 +20,7 @@ use rmrevin\yii\fontawesome\FA;
 $this->title = 'Update Page: ' . ' ' . $page->name;
 $this->params['breadcrumbs'][] = ['label' => 'Pages', 'url' => ['index']];
 $this->params['breadcrumbs'][] = 'Update: ' . $page->name;
+$this->params['wma-nav'] = 'Pages';
 ?>
 <?= Ribbon::widget() ?>
 
@@ -45,7 +46,7 @@ $this->params['breadcrumbs'][] = 'Update: ' . $page->name;
 <?php WidgetBody::begin(['padding' => false]) ?>
 
 <?php $form = ActiveForm::begin(['options' => ['class' => 'smart-form']]) ?>
-<?= $this->render('_form', ['form' => $form, 'page' => $page, 'pageMarkdown' => $pageMarkdown]) ?>
+<?= $this->render('_form', ['form' => $form, 'page' => $page, 'pageMarkdown' => $pageMarkdown, 'pageMenuIntegration' => $pageMenuIntegration]) ?>
     <footer>
         <?= UpdateButton::widget(['itemName' =>  'Page', 'updateText' => 'Publish']) ?>
         <?= DeleteButton::widget(['model' => $page]) ?>

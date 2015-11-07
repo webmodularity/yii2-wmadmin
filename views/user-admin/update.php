@@ -13,6 +13,7 @@ use wma\widgets\UpdateButton;
 use wma\widgets\Alert;
 use wma\widgets\WidgetBodyGridView;
 use yii\helpers\Html;
+use wmc\helpers\ConstantHelper;
 use yii\bootstrap\Button;
 use rmrevin\yii\fontawesome\FA;
 
@@ -147,7 +148,7 @@ $this->params['wma-nav'] = 'Users';
             [
                 'attribute' => 'type',
                 'value' => function ($model, $key, $index, $column) {
-                    return \wmc\models\user\UserKey::getReadableConstantList('TYPE_', $model->type);
+                    return ConstantHelper::humanizedFromValue(\wmc\models\user\UserKey::className(),'TYPE_', $model->type);
                 },
                 'enableSorting' => false
             ],

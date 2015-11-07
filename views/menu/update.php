@@ -59,15 +59,15 @@ $this->params['wma-nav'] = 'Menus';
         'icon' => 'list',
         'buttons' => ['toggle'],
         'sortable' => true,
-        'toolbars' => [Html::tag('span', "ID: ".$menuForm->menu_id."", ['class' => 'label label-default'])]
+        'toolbars' => [Html::tag('span', "ID: ".$menu->id."", ['class' => 'label label-default'])]
     ]
 ) ?>
 <?php WidgetBody::begin(['padding' => false]) ?>
 <?php $form = ActiveForm::begin(['options' => ['class' => 'smart-form']]) ?>
-<?= $this->render('_form', ['form' => $form, 'model' => $menuForm]) ?>
+<?= $this->render('_form', ['form' => $form, 'model' => $menu]) ?>
     <footer>
         <?= UpdateButton::widget(['itemName' => 'Menu']) ?>
-        <?= DeleteButton::widget(['model' => $menuForm, 'idField' => 'menu_id', 'itemName' => 'Menu']) ?>
+        <?= DeleteButton::widget(['model' => $menu]) ?>
     </footer>
 <?php ActiveForm::end() ?>
 <?php WidgetBody::end() ?>
@@ -88,8 +88,9 @@ $this->params['wma-nav'] = 'Menus';
 <?php WidgetBody::begin(['padding' => false]) ?>
 
 <?php $form = ActiveForm::begin(); ?>
-<?= $this->render('_formItem', ['form' => $form, 'model' => $menuItemForm, 'menu' => $menu]) ?>
-<?= $this->render('_formItemPosition', ['form' => $form, 'model' => $menuItemForm->position, 'menu' => $menu]) ?>
+<?= $this->render('_formItem', ['form' => $form, 'menuItem' => $menuItem]) ?>
+<?= $this->render('_formItemPosition', ['form' => $form, 'menuItem' => $menuItem, 'menu' => $menu]) ?>
+
     <footer>
         <?= Html::submitButton(FA::icon('plus') . ' Add<span class="hidden-xs hidden-sm"> Menu Item</span>', ['class' => 'btn btn-primary']) ?>
     </footer>

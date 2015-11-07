@@ -25,14 +25,14 @@
  * author: Sunny (@bootstraphunt)
  * email: info@myorange.ca
  * =======================================================================
- * 
+ *
  * GLOBAL ROOT (DO NOT CHANGE)
  */
 $.root_ = $('body');
 /*
  * APP CONFIGURATION (HTML/AJAX/PHP Versions ONLY)
  * Description: Enable / disable certain theme features here
- * GLOBAL: Your left nav in your app will no longer fire ajax calls, set 
+ * GLOBAL: Your left nav in your app will no longer fire ajax calls, set
  * it to false for HTML version
  */
 $.navAsAjax = false;
@@ -59,7 +59,7 @@ var root = this,
     debugStyle_success = 'background-color:green; font-weight:bold; color:#fff;',
     debugStyle_error = 'background-color:#ed1c24; font-weight:bold; color:#fff;',
 /*
- * Impacts the responce rate of some of the responsive elements (lower 
+ * Impacts the responce rate of some of the responsive elements (lower
  * value affects CPU but improves speed)
  */
     throttle_delay = 350,
@@ -70,7 +70,7 @@ var root = this,
 /*
  * Collapse current menu item as other menu items are expanded
  * Careful when using this option, if you have a long menu it will
- * keep expanding and may distrupt the user experience This is best 
+ * keep expanding and may distrupt the user experience This is best
  * used with fixed-menu class
  */
     menu_accordion = true,
@@ -87,29 +87,29 @@ var root = this,
  * turn this off if you prefer to use the onSave hook to save
  * these settings to your datatabse instead
  */
-    localStorageJarvisWidgets = true,
+    localStorageJarvisWidgets = false,
 /*
- * Turn off sortable feature for JarvisWidgets 
+ * Turn off sortable feature for JarvisWidgets
  */
     sortableJarvisWidgets = true,
 /*
- * Warning: Enabling mobile widgets could potentially crash your webApp 
- * if you have too many widgets running at once 
+ * Warning: Enabling mobile widgets could potentially crash your webApp
+ * if you have too many widgets running at once
  * (must have enableJarvisWidgets = true)
  */
-    enableMobileWidgets = false,
+    enableMobileWidgets = true,
 /*
  * Turn on fast click for mobile devices
  * Enable this to activate fastclick plugin
- * dependency: js/plugin/fastclick/fastclick.js 
+ * dependency: js/plugin/fastclick/fastclick.js
  */
     fastClick = false,
 /*
  * SMARTCHAT PLUGIN ARRAYS & CONFIG
- * Dependency: js/plugin/moment/moment.min.js 
- *             js/plugin/cssemotions/jquery.cssemoticons.min.js 
+ * Dependency: js/plugin/moment/moment.min.js
+ *             js/plugin/cssemotions/jquery.cssemoticons.min.js
  *             js/smart-chat-ui/smart.chat.ui.js
- * (DO NOT CHANGE BELOW) 
+ * (DO NOT CHANGE BELOW)
  */
     boxList = [],
     showList = [],
@@ -123,7 +123,7 @@ var root = this,
         gap: 35
     },
 /*
- * These elements are ignored during DOM object deletion for ajax version 
+ * These elements are ignored during DOM object deletion for ajax version
  * It will delete all objects during page load with these exceptions:
  */
     ignore_key_elms = ["#header, #left-panel, #right-panel, #main, div.page-footer, #shortcut, #divSmallBoxes, #divMiniIcons, #divbigBoxes, #voiceModal, script, .ui-chatbox"],
@@ -137,9 +137,9 @@ var root = this,
  */
     voice_command_auto = false,
 /*
- * 	Sets the language to the default 'en-US'. (supports over 50 languages 
+ * 	Sets the language to the default 'en-US'. (supports over 50 languages
  * 	by google)
- * 
+ *
  *  Afrikaans         ['af-ZA']
  *  Bahasa Indonesia  ['id-ID']
  *  Bahasa Melayu     ['ms-MY']

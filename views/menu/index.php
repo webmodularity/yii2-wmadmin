@@ -78,8 +78,8 @@ $form = ModalForm::begin([
     'headerText' => $addText,
     'submitText' => $addText,
     'size' => ModalForm::SIZE_SMALL,
-    'clientOptions' => ['show' => $addModel->hasErrors()]
+    'clientOptions' => ['show' => $model->hasErrors()]
 ]);
 ?>
-<?= $this->render('_form', ['model' => $addModel, 'form' => $form->form]) ?>
+<?= $this->render('_form', ['model' => $model, 'form' => $form->form]) ?>
 <?php ModalForm::end(); ?>

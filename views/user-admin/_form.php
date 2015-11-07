@@ -24,7 +24,7 @@ use wmc\models\user\UserGroup;
     </div>
 
     <div class="row">
-        <?= $form->field($model, 'group_id')->label("User Group")->dropdownList(UserGroup::getUserGroupList(Yii::$app->user->identity->group_id, [UserGroup::GUEST]),
+        <?= $form->field($model, 'group_id')->label("User Group")->dropdownList(UserGroup::getAccessibleGroupList(null, [UserGroup::GUEST]),
             ['options' => \wma\grid\data\UserGroupColumn::getDropdownOptions(), 'disabled' => Yii::$app->user->id === $model->id])->colSpan(6) ?>
         <?= $form->field($model, 'status')->label("Status")->dropdownList(\wmc\models\user\User::getUserStatusList(),
             ['options' => \wma\grid\data\UserStatusColumn::getDropdownOptions(), 'disabled' => Yii::$app->user->id === $model->id])->colSpan(6) ?>
