@@ -5,7 +5,7 @@ use yii\web\AssetBundle;
 
 /**
  * Class AdminAsset
- * Based on SmartAdmin v1.5.2
+ * Based on Admin-LTE v2.x.x
  * @package wma\web
  */
 
