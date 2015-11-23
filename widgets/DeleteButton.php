@@ -27,13 +27,13 @@ class DeleteButton extends \yii\base\Widget
 
     public function run() {
         $idField = $this->idField;
-        return Html::a(FA::icon('times') . '&nbsp;' . $this->deleteText
-            . Html::tag('span', '&nbsp;' . $this->itemName, ['class' => "hidden-xs hidden-sm"]), null,
+        return Html::a(FA::icon('times') . '&nbsp;' . $this->deleteText . Html::tag('span', '&nbsp;' . $this->itemName, ['class' => "hidden-xs hidden-sm"]),
+            Url::to([$this->deleteUrl, 'id' => $this->model->{$idField}]),
             [
                 'class' => 'btn btn-danger',
                 'disabled' => $this->disabled,
-                'href' => Url::to([$this->deleteUrl, 'id' => $this->model->{$idField}]),
-                'data-toggle' => 'confirmation'
+                'data-toggle' => 'confirmation',
+                'data-placement' => 'top'
             ]);
     }
 }
