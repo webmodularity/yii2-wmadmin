@@ -3,41 +3,21 @@
 use wma\widgets\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = 'Login';
-$form = ActiveForm::begin([
-        'options' => ['class' => 'smart-form client-form']
-    ]) ?>
-    <header>
-        Sign In
-    </header>
+$registerLink = Yii::$app->adminSettings->getOption('user.register.webRegistration') ? '<br />' . Html::a('Register New Account', ['register']) : '';
 
-    <fieldset>
-        <?php
-        echo $form->field(
-            $model,
-            'email',
-            [
-                'inputOptions' => [
-                    'tabindex' => 1,
-                    'autofocus' => 'autofocus'
-                ]
-            ])->iconAppend('envelope')->input('email');
-        echo $form->field(
-            $model,
-            'password',
-            [
-                'inputOptions' => [
-                    'tabindex' => 2
-                ]
-            ])->iconAppend('lock')->passwordInput()->hint(Html::a('Forgot password?', 'forgot-password'));
+$this->title = 'Login'; ?>
+    <p class="login-box-msg">All CMS User Sessions are Logged.</p>
 
-        if (Yii::$app->getUser()->enableAutoLogin === true) {
-            echo $form->field($model, 'rememberMe')->checkbox()->label(false);
-        }
-        ?>
-    </fieldset>
+<?php $form = ActiveForm::begin() ?>
+<?= $form->field($model, 'email', ['inputOptions' => ['tabindex' => 1, 'autofocus' => 'autofocus']])->feedbackIcon('envelope')->placeholder('Email')->input('email')->label(false); ?>
+<?= $form->field($model, 'password', ['inputOptions' => ['tabindex' => 2]])->feedbackIcon('lock')->placeholder('Password')->passwordInput()->label(false); ?>
 
-    <footer>
-        <?= Html::submitButton('Sign In', ['class' => 'btn btn-primary', 'tabindex' => 3]) ?>
-    </footer>
+    <div class="row">
+        <div class="col-xs-6">
+            <?= Html::a('Forgot password?', 'forgot-password') . $registerLink ?>
+        </div>
+        <div class="col-xs-6">
+            <?= Html::submitButton('Sign In', ['class' => 'btn btn-primary btn-block btn-flat', 'tabindex' => 3]) ?>
+        </div>
+    </div>
 <?php ActiveForm::end() ?>

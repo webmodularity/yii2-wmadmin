@@ -8,14 +8,45 @@ use yii\base\InvalidConfigException;
 
 class AdminSettings extends \yii\base\Component
 {
+    static $skinColors = [
+        'blue', 'blue-light',
+        'yellow', 'yellow-light',
+        'green', 'green-light',
+        'purple', 'purple-light',
+        'red', 'red-light',
+        'black', 'black-light'
+    ];
+    static $templateSections = [
+        'layout', 'sidebar', 'header', 'footer'
+    ];
+
     private $_template = [
-        'theme' => 'default',
-        'navStyle' => 'default',
-        'fixedLayout' => 'none',
-        'fixedFooter' => false,
-        'fixedWidth' => false,
-        'headerDropdown' => false,
-        'notificationButton' => false
+        'skin' => null,
+        'layout' => [
+            'fixed' => false,
+            'boxed' => false
+        ],
+        'header' => [
+            'nav' => false,
+            'messages' => false,
+            'notifications' => false,
+            'tasks' => false,
+            'user' => true
+        ],
+        'sidebar' => [
+            'collapsed' => false,
+            'mini' => true,
+            'user' => false,
+            'search' => false
+        ],
+        'footer' => [
+            'version' => true,
+            'copyright' => [
+                'name' => 'WebModularity',
+                'link' => 'http://www.webmodularity.com',
+                'date' => true
+            ]
+        ]
     ];
     private $_user = [
         'sessionDuration' => 14400,
@@ -34,58 +65,26 @@ class AdminSettings extends \yii\base\Component
     }
 
     /**
-     * Set admin template options. Reference SmartAdmin documentation for behaviors.
-     * The fixedFooter,and fixedWidth booleans can be combined though the fixedWidth toggle
-     * does not work with the 'header+nav' or 'header+nav+ribbon' fixedLayout options.
-     * options array[
-     *  'theme' => (default|dark-elegance|ultra-white|google),
-     *  'navStyle' => (default|minified|hidden|top),
-     *  'fixedLayout' => (none|header|header+nav|header+nav+ribbon)
-     *  'fixedWidth' => bool (defaults to false),
-     *  'fixedFooter' => bool (defaults to false),
-     *  'headerDropdown' => bool (defaults to true)
-     *  'notificationButton' => bool (defaults to true)
-     *
-     * ]
+     * Set admin template options. Refer to $this->_template for options
      * @param $options array set template options via array config
      */
 
     public function setTemplate($options) {
         if (is_array($options)) {
             foreach ($options as $key => $val){
-                if (   ($key == 'theme' && in_array($val,['dark-elegance','ultra-white','google','pixel-smash', 'glass']))
-                    || ($key == 'navStyle' && in_array($val,['minified','hidden','top']))
-                    || ($key == 'fixedLayout' && in_array($val,['header','header+nav','header+nav+ribbon']))
-                    || (is_bool($val) && in_array($key, ['headerDropdown', 'notificationButton']))
-                ) {
-                    $this->_template[$key] = $val;
-                } else if (($key == 'fixedFooter' || $key == 'fixedWidth') && is_bool($val)) {
-                    $this->_template[$key] = $val;
+                if ($key == 'skin' && in_array($val, static::$skinColors)) {
+                    $this->_template['skin'] = $val;
+                } else if (in_array($key, static::$templateSections) && is_array($val)) {
+                    foreach ($val as $altKey => $altVal) {
+                        $this->_template[$key][$altKey] = $altVal;
+                    }
                 }
-            }
-            // Ensure fixed-layout != header+nav or header+nav+ribbon if fixed-width is true
-            if (    $this->_template['fixedWidth'] === true
-                && ($this->_template['fixedLayout'] == 'header+nav'
-                    || $this->_template['fixedLayout'] == 'header+nav')
-            ) {
-                $this->_template['fixedLayout'] = 'none';
             }
         }
     }
 
     /**
-     * Set admin user options.
-     * options [
-     *  'enableAutoLogin' => bool (default set in wma\web\Application),
-     *  'sessionDuration' => int (seconds) (default *varies based on allowCookies* set in wma\web\Application),
-     *  'register' => [
-     *      'webRegistration' -> bool (allow new admin users via web registration form),
-     *      'confirmEmail' => bool (send account confirmation email to change status from new to active)
-     *                             Only applies when webRegistration is set to true,
-     *      'newUserStatus' => int (-1:Deleted|0:New|1:Active),
-     *      'newUserRole' => int (1:User->255:SuperAdmin),
-     *   ]
-     * ]
+     * Set admin user options. Refer to $this->_user for options.
      * @param $options array set template options via array config
      */
 

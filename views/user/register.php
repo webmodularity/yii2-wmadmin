@@ -3,28 +3,23 @@
 use wma\widgets\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = 'Register';
-$form = ActiveForm::begin([
-        'options' => ['class' => 'smart-form client-form']
-    ]) ?>
-    <header>
-        Register New Account
-    </header>
+$this->title = 'Register'; ?>
+    <p class="login-box-msg">Register New Account</p>
 
-    <fieldset>
-        <div class="row">
-            <?= $form->field($model->person, 'first_name')->placeholder()->colspan(6)->iconAppend('user') ?>
-            <?= $form->field($model->person, 'last_name')->placeholder()->colspan(6)->iconAppend('user') ?>
-        </div>
-        <?= $form->field($model, 'email')->placeholder()->iconAppend('envelope') ?>
-        <div class="row">
-            <?= $form->field($model, 'password')->placeholder()->passwordInput()->colspan(6)->iconAppend('lock') ?>
-            <?= $form->field($model, 'password_confirm')->placeholder()->passwordInput()->colspan(6)->iconAppend('lock') ?>
-        </div>
-        <?= $form->field($model, 'captcha')->widget('wmc\modules\recaptcha\widgets\Recaptcha')->label(false); ?>
-    </fieldset>
+<?php $form = ActiveForm::begin() ?>
+    <?= $form->field($model->person, 'first_name')->placeholder()->feedbackIcon('user')->label(false) ?>
+    <?= $form->field($model->person, 'last_name')->placeholder()->feedbackIcon('user')->label(false) ?>
+    <?= $form->field($model, 'email')->placeholder()->feedbackIcon('envelope')->label(false) ?>
+    <?= $form->field($model, 'password')->placeholder()->passwordInput()->colspan(6)->feedbackIcon('lock')->label(false) ?>
+    <?= $form->field($model, 'password_confirm')->placeholder()->passwordInput()->colspan(6)->feedbackIcon('lock')->label(false) ?>
+    <?= $form->field($model, 'captcha')->widget('wmc\modules\recaptcha\widgets\Recaptcha')->label(false); ?>
 
-    <footer>
-        <?= Html::submitButton('Register', ['class' => 'btn btn-primary']) ?>
-    </footer>
+    <div class="row">
+        <div class="col-xs-6">
+            <?= Html::a('User Login', 'login') ?>
+        </div>
+        <div class="col-xs-6">
+            <?= Html::submitButton('Register' , ['class' => 'btn btn-primary btn-block btn-flat']) ?>
+        </div>
+    </div>
 <?php ActiveForm::end() ?>

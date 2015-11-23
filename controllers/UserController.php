@@ -17,7 +17,8 @@ class UserController extends \wmc\controllers\UserController
         'login' => '@wma/views/user/login',
         'forgotPassword' => '@wma/views/user/forgot-password',
         'resetPassword' => '@wma/views/user/reset-password',
-        'register' => '@wma/views/user/register'
+        'register' => '@wma/views/user/register',
+        'error' => '@wma/views/user/error'
     ];
 
     public $emailData = [
@@ -26,6 +27,14 @@ class UserController extends \wmc\controllers\UserController
             'subject' => "User Email Confirmation"
         ]
     ];
+
+    public function actionError() {
+        $exception = Yii::$app->errorHandler->exception;
+        if ($exception !== null) {
+            $statusCode = isset($exception->statusCode) ? $exception->statusCode : '';
+            return $this->render($this->viewFile['error'], ['exception' => $exception, 'statusCode' => $statusCode]);
+        }
+    }
 
     public function actionRegister() {
         $model = new User([

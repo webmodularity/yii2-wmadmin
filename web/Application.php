@@ -9,8 +9,26 @@ use yii\helpers\VarDumper;
 
 class Application extends \yii\web\Application
 {
-    private $_adminAssetPath;
-    private $_adminAssetUrl;
+    public $version = '2.1.0';
+
+    public $nameCms = 'CMS';
+
+    /**
+     * @var string Abbreviated site name, if not specified will use value of $this->$name
+     * Is used mainly when the sidebar navigation is minimized, should be 3 or 4 characters
+     */
+    protected $_nameShort;
+
+    public function getNameShort() {
+        return empty($this->_nameShort) ? strtoupper(substr($this->name, 0, 3)) : $this->_nameShort;
+    }
+
+    public function setNameShort($shortName) {
+        if (is_string($shortName) && !empty($shortName)) {
+            $this->_nameShort = $shortName;
+        }
+    }
+
     private $_requiredParams = [
         'siteName',
         'adminEmail',
@@ -169,7 +187,7 @@ class Application extends \yii\web\Application
         $config['components']['errorHandler'] = isset($config['components']['errorHandler'])
             ? $config['components']['errorHandler']
             : [];
-        $config['components']['errorHandler']['errorAction'] = '/user/error';
+        $config['components']['errorHandler']['errorAction'] = 'user/error';
 
         $adminConfig = [
             'defaultRoute' => '/dashboard/go',
@@ -180,32 +198,11 @@ class Application extends \yii\web\Application
 
     public function init() {
         parent::init();
-        $asset = Yii::$app->assetManager->publish('@wma/assets',['forceCopy' => false]);
-        $this->_adminAssetPath = $asset[0];
-        $this->_adminAssetUrl = $asset[1];
 
         // DI
         Yii::$container->set('yii\behaviors\TimestampBehavior', ['value' => new \yii\db\Expression('NOW()')]);
         Yii::$container->set('wmc\models\user\LoginForm', ['sessionDuration' => Yii::$app->adminSettings->getOption('user.sessionDuration')]);
         Yii::$container->set('wmc\swiftmailer\Mailer', ['htmlLayout' => '@wma/mail/layouts/html']);
-        Yii::$container->set('yii\bootstrap\BootstrapAsset', ['css' => ['css/bootstrap.min.css'], 'sourcePath' => '@wma/assets']);
-    }
-
-    /**
-     * Returns file path of published admin/assets/web directory
-     * @return string admin assets file path
-     */
-
-    public function getAdminAssetPath() {
-        return $this->_adminAssetPath;
-    }
-
-    /**
-     * Returns URL of published admin/assets/web directory
-     * @return string admin assets URL
-     */
-
-    public function getAdminAssetUrl() {
-        return $this->_adminAssetUrl;
+        Yii::$container->set('yii\bootstrap\BootstrapAsset', ['css' => ['css/bootstrap.min.css'], 'sourcePath' => '@vendor/almasaeed2010/adminlte/bootstrap']);
     }
 }

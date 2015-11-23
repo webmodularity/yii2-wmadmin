@@ -6,38 +6,32 @@ use yii\helpers\Html;
 
 class Alert extends \wmc\widgets\Alert
 {
-    public $block = false;
-
-    public function init() {
-        parent::init();
-        // Normalize block
-        if (!is_bool($this->block)) {
-            $this->block = false;
-        }
-    }
-
-    public function getContainerOptions() {
-        $options = parent::getContainerOptions();
-        if ($this->block === true) {
-            $options['class'] .= ' alert-block';
-        }
-        return $options;
-    }
+    public $callout = false;
 
     public function getHeadingHtml()
     {
-        if ($this->block === true) {
-            return Html::tag('h4', parent::getIconHtml() . $this->heading, ['class' => 'alert-heading']);
-        } else {
-            return parent::getHeadingHtml();
-        }
+        return Html::tag('h4', parent::getIconHtml() . $this->heading, ['class' => 'alert-heading']);
     }
 
     public function getIconHtml() {
-        if ($this->block === true) {
-            return '';
+        return null;
+    }
+
+    public function getCloseHtml() {
+        if ($this->callout) {
+            $this->close = false;
+        }
+        return parent::getCloseHtml();
+    }
+
+    public function getContainerOptions() {
+        if ($this->callout) {
+            return [
+                'class' => 'callout callout-' . $this->style,
+                'role' => 'alert'
+            ];
         } else {
-            return parent::getIconHtml();
+            return parent::getContainerOptions();
         }
     }
 }

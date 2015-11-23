@@ -3,10 +3,12 @@
 namespace wma\widgets;
 
 use Yii;
-use rmrevin\yii\fontawesome\FA;
+use yii\helpers\Html;
 
 class UserIcon extends \yii\base\Widget
 {
+    public $htmlOptions = [];
+
     protected $_iconSource = 'gravatar';
     protected $_size = null;
 
@@ -18,9 +20,9 @@ class UserIcon extends \yii\base\Widget
 
     public function run() {
         if ($this->_iconSource == 'gravatar') {
-            $gravatarHash = md5(strtolower(Yii::$app->user->identity->email));
-            $source = 'https://www.gravatar.com/avatar/' . $gravatarHash;
-            return is_null($this->_size) ? $source : $source . '?s=' . $this->_size;
+            $size = is_null($this->_size) ? 'd=mm' : '?d=mm&s=' . $this->_size;
+            $src = 'https://www.gravatar.com/avatar/' . md5(strtolower(Yii::$app->user->identity->email)) . $size;
+            return Html::img($src, $this->htmlOptions);
         }
     }
 }

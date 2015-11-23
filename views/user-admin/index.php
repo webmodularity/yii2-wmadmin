@@ -1,43 +1,23 @@
 <?php
 
-use wma\widgets\Ribbon;
-use wma\widgets\Widget;
-use wma\widgets\WidgetBodyGridView;
-use wma\widgets\WidgetGrid;
-use wma\widgets\WidgetContainer;
-use wma\widgets\PageTitle;
-use wma\widgets\ContentContainer;
 use yii\helpers\Html;
+use wma\widgets\Box;
+use wma\grid\GridView;
 
 $this->title = 'Users';
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['wma-nav'] = 'Users';
-$addText = 'Add New User';
+$addText = 'Add User';
 ?>
-<?= Ribbon::widget() ?>
-
-<?php ContentContainer::begin() ?>
-
-<?= PageTitle::widget(['subTitle' => 'Site Users', 'icon' => 'users']) ?>
 
 <?= Yii::$app->alertManager->get() ?>
 
-<?php WidgetGrid::begin() ?>
-<?php WidgetContainer::begin(['htmlOptions' => ['class' => "col-xs-12 col-sm-12 col-md-12 col-lg-12"]]) ?>
-<?php Widget::begin(
-    [
-        'id' => 'user-list-all',
-        'title' => 'Users',
-        'icon' => 'user',
-        'buttons' => ['toggle'],
-        'sortable' => true,
-        'toolbars' => []
-    ]
-) ?>
-<?= WidgetBodyGridView::widget([
-    'bodyOptions' => [
-        'padding' => false
-    ],
+<?php Box::begin([
+    'title' => $this->title,
+    'padding' => false,
+    'headerBorder' => false
+]) ?>
+<?= GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'columns' => [
@@ -68,10 +48,4 @@ $addText = 'Add New User';
         ['class' => 'wma\grid\ActionUserAdminColumn'],
     ],
 ]); ?>
-<?php Widget::end() ?>
-<?php WidgetContainer::end() ?>
-
-
-<?php WidgetGrid::end() ?>
-
-<?php ContentContainer::end() ?>
+<?php Box::end() ?>

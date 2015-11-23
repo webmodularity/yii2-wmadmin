@@ -2,15 +2,20 @@
 
 namespace wma\widgets;
 
+use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 use wmc\models\Menu;
 
 
-class Nav extends \wmc\widgets\menu\NestedList
+class SidebarMenu extends \wmc\widgets\menu\NestedList
 {
     public $menuName = 'wma-nav';
+    public $listOptions = ['class' => 'sidebar-menu'];
+    public $listNestedOptions = ['class' => 'treeview-menu'];
+
+    protected $_activeHeaderIds = [];
 
     public function init() {
         parent::init();
@@ -49,11 +54,18 @@ class Nav extends \wmc\widgets\menu\NestedList
         if (!empty($link)) {
             $where['link'] = $link;
         }
-        $this->currentId = Menu::find()->select(['id'])->where($where)->scalar();
+        $currentMenu = Menu::find()->where($where)->one();
+        if (!is_null($currentMenu)) {
+            $this->currentId = $currentMenu->id;
+            $parents = $currentMenu->parents()->andWhere(['!=', 'depth', 0])->all();
+            foreach ($parents as $p) {
+                $this->_activeHeaderIds[] = $p->id;
+            }
+        }
     }
 
     public function run() {
-        return Html::tag('nav', parent::run()) . Html::tag('span', Html::tag('i', '', ['class' => 'fa fa-arrow-circle-left hit']), ['class' => 'minifyme', 'data-action' => 'minifyMenu']);
+        return parent::run();
     }
 
     protected function buildItem($item, $index, $nested = false, $hasChildren  = false) {
@@ -63,8 +75,27 @@ class Nav extends \wmc\widgets\menu\NestedList
         }
 
         $link = $hasChildren === true || $item->type == Menu::TYPE_HEADER ? "#" : $item->link;
-        $linkContent = $nested === false ? Html::tag('span', $item->name, ['class' => 'menu-item-parent']) : $item->name;
-        return Html::a(static::iconTag($item->icon, $this->menu->icon, true, 'lg') . $linkContent, $link, ['title' => $item->name]);
+        $linkContent = $nested === false ? Html::tag('span', $item->name) : $item->name;
+        $linkExpand = $hasChildren ? FA::icon('angle-left', ['class' => 'pull-right']) : '';
+        $icon = $nested === true ? 'circle-o' : $item->icon;
+        return Html::a(static::iconTag($icon, $this->menu->icon) . $linkContent . $linkExpand, $link, ['title' => $item->name]);
+    }
+
+    public function listItemCallable($item, $index, $nested) {
+        $list = $item['list'];
+        $item = $item['item'];
+        $hasChildren = is_null($list) ? false : true;
+        $listItemOptions = $nested === false ? $this->listItemOptions : $this->listItemNestedOptions;
+        if ($this->currentId == $item->id) {
+            Html::addCssClass($listItemOptions, "active");
+        }
+        if ($item->type == Menu::TYPE_HEADER) {
+            Html::addCssClass($listItemOptions, "treeview");
+            if (in_array($item->id, $this->_activeHeaderIds)) {
+                Html::addCssClass($listItemOptions, "active");
+            }
+        }
+        return Html::tag('li', $this->buildItem($item, $index, $nested, $hasChildren) . $list, $listItemOptions);
     }
 
 }

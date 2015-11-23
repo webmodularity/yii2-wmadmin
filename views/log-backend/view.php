@@ -1,69 +1,42 @@
 <?php
 
-use yii\widgets\DetailView;
-use wma\widgets\Ribbon;
-use wma\widgets\Widget;
-use wma\widgets\WidgetBody;
-use wma\widgets\WidgetGrid;
-use wma\widgets\WidgetContainer;
-use wma\widgets\PageTitle;
-use wma\widgets\ContentContainer;
 use yii\helpers\Html;
-use yii\bootstrap\Button;
+use wma\widgets\Box;
+use wma\widgets\DetailView;
 use rmrevin\yii\fontawesome\FA;
 
 /* @var $this yii\web\View */
 /* @var $model wmc\models\Log */
 
-$this->title = "Log ID: ".$model->id."";
-$this->params['breadcrumbs'][] = ['label' => 'Error Log', 'url' => ['index']];
+$this->title = "Backend Log Entry: ".$model->id."";
+$this->params['breadcrumbs'][] = ['label' => 'Backend Log', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['wma-nav'] = 'Backend Log';
 ?>
-<?= Ribbon::widget() ?>
-
-<?php ContentContainer::begin() ?>
-
-<?= PageTitle::widget(['title' => 'Error Log', 'subTitle' => $model->id, 'icon' => 'ban']) ?>
 
 <?= Yii::$app->alertManager->get() ?>
 
-<?php WidgetGrid::begin() ?>
-
-<?php WidgetContainer::begin(['htmlOptions' => ['class' => "col-xs-12 col-sm-12 col-md-12 col-lg-12"]]) ?>
-
-<?php Widget::begin(
+<?php Box::begin(
     [
-        'id' => 'error-log-view',
-        'title' => 'Error Log Detail View',
-        'icon' => 'ban',
-        'buttons' => ['fullscreen', 'toggle'],
-        'sortable' => true,
-        'toolbars' => [
-            Html::tag('span', "ID: ".$model->id."", ['class' => 'label label-default']),
-            Html::a('Next ' . FA::icon('chevron-right'), ['view', 'id' => ($model->id)+1], ['class' => 'btn btn-success']),
-            Html::a(FA::icon('chevron-left') . ' Previous', ['view', 'id' => ($model->id)-1], ['class' => 'btn btn-success']),
+        'title' => 'Backend Log Entry',
+        'padding' => false,
+        'headerBorder' => false,
+        'tools' => [
+            Html::tag('span', "ID: ".$model->id."", ['class' => 'label label-primary']),
+            Html::a(FA::icon('chevron-left'), ['view', 'id' => ($model->id)-1], ['class' => 'btn btn-box-tool']),
+            Html::a(FA::icon('chevron-right'), ['view', 'id' => ($model->id)+1], ['class' => 'btn btn-box-tool']),
         ]
     ]
 ) ?>
-<?php WidgetBody::begin(['padding' => false]) ?>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'level',
-            'category',
-            'log_time:datetime',
-            'prefix:ntext',
-            'message:ntext',
-        ],
-    ]) ?>
-
-<?php WidgetBody::end() ?>
-<?php Widget::end() ?>
-
-<?php WidgetContainer::end() ?>
-
-<?php WidgetGrid::end() ?>
-
-<?php ContentContainer::end() ?>
+<?= DetailView::widget([
+    'model' => $model,
+    'wrapLong' => true,
+    'attributes' => [
+        'level',
+        'category',
+        'log_time:datetime',
+        'prefix:ntext',
+        'message:ntext',
+    ],
+]) ?>
+<?php Box::end() ?>

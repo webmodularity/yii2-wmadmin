@@ -4,5 +4,5 @@ use yii\helpers\Html;
 <fieldset>
     <?= Html::activeHiddenInput($model, 'type') ?>
     <?= $form->field($model, 'name') ?>
-    <?= $form->field($model, 'icon')->tooltip('This field should contain the name of the icon set that will be used when an icon is specified for a menu item. So use fa for font-awesome or glyphicon for glyphicon.') ?>
+    <?= $form->field($model, 'icon')->hint('Name of the icon set to be used for this menu. Use abbreviation: fa for font-awesome or glyphicon for glyphicon, etc.') ?>
 </fieldset>

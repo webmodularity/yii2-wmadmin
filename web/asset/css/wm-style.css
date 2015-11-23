@@ -1,0 +1,10 @@
+/* Used for tables that contain long strings without whitespace (logs, etc.) */
+.wrap-long > tbody > tr > td {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+}
+/* GridView gets stuck in a div. This ensures that we don't have bottom margin when we are in box */
+.box-body > div > .table {
+    margin-bottom: 0px;
+}

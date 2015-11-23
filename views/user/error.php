@@ -1,12 +1,15 @@
 <?php
 
 use yii\helpers\Html;
+use wma\widgets\Alert;
 
-$this->title = 'Error';
-?>
-    <header>
-        Error
-    </header>
+$this->title = 'Error'; ?>
+<?= Alert::widget([
+    'callout' => true,
+    'heading' => $statusCode . ' ' . $exception->getName() . " Error",
+    'message' => $exception->getMessage(),
+    'icon' => 'ban',
+    'style' => 'danger'
+])?>
 
-<h1><?= $exception->name ?></h1>
-<p><?= $esception->message ?></p>
+<p class="login-box-msg"><?= Html::a('Return Home', Yii::$app->getHomeUrl()) ?></p>

@@ -7,10 +7,11 @@ use yii\data\ActiveDataProvider;
 use yii\db\ActiveQueryInterface;
 use yii\helpers\Inflector;
 use yii\helpers\Html;
+use rmrevin\yii\fontawesome\FA;
 
 class DataColumn extends \yii\grid\DataColumn
 {
-    public $filterInputOptions = ['id' => null];
+    public $filterInputOptions = ['id' => null, 'class' => 'form-control'];
     /**
      * @inheritdoc
      */
@@ -59,7 +60,7 @@ class DataColumn extends \yii\grid\DataColumn
         $model = $this->grid->filterModel;
         if ($this->filter !== false && $model instanceof Model && $this->attribute !== null && $model->isAttributeActive($this->attribute)) {
             if ($model->hasErrors($this->attribute)) {
-                Html::addCssClass($this->filterOptions, 'state-error');
+                Html::addCssClass($this->filterOptions, 'has-error');
                 $error = ' ' . Html::error($model, $this->attribute, $this->grid->filterErrorOptions);
             } else {
                 $error = '';
@@ -68,7 +69,7 @@ class DataColumn extends \yii\grid\DataColumn
                 $options = array_merge(['prompt' => ''], $this->filterInputOptions);
                 return Html::activeDropDownList($model, $this->attribute, $this->filter, $options) . $error;
             } else {
-                return Html::activeTextInput($model, $this->attribute, array_merge(['iconAppend' => 'search'], $this->filterInputOptions)) . $error;
+                return "<div class='form-group has-feedback no-margin'>" . Html::activeTextInput($model, $this->attribute, $this->filterInputOptions) . FA::icon('search', ['class' => 'form-control-feedback'])->tag('span') . $error . "</div>";
             }
         } else {
             return parent::renderFilterCellContent();

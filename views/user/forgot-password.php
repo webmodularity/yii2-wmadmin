@@ -3,21 +3,18 @@
 use wma\widgets\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = 'Forgot Password';
-$form = ActiveForm::begin([
-        'options' => ['class' => 'smart-form client-form']
-    ]) ?>
-    <header>
-        <?= $this->title ?>
-    </header>
+$this->title = 'Forgot Password'; ?>
+<p class="login-box-msg">Enter your email address and a password reset link will be sent via email.</p>
 
-    <fieldset>
-        <section>
-            <?= $form->field($model, 'email')->placeholder()->iconAppend('envelope')->hint('Enter your email address and a password reset link will be sent via email.') ?>
-        </section>
-    </fieldset>
+<?php $form = ActiveForm::begin() ?>
+<?= $form->field($model, 'email')->placeholder()->feedbackIcon('envelope')->label(false) ?>
 
-    <footer>
-        <?= Html::submitButton($this->title , ['class' => 'btn btn-primary']) ?>
-    </footer>
+    <div class="row">
+        <div class="col-xs-6">
+            <?= Html::a('User Login', 'login') ?>
+        </div>
+        <div class="col-xs-6">
+            <?= Html::submitButton('Reset Password' , ['class' => 'btn btn-primary btn-block btn-flat']) ?>
+        </div>
+    </div>
 <?php ActiveForm::end() ?>

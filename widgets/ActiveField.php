@@ -6,64 +6,8 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use rmrevin\yii\fontawesome\FA;
 
-class ActiveField extends \yii\widgets\ActiveField
+class ActiveField extends \yii\bootstrap\ActiveField
 {
-    public $template = "{label}\n{input}\n{error}\n{hint}";
-    public $hintOptions = [
-        'tag' => 'div',
-        'class' => 'note'
-    ];
-    public $errorOptions = [
-        'tag' => 'em',
-        'class' => 'invalid'
-    ];
-    public $labelOptions = [
-        'class' => 'label'
-    ];
-    public $inputOptions = [];
-    public $options = [
-        'tag' => 'section'
-    ];
-
-    /**
-     * Attach a FontAwesome icon to end of input
-     * @param null $faIconName FontAwesome icon name, without fa- (use envelope rather than fa-envelope)
-     * @return $this
-     */
-
-    public function iconAppend($faIconName = null) {
-        if (is_string($faIconName) && !empty($faIconName)) {
-            $this->inputOptions['iconAppend'] = $faIconName;
-        }
-        return $this;
-    }
-
-    /**
-     * Attach a FontAwesome icon to front of input
-     * @param null $faIconName FontAwesome icon name, without fa- (use envelope rather than fa-envelope)
-     * @return $this
-     */
-
-    public function iconPrepend($faIconName = null) {
-        if (is_string($faIconName) && !empty($faIconName)) {
-            $this->inputOptions['iconPrepend'] = $faIconName;
-        }
-        return $this;
-    }
-
-    /**
-     * Add a tooltip to a text or textarea input. The content is not HTML encoded and can include icons, etc.
-     * @param $content string The content of tooltip, not HTML encoded
-     * @param string $position Controls tooltip placement on parent input element. The following positions are recognized:
-     * top-right (default), bottom-right, right, top-left, bottom-left, left
-     * @param string $iconPosition Set to either append (default) or prepend the fa-question-circle icon to parent input element
-     * @return $this
-     */
-
-    public function tooltip($content, $position = 'top-right', $iconPosition = 'append') {
-        $this->inputOptions['tooltip'] = compact('content', 'position', 'iconPosition');
-        return $this;
-    }
 
     /**
      * Adds grid class to field container
@@ -74,7 +18,7 @@ class ActiveField extends \yii\widgets\ActiveField
 
     public function colSpan($cols) {
         if (is_int($cols)) {
-            Html::addCssClass($this->options, "col col-" . $cols . "");
+            Html::addCssClass($this->options, "col-md-" . $cols . "");
         } else if (is_array($cols)) {
             Html::addGridColsClass($this->options, $cols);
         }
@@ -82,7 +26,8 @@ class ActiveField extends \yii\widgets\ActiveField
     }
 
     /**
-     * Turns off the label above the input and sets the placeholder field of compatible inputs (text, texarea, etc.).
+     * Sets the placeholder field of compatible inputs (text, texarea, etc.). This must be called before the input
+     * method. This is correct: placeholder()->input() while input()->placeholder() will not work.
      * @param string|null $placeholder String to use as placeholder text for input.
      * If a null value is passed, the attribute label will be used.
      * @return $this
@@ -100,28 +45,14 @@ class ActiveField extends \yii\widgets\ActiveField
                 ['placeholder' => $placeholder]
             );
         }
-        $this->parts['{label}'] = '';
         return $this;
     }
 
-    /**
-     * Make sure you call this method before [[checkboxList()]] or [[radioList()]] to have any effect.
-     * @return static the field object itself
-     */
+    public function feedbackIcon($iconName) {
+        Html::addCssClass($this->options, 'has-feedback');
+        $icon = FA::icon($iconName, ['class' => 'form-control-feedback'])->tag('span');
+        $this->template = str_replace('{input}', '{input}' . $icon, $this->template);
 
-    public function inline() {
-        $this->inputOptions['inline'] = true;
-        return $this;
-    }
-
-    /**
-     * Make sure you call this method before [[checkboxList()]] or [[radioList()]] to have any effect.
-     * @return static the field object itself
-     */
-
-    public function toggle() {
-        $this->enableClientValidation = false;
-        $this->inputOptions['toggle'] = true;
         return $this;
     }
 }

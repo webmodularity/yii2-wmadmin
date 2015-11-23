@@ -6,6 +6,7 @@ use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
 use rmrevin\yii\fontawesome\FA;
+use wmc\widgets\bootstrap\Confirm;
 
 class DeleteButton extends \yii\base\Widget
 {
@@ -20,6 +21,8 @@ class DeleteButton extends \yii\base\Widget
         if (empty($this->itemName)) {
             $this->itemName = Inflector::camel2words(Inflector::classify($this->model->tableName()));
         }
+        // Load Confirm
+        Confirm::widget();
     }
 
     public function run() {
@@ -29,8 +32,8 @@ class DeleteButton extends \yii\base\Widget
             [
                 'class' => 'btn btn-danger',
                 'disabled' => $this->disabled,
-                'data-wma-delete-url' => Url::to([$this->deleteUrl, 'id' => $this->model->{$idField}]),
-                'data-wma-delete-item-name' => $this->itemName
+                'href' => Url::to([$this->deleteUrl, 'id' => $this->model->{$idField}]),
+                'data-toggle' => 'confirmation'
             ]);
     }
 }
