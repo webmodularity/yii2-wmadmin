@@ -59,7 +59,6 @@ class MenuController extends \wma\controllers\Controller
                     'heading' => "Add Successful!",
                     'message' => "The Menu (".$model->name.") has been inserted.",
                     'style' => 'success',
-                    'block' => true,
                     'icon' => 'check-square-o'
                 ]));
             return $this->refresh();
@@ -109,7 +108,6 @@ class MenuController extends \wma\controllers\Controller
                     'heading' => "Menu Updated!",
                     'message' => "Successfully updated ".$menu->name."",
                     'style' => 'success',
-                    'block' => true,
                     'icon' => 'check-square-o'
                 ]));
             return $this->refresh();
@@ -119,7 +117,6 @@ class MenuController extends \wma\controllers\Controller
                     'heading' => "Menu Item Added!",
                     'message' => "Successfully added a new Menu Item: (" . $menuItem->name . ")",
                     'style' => 'success',
-                    'block' => true,
                     'icon' => 'check-square-o'
                 ]));
             return $this->refresh();
@@ -143,7 +140,6 @@ class MenuController extends \wma\controllers\Controller
                     'heading' => "Menu Item Updated!",
                     'message' => "Successfully updated: " . $menuItem->name . "",
                     'style' => 'success',
-                    'block' => true,
                     'icon' => 'check-square-o'
                 ]));
             return $this->refresh();
@@ -167,7 +163,6 @@ class MenuController extends \wma\controllers\Controller
                     'heading' => "Menu Item Moved!",
                     'message' => "Successfully moved: " . $menuItem->name . "",
                     'style' => 'success',
-                    'block' => true,
                     'icon' => 'check-square-o'
                 ]));
         } else {
@@ -176,7 +171,6 @@ class MenuController extends \wma\controllers\Controller
                     'heading' => "Menu Move Failed!",
                     'message' => "Failed to move ".$menuItem->name."",
                     'style' => 'danger',
-                    'block' => true,
                     'icon' => 'times-circle-o'
                 ]));
         }
@@ -205,7 +199,6 @@ class MenuController extends \wma\controllers\Controller
                     'heading' => "Menu".$itemText." Deleted!",
                     'message' => "The Menu".$itemText." has been removed from the database.",
                     'style' => 'success',
-                    'block' => true,
                     'icon' => 'check-square-o'
                 ]));
         } else {
@@ -214,7 +207,6 @@ class MenuController extends \wma\controllers\Controller
                     'heading' => 'Delete Failed!',
                     'message' => "The Menu".$itemText." could not be deleted, the server encountered an internal error!",
                     'style' => 'danger',
-                    'block' => true,
                     'icon' => 'times-circle-o'
                 ]));
         }

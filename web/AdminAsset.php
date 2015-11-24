@@ -19,8 +19,7 @@ class AdminAsset extends AssetBundle
         'rmrevin\yii\fontawesome\AssetBundle',
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
-        'yii\bootstrap\BootstrapPluginAsset',
-        'wmc\web\JqueryRedirectAsset'
+        'yii\bootstrap\BootstrapPluginAsset'
     ];
 
     public function init() {

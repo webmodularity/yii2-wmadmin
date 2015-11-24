@@ -5,8 +5,7 @@ namespace wma\grid;
 use yii\bootstrap\Button;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\helpers\Inflector;
+use wmc\widgets\bootstrap\DeleteConfirm;
 
 class ActionColumn extends \yii\grid\ActionColumn
 {
@@ -14,34 +13,37 @@ class ActionColumn extends \yii\grid\ActionColumn
     public $contentOptions = [
         'style' => 'white-space: nowrap;width:25px;'
     ];
-    public $deleteItemName;
+    public $deleteDisabled;
     public $iconOnly = false;
 
 public function init() {
     if (!isset($this->buttons['delete'])) {
+        DeleteConfirm::widget();
         $this->buttons['delete'] = function ($url, $model, $key) {
-            $deleteItemName = empty($this->deleteItemName)
-                ? Inflector::camel2words(Inflector::classify($model->tableName()))
-                : $this->deleteItemName;
             $text = $this->iconOnly !== true
-                ? ' ' . Html::tag('span', 'Delete', ['class' => 'hidden-xs hidden-sm'])
+                ? ' ' . Html::tag('span', 'Delete', ['class' => 'hidden-xs'])
                 : '';
+            $options = ['class' => 'btn-danger btn-xs'];
+            if (is_callable($this->deleteDisabled) && call_user_func($this->deleteDisabled, $model)) {
+                $options['disabled'] = true;
+            } else {
+                $options['data'] = [
+                    'href' => $url,
+                    'toggle' => 'delete-confirm',
+                    'placement' => 'left'
+                ];
+            }
             return Button::widget([
                 'encodeLabel' => false,
-                'label' => FA::icon('trash' . $text),
-                'options' => [
-                    'class' => 'btn-danger btn-xs',
-                    'data-wma-delete-url' => $url,
-                    'data-wma-delete-item-name' => $deleteItemName
-                ],
-                'tagName' => 'a'
+                'label' => FA::icon('trash') . $text,
+                'options' => $options
             ]);
         };
     }
     if (!isset($this->buttons['update'])) {
         $this->buttons['update'] = function ($url, $model, $key) {
             $text = $this->iconOnly !== true
-                ? ' ' . Html::tag('span', 'Edit', ['class' => 'hidden-xs hidden-sm'])
+                ? ' ' . Html::tag('span', 'Edit', ['class' => 'hidden-xs'])
                 : '';
             return Button::widget([
                 'encodeLabel' => false,
@@ -57,7 +59,7 @@ public function init() {
     if (!isset($this->buttons['view'])) {
         $this->buttons['view'] = function ($url, $model, $key) {
             $text = $this->iconOnly !== true
-                ? ' ' . Html::tag('span', 'View', ['class' => 'hidden-xs hidden-sm'])
+                ? ' ' . Html::tag('span', 'View', ['class' => 'hidden-xs'])
                 : '';
             return Button::widget([
                 'encodeLabel' => false,

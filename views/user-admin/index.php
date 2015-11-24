@@ -45,7 +45,10 @@ $addText = 'Add User';
         // 'created_at',
         // 'updated_at',
 
-        ['class' => 'wma\grid\ActionUserAdminColumn'],
+        [
+            'class' => 'wma\grid\ActionColumn',
+            'deleteDisabled' => function ($model){return Yii::$app->user->id == $model->id;}
+        ]
     ],
 ]); ?>
 <?php Box::end() ?>

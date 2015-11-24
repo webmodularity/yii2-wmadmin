@@ -2,11 +2,13 @@
 
 namespace wma\widgets;
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
 use rmrevin\yii\fontawesome\FA;
-use wmc\widgets\bootstrap\Confirm;
+use wmc\widgets\bootstrap\DeleteConfirm;
+use yii\bootstrap\Button;
 
 class DeleteButton extends \yii\base\Widget
 {
@@ -21,19 +23,28 @@ class DeleteButton extends \yii\base\Widget
         if (empty($this->itemName)) {
             $this->itemName = Inflector::camel2words(Inflector::classify($this->model->tableName()));
         }
-        // Load Confirm
-        Confirm::widget();
+        if (!$this->disabled) {
+            // Load Confirm
+            DeleteConfirm::widget();
+        }
     }
 
     public function run() {
         $idField = $this->idField;
-        return Html::a(FA::icon('times') . '&nbsp;' . $this->deleteText . Html::tag('span', '&nbsp;' . $this->itemName, ['class' => "hidden-xs hidden-sm"]),
-            Url::to([$this->deleteUrl, 'id' => $this->model->{$idField}]),
-            [
-                'class' => 'btn btn-danger',
-                'disabled' => $this->disabled,
-                'data-toggle' => 'confirmation',
-                'data-placement' => 'top'
-            ]);
+        $options = ['class' => 'btn btn-danger'];
+        if ($this->disabled) {
+            $options['disabled'] = true;
+        } else {
+            $options['data'] = [
+                'toggle' => 'delete-confirm',
+                'placement' => 'top',
+                'href' => Url::to([$this->deleteUrl, 'id' => $this->model->{$idField}])
+            ];
+        }
+        return Button::widget([
+            'label' => FA::icon('times') . '&nbsp;' . $this->deleteText . Html::tag('span', '&nbsp;' . $this->itemName, ['class' => "hidden-xs hidden-sm"]),
+            'encodeLabel' => false,
+            'options' => $options
+        ]);
     }
 }

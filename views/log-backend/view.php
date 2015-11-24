@@ -22,7 +22,7 @@ $this->params['wma-nav'] = 'Backend Log';
         'padding' => false,
         'headerBorder' => false,
         'tools' => [
-            Html::tag('span', "ID: ".$model->id."", ['class' => 'label label-primary']),
+            Html::tag('span', "ID: ".$model->id."", ['class' => 'label label-default']),
             Html::a(FA::icon('chevron-left'), ['view', 'id' => ($model->id)-1], ['class' => 'btn btn-box-tool']),
             Html::a(FA::icon('chevron-right'), ['view', 'id' => ($model->id)+1], ['class' => 'btn btn-box-tool']),
         ]

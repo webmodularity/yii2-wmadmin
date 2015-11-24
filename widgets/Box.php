@@ -21,6 +21,7 @@ class Box extends \yii\base\Widget
     public $responsive = true;
     public $headerBorder = true;
     public $footer;
+    public $disabled = false;
 
     protected $_style;
     protected $_tools = [];
@@ -74,10 +75,15 @@ class Box extends \yii\base\Widget
             Html::addCssClass($this->bodyOptions, 'table-responsive');
         }
 
-        ob_start();
+        if (!$this->disabled) {
+            ob_start();
+        }
     }
 
     public function run() {
+        if ($this->disabled) {
+            return '';
+        }
         $content = ob_get_clean();
         return Html::beginTag('div', $this->options)
                 . $this->renderHeader()

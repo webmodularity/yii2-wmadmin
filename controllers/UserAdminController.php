@@ -120,7 +120,6 @@ class UserAdminController extends Controller
                     'heading' => "User Updated!",
                     'message' => "Successfully updated record for ".$model->email."",
                     'style' => 'success',
-                    'block' => true,
                     'icon' => 'check-square-o'
                 ]));
             return $this->refresh();
@@ -131,7 +130,6 @@ class UserAdminController extends Controller
                         'heading' => "User Updated Failed!",
                         'message' => "Failed to update user!",
                         'style' => 'danger',
-                        'block' => true,
                         'icon' => 'times-circle-o'
                     ]));
             }
@@ -168,7 +166,6 @@ class UserAdminController extends Controller
                         'heading' => "User Deleted!",
                         'message' => "The User has been deleted. This record can be recovered by filtering user status to 'Deleted'.",
                         'style' => 'success',
-                        'block' => true,
                         'icon' => 'check-square-o'
                     ]));
             } else {
@@ -177,7 +174,6 @@ class UserAdminController extends Controller
                         'heading' => 'Delete User Failed!',
                         'message' => "The User could not be deleted, the server encountered an error.",
                         'style' => 'danger',
-                        'block' => true,
                         'icon' => 'times-circle-o'
                     ]));
             }
@@ -194,7 +190,6 @@ class UserAdminController extends Controller
                         'heading' => 'User PERMANENTLY Deleted!',
                         'message' => "The User has been PERMANENTLY deleted. Record removed from database, no future recovery available.",
                         'style' => 'success',
-                        'block' => true,
                         'icon' => 'check-square-o'
                     ]));
             } else {
@@ -203,7 +198,6 @@ class UserAdminController extends Controller
                         'heading' => 'Delete User Failed!',
                         'message' => "The User could not be PERMANENTLY deleted, the server encountered an error:",
                         'style' => 'danger',
-                        'block' => true,
                         'icon' => 'times-circle-o'
                     ]));
             }
@@ -220,7 +214,6 @@ class UserAdminController extends Controller
                     'heading' => 'User Key Deleted!',
                     'message' => "The User Key has been successfully deleted.",
                     'style' => 'success',
-                    'block' => true,
                     'icon' => 'check-square-o'
                 ]));
         } else {
@@ -229,7 +222,6 @@ class UserAdminController extends Controller
                     'heading' => 'Delete User Key Failed!',
                     'message' => "The User Key could not be deleted, the server encountered an error:",
                     'style' => 'danger',
-                    'block' => true,
                     'icon' => 'times-circle-o'
                 ]));
         }
@@ -253,7 +245,6 @@ class UserAdminController extends Controller
                     'heading' => 'New User AUTH Key Created!',
                     'message' => "The old AUTH key has been replaced with a new random key.",
                     'style' => 'success',
-                    'block' => true,
                     'icon' => 'check-square-o'
                 ]));
         } else {
@@ -263,7 +254,6 @@ class UserAdminController extends Controller
                     'heading' => 'New User AUTH Key Failed!',
                     'message' => "The User AUTH Key could not be regenerated, the server encountered an error:",
                     'style' => 'danger',
-                    'block' => true,
                     'icon' => 'times-circle-o'
                 ]));
         }
