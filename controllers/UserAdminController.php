@@ -269,7 +269,7 @@ class UserAdminController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id) {
-        if (($model = User::findOne($id)) !== null) {
+        if (($model = User::find()->where(['user.id' => $id])->joinWith(['group', 'person'])->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
