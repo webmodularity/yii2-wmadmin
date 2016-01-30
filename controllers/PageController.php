@@ -54,7 +54,6 @@ class PageController extends Controller
                             'heading' => "Page Created!",
                             'message' => "Successfully created page.",
                             'style' => 'success',
-                            'block' => true,
                             'icon' => 'check-square-o'
                         ]));
                     return $this->redirect(['update', 'id' => $page->id]);
@@ -80,7 +79,7 @@ class PageController extends Controller
         $pageMarkdown = $page->latestMarkdown;
         $pageMenuIntegration = new PageMenuIntegrationForm(['active' => 0]);
 
-        if ($pageMarkdown->load(Yii::$app->request->post()) && $page->load(Yii::$app->request->post()) && $pageMarkdown->validate() && $page->save()) {
+        if ($pageMarkdown->load(Yii::$app->request->post()) && $page->load(Yii::$app->request->post()) && $pageMarkdown->validate() && $page->validate()) {
             if (in_array('markdown', array_keys($pageMarkdown->getDirtyAttributes(['markdown'])))) {
                 $newMarkdown = new PageMarkdown();
                 $newMarkdown->page_id = $page->id;
@@ -92,14 +91,23 @@ class PageController extends Controller
                 }
                 $page->html = Markdown::process($pageMarkdown->markdown, 'gfm');
             }
-            Yii::$app->alertManager->add(Alert::widget(
-                [
-                    'heading' => "Page Updated!",
-                    'message' => "Successfully updated page.",
-                    'style' => 'success',
-                    'block' => true,
-                    'icon' => 'check-square-o'
-                ]));
+            if ($page->save()) {
+                Yii::$app->alertManager->add(Alert::widget(
+                    [
+                        'heading' => "Page Updated!",
+                        'message' => "Successfully updated page.",
+                        'style' => 'success',
+                        'icon' => 'check-square-o'
+                    ]));
+            } else {
+                Yii::$app->alertManager->add(Alert::widget(
+                    [
+                        'heading' => "Page Update Failed!",
+                        'message' => "Failed to save page.",
+                        'style' => 'danger',
+                        'icon' => 'times-circle-o'
+                    ]));
+            }
             return $this->refresh();
         } else {
             return $this->render('@wma/views/page/update', [

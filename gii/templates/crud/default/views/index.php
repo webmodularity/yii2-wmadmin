@@ -12,15 +12,10 @@ $nameAttribute = $generator->getNameAttribute();
 echo "<?php\n";
 ?>
 
-use wma\widgets\Ribbon;
-use wma\widgets\Widget;
-use wma\widgets\WidgetBodyGridView;
-use wma\widgets\WidgetGrid;
-use wma\widgets\WidgetContainer;
-use wma\widgets\PageTitle;
-use wma\widgets\ContentContainer;
 use yii\helpers\Html;
-use rmrevin\yii\fontawesome\FA;
+use wma\grid\ActionColumn;
+use wma\widgets\Box;
+use <?= $generator->indexWidgetType === 'grid' ? "wma\\grid\\GridView" : "wma\\widgets\\ListView" ?>;
 
 /* @var $this yii\web\View */
 <?= !empty($generator->searchModelClass) ? "/* @var \$searchModel " . ltrim($generator->searchModelClass, '\\') . " */\n" : '' ?>

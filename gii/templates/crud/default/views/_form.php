@@ -20,10 +20,8 @@ use yii\helpers\Html;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<fieldset>
 <?php foreach ($generator->getColumnNames() as $attribute) {
     if (in_array($attribute, $safeAttributes)) {
         echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
     }
 } ?>
-</fieldset>

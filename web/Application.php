@@ -63,7 +63,8 @@ class Application extends \yii\web\Application
             'log-backend' => 'wma\controllers\LogBackendController',
             'log-frontend' => 'wma\controllers\LogFrontendController',
             'site' => 'wma\controllers\SiteController',
-            'page' => 'wma\controllers\PageController'
+            'page' => 'wma\controllers\PageController',
+            'file-admin' => 'wma\controllers\FileAdminController',
         ];
         $config['controllerMap'] = isset($config['controllerMap']) ? ArrayHelper::merge($adminControllerMap, $config['controllerMap']) : $adminControllerMap;
 

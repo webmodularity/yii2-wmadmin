@@ -1,33 +1,21 @@
 <?php
 
-use wma\widgets\Ribbon;
-use wma\widgets\Widget;
-use wma\widgets\WidgetBody;
-use wma\widgets\WidgetGrid;
-use wma\widgets\WidgetContainer;
-use wma\widgets\PageTitle;
-use wma\widgets\ContentContainer;
 use wma\widgets\ActiveForm;
 use wma\widgets\DeleteButton;
 use wma\widgets\UpdateButton;
 use wma\widgets\Alert;
-use wma\widgets\WidgetBodyGridView;
-use yii\helpers\Html;
+use yii\bootstrap\Html;
 use wmc\helpers\ConstantHelper;
-use yii\bootstrap\Button;
 use rmrevin\yii\fontawesome\FA;
+use kartik\select2\Select2;
+use wma\widgets\Box;
+use wma\grid\GridView;
 
 $this->title = "User: ".$model->email."";
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['wma-nav'] = 'Users';
 ?>
-<?= Ribbon::widget() ?>
-
-<?php ContentContainer::begin() ?>
-
-<?= PageTitle::widget(['title' => 'User', 'subTitle' => $model->email, 'icon' => 'user']) ?>
-
 <?= Yii::$app->alertManager->get() ?>
 
 <?php WidgetGrid::begin() ?>
