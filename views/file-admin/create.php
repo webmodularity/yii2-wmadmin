@@ -17,7 +17,7 @@ $this->params['wma-nav'] = 'Add New File';
 <?= Yii::$app->alertManager->get() ?>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
 
         <?php $form = ActiveForm::begin() ?>
 

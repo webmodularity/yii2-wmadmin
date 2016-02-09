@@ -8,15 +8,16 @@ use wma\widgets\Box;
 /* @var $this yii\web\View */
 /* @var $model wmc\models\File */
 
-$this->title = 'File: ' . $model->name;
+$this->title = 'File: ' . $model->fullAlias;
 $this->params['breadcrumbs'][] = ['label' => 'Files', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->name;
+$this->params['wma-nav'] = 'Files';
 ?>
 
 <?= Yii::$app->alertManager->get() ?>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
 
         <?php $form = ActiveForm::begin() ?>
 

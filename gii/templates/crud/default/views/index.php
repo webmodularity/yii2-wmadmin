@@ -13,9 +13,9 @@ echo "<?php\n";
 ?>
 
 use yii\helpers\Html;
-use wma\grid\ActionColumn;
 use wma\widgets\Box;
 use <?= $generator->indexWidgetType === 'grid' ? "wma\\grid\\GridView" : "wma\\widgets\\ListView" ?>;
+<?= $generator->enablePjax ? 'use yii\widgets\Pjax;' : '' ?>
 
 /* @var $this yii\web\View */
 <?= !empty($generator->searchModelClass) ? "/* @var \$searchModel " . ltrim($generator->searchModelClass, '\\') . " */\n" : '' ?>
@@ -24,35 +24,19 @@ use <?= $generator->indexWidgetType === 'grid' ? "wma\\grid\\GridView" : "wma\\w
 
 $this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['wma-nav'] = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
-$addText = 'Add New ' . <?= $generator->generateString(Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>;
+$this->params['wma-nav'] = <?= $generator->generateString('All ' . Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
 ?>
-<?= "<?= " ?>Ribbon::widget() ?>
-
-<?= "<?php " ?>ContentContainer::begin() ?>
-
-<?= "<?= " ?>PageTitle::widget(['subTitle' => '', 'icon' => '']) ?>
-
 <?= "<?= " ?>Yii::$app->alertManager->get() ?>
 
-<?= "<?php " ?>WidgetGrid::begin() ?>
-<?= "<?php " ?>WidgetContainer::begin(['htmlOptions' => ['class' => "col-xs-12 col-sm-12 col-md-12 col-lg-12"]]) ?>
-<?= "<?php " ?>Widget::begin(
-    [
-        'id' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-list-all',
-        'title' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>,
-        'icon' => '',
-        'buttons' => ['toggle'],
-        'sortable' => true,
-        'toolbars' => [
-            Html::a(FA::icon('plus') . ' ' . 'Add ' . <?= $generator->generateString(Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['create'], ['class' => 'btn btn-success'])
-        ]
+<?= "<?php " ?>Box::begin([
+        'title' => $this->title,
+        'padding' => false,
+        'headerBorder' => false,
+        'tools' => []
     ]
 ) ?>
-<?= "<?= "?>WidgetBodyGridView::widget([
-        'bodyOptions' => [
-            'padding' => false
-        ],
+
+<?= "<?= "?>GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -78,13 +62,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     }
 }
 ?>
-            ['class' => 'wma\grid\ActionUserAdminColumn'],
+            ['class' => 'wma\grid\ActionColumn'],
         ],
     ]); ?>
-<?= "<?php " ?>Widget::end() ?>
-
-<?= "<?php " ?>WidgetContainer::end() ?>
-
-<?= "<?php " ?>WidgetGrid::end() ?>
-
-<?= "<?php " ?>ContentContainer::end() ?>
+<?= "<?php " ?>Box::end() ?>

@@ -22,7 +22,7 @@ class FileAdminController extends Controller
         $searchModel = new FileSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+        return $this->render('@wma/views/file-admin/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -47,6 +47,7 @@ class FileAdminController extends Controller
      */
     public function actionCreate()
     {
+        throw new NotFoundHttpException('The requested page does not exist.');
         $model = new File();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -71,7 +72,7 @@ class FileAdminController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['update', 'id' => $model->id]);
         } else {
-            return $this->render('update', [
+            return $this->render('@wma/views/file-admin/update', [
                 'model' => $model,
             ]);
         }

@@ -9,7 +9,7 @@ use yii\helpers\VarDumper;
 
 class Application extends \yii\web\Application
 {
-    public $version = '2.1.0';
+    public $version = '2.2.3';
 
     public $nameCms = 'CMS';
 
