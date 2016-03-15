@@ -3,11 +3,13 @@
 use yii\helpers\Html;
 use wma\widgets\Box;
 use wma\grid\GridView;
+use wmc\models\FilePath;
 
 /* @var $this yii\web\View */
 /* @var $searchModel wma\models\FileSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+Yii::$app->formatter->sizeFormatBase = 1000;
 
 $this->title = 'Files';
 $this->params['breadcrumbs'][] = $this->title;
@@ -37,7 +39,8 @@ $this->params['wma-nav'] = 'All Files';
         [
             'attribute' => 'file_path_id',
             'value' => 'filePath.path',
-            'label' => 'Path'
+            'label' => 'Path',
+            'filter' => FilePath::getFilePathList()
         ],
         [
             'attribute' => 'alias',
@@ -46,14 +49,26 @@ $this->params['wma-nav'] = 'All Files';
                 return $model->fullAlias;
             }
         ],
-        // 'inline',
+        [
+            'attribute' => 'bytes',
+            'label' => 'Size',
+            'format' => 'shortSize'
+        ],
         [
             'class' => 'wma\grid\data\StatusColumn',
             'attribute' => 'status'
         ],
-        'created_at:datetime',
-        'updated_at:datetime',
-        ['class' => 'wma\grid\ActionColumn','template' => '{delete}'],
+        [
+            'attribute' => 'created_at',
+            'format' => 'datetime',
+            'filter' => false
+        ],
+        [
+            'attribute' => 'updated_at',
+            'format' => 'datetime',
+            'filter' => false
+        ],
+        ['class' => 'wma\grid\ActionColumn'],
     ],
 ]); ?>
 <?php Box::end() ?>

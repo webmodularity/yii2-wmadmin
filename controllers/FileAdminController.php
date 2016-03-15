@@ -7,6 +7,7 @@ use wmc\models\File;
 use wma\models\FileSearch;
 use wma\controllers\Controller;
 use yii\web\NotFoundHttpException;
+use wmc\behaviors\FileUploadBehavior;
 
 /**
  * FileAdminController implements the CRUD actions for File model.
@@ -47,16 +48,24 @@ class FileAdminController extends Controller
      */
     public function actionCreate()
     {
-        throw new NotFoundHttpException('The requested page does not exist.');
-        $model = new File();
+        $model = new File(['inline' => true, 'status' => 1]);
+        $model->attachBehavior('fileUploadBehavior',[
+            'class' => FileUploadBehavior::className(),
+            'pathAttribute' => 'file_path_id',
+            'saveFileModel' => false
+        ]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('@wma/views/file-admin/create', [
-                'model' => $model,
-            ]);
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['index', 'id' => $model->id]);
+            } else {
+                $model->addError('upload_file', "Error while uploading file.");
+            }
         }
+
+        return $this->render('@wma/views/file-admin/create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -89,6 +98,33 @@ class FileAdminController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionRefreshSize($pathId = 0) {
+        $where = [];
+        if (is_int($pathId) && $pathId > 0) {
+            $where['file_path_id'] = $pathId;
+        }
+        Yii::warning("File Admin refreshSize action started.");
+        $count = $countChanged = $countError = 0;
+        foreach (File::find()->where($where)->joinWith(['fileType', 'filePath'])->all() as $file) {
+            $count++;
+            $actualBytes = @filesize(Yii::getAlias($file->filePath->path) . DIRECTORY_SEPARATOR . $file->fullAlias);
+            if ($actualBytes === false) {
+                $countError++;
+                Yii::warning("Unable to get filesize() of [".Yii::getAlias($file->filePath->path) . DIRECTORY_SEPARATOR . $file->fullAlias."]!");
+            } else if ($actualBytes != $file->bytes) {
+                $file->bytes = $actualBytes;
+                if (!$file->save(true, ['bytes'])) {
+                    $countError++;
+                    Yii::warning("Failed to update bytes to [".$actualBytes."] for file [ID: ".$file->id."].");
+                } else {
+                    $countChanged++;
+                }
+            }
+        }
+        Yii::warning("File Admin refreshSize action finished. Summary: [".$count."] Files scanned, [".$countChanged."] Files updated, [".$countError."] Errors.");
+        $this->redirect(['index']);
     }
 
     /**

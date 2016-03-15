@@ -17,7 +17,7 @@ class FileTypeColumn extends \wma\grid\DataColumnIcon
     public function init() {
         $this->filter = FileType::getFileTypeList();
         $this->value = function ($model, $key, $index, $column) {
-            return FA::icon($model->fileType->iconName, ['class' => 'text-center'])->size(FA::SIZE_2X);
+            return FA::icon($model->fileType->iconName, ['class' => 'text-center']) . '&nbsp;' . $model->fileType->name;
         };
     }
 
