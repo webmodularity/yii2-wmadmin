@@ -6,8 +6,13 @@ use Yii;
 use wmc\models\File;
 use wma\models\FileSearch;
 use wma\controllers\Controller;
+use yii\helpers\VarDumper;
 use yii\web\NotFoundHttpException;
 use wmc\behaviors\FileUploadBehavior;
+use wmc\models\FileType;
+use yii\helpers\ArrayHelper;
+use wmc\widgets\Alert;
+use yii\helpers\Html;
 
 /**
  * FileAdminController implements the CRUD actions for File model.
@@ -49,17 +54,26 @@ class FileAdminController extends Controller
     public function actionCreate()
     {
         $model = new File(['inline' => true, 'status' => 1]);
+
         $model->attachBehavior('fileUploadBehavior',[
             'class' => FileUploadBehavior::className(),
-            'pathAttribute' => 'file_path_id',
+            'fileTypes' => ArrayHelper::getColumn(FileType::find()->where('1=1')->all(), 'id'),
             'saveFileModel' => false
         ]);
 
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['index', 'id' => $model->id]);
+                Yii::$app->alertManager->add(Alert::widget(
+                    [
+                        'heading' => "Meeting Note Added.",
+                        'message' => "Successfully added a new File with an " . Html::a('ID of ' . $model->id, ['index', 'File[id]' => $model->id], ['class' => 'alert-link']) . ".",
+                        'style' => 'success',
+                        'encode' => false,
+                        'icon' => 'check-square-o'
+                    ]));
+                return $this->redirect(['index']);
             } else {
-                $model->addError('upload_file', "Error while uploading file.");
+                $model->addError('upload_file', "Error while uploading file. (" . VarDumper::dumpAsString($model->getErrors()) . ")");
             }
         }
 
@@ -77,6 +91,13 @@ class FileAdminController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = File::SCENARIO_UPDATE;
+        $model->attachBehavior('fileUploadBehavior',[
+            'class' => FileUploadBehavior::className(),
+            'fileTypes' => ArrayHelper::getColumn(FileType::find()->where('1=1')->all(), 'id'),
+            'saveFileModel' => false,
+            'uploadRequired' => false
+        ]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['update', 'id' => $model->id]);
