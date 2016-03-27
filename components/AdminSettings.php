@@ -16,6 +16,10 @@ class AdminSettings extends \yii\base\Component
         'red', 'red-light',
         'black', 'black-light'
     ];
+    static $bgColors = [
+        'red', 'yellow', 'aqua', 'blue', 'light-blue', 'green', 'navy', 'teal', 'olive', 'lime', 'orange', 'fuchsia', 'purple', 'maroon', 'black',
+        'red-active', 'yellow-active', 'aqua-active', 'blue-active', 'light-blue-active', 'green-active', 'navy-active', 'teal-active', 'olive-active', 'lime-active', 'orange-active', 'fuchsia-active', 'purple-active', 'maroon-active', 'black-active'
+    ];
     static $templateSections = [
         'layout', 'sidebar', 'header', 'footer'
     ];
@@ -57,6 +61,10 @@ class AdminSettings extends \yii\base\Component
             'confirmEmail' => true
         ]
     ];
+
+    public function getBgColors() {
+        return static::$bgColors;
+    }
 
     public function setAdminSettings($settings) {
         foreach ($settings as $key => $val) {
