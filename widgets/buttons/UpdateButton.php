@@ -1,6 +1,6 @@
 <?php
 
-namespace wma\widgets;
+namespace wma\widgets\buttons;
 
 use yii\helpers\Html;
 use yii\helpers\Inflector;

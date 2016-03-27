@@ -1,7 +1,7 @@
 <?php
 
 use wma\widgets\ActiveForm;
-use wma\widgets\UpdateButton;
+use wma\widgets\buttons\UpdateButton;
 use yii\helpers\Html;
 use wma\widgets\Box;
 use wmc\models\FilePath;

@@ -1,8 +1,8 @@
 <?php
 
 use wma\widgets\ActiveForm;
-use wma\widgets\DeleteButton;
-use wma\widgets\UpdateButton;
+use wma\widgets\buttons\DeleteButton;
+use wma\widgets\buttons\UpdateButton;
 use wma\widgets\NestedList;
 use yii\helpers\Html;
 use wma\widgets\Box;
