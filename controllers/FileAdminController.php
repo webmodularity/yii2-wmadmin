@@ -13,12 +13,45 @@ use wmc\models\FileType;
 use yii\helpers\ArrayHelper;
 use wmc\widgets\Alert;
 use yii\helpers\Html;
+use yii\filters\VerbFilter;
 
 /**
  * FileAdminController implements the CRUD actions for File model.
  */
 class FileAdminController extends Controller
 {
+    public function behaviors() {
+        return
+            [
+                'access' =>
+                    [
+                        'class' => \yii\filters\AccessControl::className(),
+                        'rules' =>
+                            [
+                                [
+                                    'allow' => true,
+                                    'actions' => ['refresh-size'],
+                                    'roles' => ['su']
+                                ],
+                                [
+                                    'allow' => false,
+                                    'actions' => ['refresh-size']
+                                ],
+                                [
+                                    'allow' => true,
+                                    'roles' => ['admin'],
+                                ]
+                            ]
+                    ],
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['post'],
+                    ],
+                ]
+            ];
+    }
+
     /**
      * Lists all File models.
      * @return mixed

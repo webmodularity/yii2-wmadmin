@@ -65,6 +65,7 @@ class Application extends \yii\web\Application
             'site' => 'wma\controllers\SiteController',
             'page' => 'wma\controllers\PageController',
             'file-admin' => 'wma\controllers\FileAdminController',
+            'file-path' => 'wma\controllers\FilePathController',
         ];
         $config['controllerMap'] = isset($config['controllerMap']) ? ArrayHelper::merge($adminControllerMap, $config['controllerMap']) : $adminControllerMap;
 
