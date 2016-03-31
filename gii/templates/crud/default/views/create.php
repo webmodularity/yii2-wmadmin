@@ -20,7 +20,7 @@ use wma\widgets\Box;
 $this->title = <?= $generator->generateString(Inflector::camel2words(StringHelper::basename($generator->modelClass)) . ' - Add New') ?>;
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['wma-nav'] = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
+$this->params['wma-nav'] = <?= $generator->generateString('Add New ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>;
 ?>
 
 <?= "<?= " ?>Yii::$app->alertManager->get() ?>

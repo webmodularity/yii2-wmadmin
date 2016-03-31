@@ -12,7 +12,8 @@
     "require": {
         "webmod/yii2-wmcommon": "dev-master",
         "almasaeed2010/adminlte": "~2.0",
-        "bower-asset/bootstrap-iconpicker": "*"
+        "bower-asset/bootstrap-iconpicker": "*",
+        "2amigos/yii2-switch-widget": "~1.0"
     },
     "autoload": {
         "psr-4": {

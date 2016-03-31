@@ -5,6 +5,7 @@
 
 use yii\db\ActiveRecordInterface;
 use yii\helpers\StringHelper;
+use yii\helpers\Inflector;
 
 
 /* @var $this yii\web\View */
@@ -38,25 +39,14 @@ use yii\data\ActiveDataProvider;
 <?php endif; ?>
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use wma\widgets\Alert;
+use yii\helpers\Html;
 
 /**
  * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
  */
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all <?= $modelClass ?> models.
      * @return mixed
@@ -83,18 +73,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     }
 
     /**
-     * Displays a single <?= $modelClass ?> model.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return mixed
-     */
-    public function actionView(<?= $actionParams ?>)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel(<?= $actionParams ?>),
-        ]);
-    }
-
-    /**
      * Creates a new <?= $modelClass ?> model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -104,12 +82,19 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model = new <?= $modelClass ?>();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            Yii::$app->alertManager->add(Alert::widget([
+                'heading' => '<?= Inflector::camel2words($modelClass) ?> Added.',
+                'message' => 'Successfully added a new ' . Html::a('<?= Inflector::camel2words($modelClass) ?>(' . $model->id . ')', ['update','id' => $model->id], ['class' => 'alert-link']) . '.',
+                'style' => 'success',
+                'encode' => false,
+                'icon' => 'check-square-o'
+            ]));
+            return $this->redirect(['index']);
         }
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+
     }
 
     /**
