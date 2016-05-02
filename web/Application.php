@@ -9,7 +9,7 @@ use yii\helpers\VarDumper;
 
 class Application extends \yii\web\Application
 {
-    public $version = '2.2.3';
+    public $version = '2.4.1';
 
     public $nameCms = 'CMS';
 
@@ -184,6 +184,12 @@ class Application extends \yii\web\Application
         $config['components']['assetManager']['linkAssets'] = isset($config['components']['assetManager']['linkAssets'])
             ? $config['components']['assetManager']['linkAssets']
             : true;
+
+        // Modules
+        // Kartik Gridview
+        $config['modules']['gridview'] = [
+            'class' => '\kartik\grid\Module'
+        ];
 
         // errorHandler
         $config['components']['errorHandler'] = isset($config['components']['errorHandler'])
