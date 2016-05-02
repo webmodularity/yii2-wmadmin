@@ -22,7 +22,7 @@ class UpdateButton extends \yii\base\Widget
         return Html::submitButton(FA::icon('edit') . '&nbsp;' . $this->updateText
             . Html::tag('span', '&nbsp;' . $this->itemName, ['class' => "hidden-xs hidden-sm"]),
             [
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-success',
             ]);
     }
 }

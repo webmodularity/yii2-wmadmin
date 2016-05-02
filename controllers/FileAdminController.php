@@ -4,6 +4,7 @@ namespace wma\controllers;
 
 use Yii;
 use wmc\models\File;
+use wmc\models\FileData;
 use wma\models\FileSearch;
 use wma\controllers\Controller;
 use yii\helpers\VarDumper;
@@ -90,8 +91,9 @@ class FileAdminController extends Controller
 
         $model->attachBehavior('fileUploadBehavior',[
             'class' => FileUploadBehavior::className(),
-            'fileTypes' => ArrayHelper::getColumn(FileType::find()->where('1=1')->all(), 'id'),
-            'saveFileModel' => false
+            'attributes' => [
+                ['fileTypes' => ArrayHelper::getColumn(FileType::find()->where('1=1')->all(), 'name')],
+            ]
         ]);
 
         if (Yii::$app->request->isPost) {
@@ -161,7 +163,7 @@ class FileAdminController extends Controller
         }
         Yii::warning("File Admin refreshSize action started.");
         $count = $countChanged = $countError = 0;
-        foreach (File::find()->where($where)->joinWith(['fileType', 'filePath'])->all() as $file) {
+        foreach (FileData::find()->where($where)->joinWith(['fileType', 'filePath'])->all() as $file) {
             $count++;
             $actualBytes = @filesize(Yii::getAlias($file->filePath->path) . DIRECTORY_SEPARATOR . $file->fullAlias);
             if ($actualBytes === false) {
@@ -190,7 +192,7 @@ class FileAdminController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = File::findOne($id)) !== null) {
+        if (($model = File::find()->where(['id' => $id])->joinWith('primaryExtension')->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

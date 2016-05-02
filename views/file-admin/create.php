@@ -6,6 +6,7 @@ use yii\helpers\Html;
 use wma\widgets\Box;
 use wmc\models\FilePath;
 use wmc\models\user\UserGroup;
+use wma\widgets\input\file\FileInputCreate;
 
 /* @var $this yii\web\View */
 /* @var $model wmc\models\File */
@@ -32,10 +33,11 @@ $this->params['wma-nav'] = 'Add New File';
             ]
         ) ?>
 
-        <?= $form->field($model, 'file_path_id')->dropDownList(FilePath::getFilePathList())->label('File Path') ?>
+        <?= $form->field($model, 'fileUpload')->widget(FileInputCreate::classname(), [
+        ])->hint($model->getAllowedFileExtensionsHint('fileUpload')) ?>
 
         <div class="row">
-            <?= $form->field($model, 'upload_file')->fileInput()->hint('Accepts ALL File Types.')->colSpan(6) ?>
+            <?= $form->field($model, 'file_path_id')->dropDownList(FilePath::getFilePathList())->label('File Path')->colSpan(6) ?>
 
             <?= $form->field($model, 'alias')->textInput(['maxlength' => true])->label('File Alias (Optional)')->hint("The name used to refer to this file in the URL. Leaving this field empty (default) uses the original name of the file. Do not include file extension in alias.")->colSpan(6) ?>
         </div>

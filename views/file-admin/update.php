@@ -30,7 +30,7 @@ $this->params['wma-nav'] = 'All Files';
                 'title' => 'File Details',
                 'responsive' => false,
                 'tools' => [
-                    Html::tag('span', "Size: ".Yii::$app->formatter->asShortSize($model->bytes)."", ['class' => 'label label-success'])
+                    Html::tag('span', "Size: ".Yii::$app->formatter->asShortSize($model->bytes)."", ['class' => 'label label-primary'])
                 ],
                 'footer' => [UpdateButton::widget(['itemName' => 'File'])]
             ]

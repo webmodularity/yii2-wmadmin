@@ -22,7 +22,7 @@ class AddButton extends \yii\base\Widget
         return Html::submitButton(FA::icon('plus') . '&nbsp;' . $this->addText
             . Html::tag('span', '&nbsp;' . $this->itemName, ['class' => "hidden-xs hidden-sm"]),
             [
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-success',
             ]);
     }
 }

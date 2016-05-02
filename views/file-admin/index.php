@@ -32,13 +32,8 @@ $this->params['wma-nav'] = 'All Files';
         ['class' => 'wma\grid\SerialColumn'],
         'id',
         [
-            'class' => 'wma\grid\data\FileTypeColumn',
-            'attribute' => 'file_type_id',
-            'label' => 'Type'
-        ],
-        [
-            'attribute' => 'file_path_id',
-            'value' => 'filePath.path',
+            'attribute' => 'path',
+            'value' => 'path',
             'label' => 'Path',
             'filter' => FilePath::getFilePathList()
         ],
