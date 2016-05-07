@@ -61,7 +61,7 @@ Box::begin([
                 'class' => 'btn btn-default'
             ],
             'selectedColumns' => [1, 2, 3],
-            'hiddenColumns' => [0, 6],
+            'noExportColumns' => [0, 6],
             'exportConfig' => [
                 ExportMenu::FORMAT_PDF => false
             ]
