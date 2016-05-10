@@ -2,6 +2,7 @@
 
 use wma\widgets\ActiveForm;
 use yii\helpers\Html;
+use himiklab\yii2\recaptcha\ReCaptcha;
 
 $this->title = 'Register'; ?>
     <p class="login-box-msg">Register New Account</p>
@@ -12,7 +13,7 @@ $this->title = 'Register'; ?>
     <?= $form->field($model, 'email')->placeholder()->feedbackIcon('envelope')->label(false) ?>
     <?= $form->field($model, 'password')->placeholder()->passwordInput()->colspan(6)->feedbackIcon('lock')->label(false) ?>
     <?= $form->field($model, 'password_confirm')->placeholder()->passwordInput()->colspan(6)->feedbackIcon('lock')->label(false) ?>
-    <?= $form->field($model, 'captcha')->widget('wmc\modules\recaptcha\widgets\Recaptcha')->label(false); ?>
+    <?= $form->field($model, 'captcha')->widget(ReCaptcha::className())->label(false); ?>
 
     <div class="row">
         <div class="col-xs-6">
