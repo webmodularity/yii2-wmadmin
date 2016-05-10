@@ -2,17 +2,16 @@
 
 namespace wma\controllers;
 
-use wmc\models\user\UserKey;
 use Yii;
 use wmc\models\user\User;
 use wmc\models\user\UserSearch;
 use wmc\models\user\UserLog;
 use wmc\models\user\UserLogSearch;
+use wmc\models\user\UserKey;
 use wmc\models\user\UserKeySearch;
 use wma\widgets\Alert;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 
 /**
  * UserAdminController implements the CRUD actions for User model.
