@@ -47,7 +47,7 @@ class AdminSettings extends \yii\base\Component
             'version' => true,
             'copyright' => [
                 'name' => 'WebModularity',
-                'link' => 'http://www.webmodularity.com',
+                'link' => 'https://www.webmodularity.com',
                 'date' => true
             ]
         ]

@@ -2,7 +2,6 @@
 
 namespace wma\controllers;
 
-use yii\filters\AccessControl;
 use wmc\models\user\User;
 
 class DashboardController extends \wma\controllers\Controller
